@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Secretaría - Gestor de Academias</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Secretaría - <span th:text="${usuario?.academia?.nombre}">Mi Academia</span></a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="navbar-text text-white me-3">
+                            <i class="bi bi-person-circle"></i> <span th:text="${usuario?.nombre + ' ' + usuario?.apellidos}">Usuario</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/logout}">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-md-block bg-light sidebar py-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/secretaria/dashboard}">
+                            Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <main class="col-md-10 ms-sm-auto px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Panel de Secretaría</h1>
+                </div>
+
+                <!-- KPIs Operativos -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card border-success">
+                            <div class="card-body">
+                                <h6 class="card-title text-success">Alumnos Activos</h6>
+                                <h2 th:text="${stats?.alumnosActivos ?: 0}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-warning">
+                            <div class="card-body">
+                                <h6 class="card-title text-warning">Alumnos Inactivos</h6>
+                                <h2 th:text="${stats?.alumnosInactivos ?: 0}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-info">
+                            <div class="card-body">
+                                <h6 class="card-title text-info">Total Alumnos</h6>
+                                <h2 th:text="${stats?.totalAlumnos ?: 0}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-primary">
+                            <div class="card-body">
+                                <h6 class="card-title text-primary">Profesores</h6>
+                                <h2 th:text="${stats?.totalProfesores ?: 0}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Últimos Alumnos Registrados -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-secondary text-white">
+                                <h5>Últimos Alumnos Registrados</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre Completo</th>
+                                                <th>Email</th>
+                                                <th>Fecha Registro</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="alumno : ${ultimosAlumnos}">
+                                                <td th:text="${alumno.usuario.nombre + ' ' + alumno.usuario.apellidos}">Alumno Test</td>
+                                                <td th:text="${alumno.usuario.email}">email@test.com</td>
+                                                <td th:text="${#temporals.format(alumno.fechaRegistro, 'dd/MM/yyyy')}">20/01/2026</td>
+                                                <td>
+                                                    <span th:if="${alumno.estadoMatricula == 'ACTIVO'}" class="badge bg-success">Activo</span>
+                                                    <span th:if="${alumno.estadoMatricula == 'INACTIVO'}" class="badge bg-secondary">Inactivo</span>
+                                                    <span th:if="${alumno.estadoMatricula == 'COMPLETADO'}" class="badge bg-info">Completado</span>
+                                                </td>
+                                            </tr>
+                                            <tr th:if="${#lists.isEmpty(ultimosAlumnos)}">
+                                                <td colspan="4" class="text-center text-muted">No hay alumnos registrados</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accesos Rápidos -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h5>Accesos Rápidos</h5>
+                        <div class="alert alert-info">
+                            <p class="mb-0"><i class="bi bi-info-circle"></i> Funcionalidades de gestión de alumnos se implementarán en próximas fases.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+</body>
+</html>

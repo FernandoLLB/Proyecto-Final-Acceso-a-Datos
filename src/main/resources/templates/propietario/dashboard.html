@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Propietario - Gestor de Academias</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Propietario - <span th:text="${usuario?.academia?.nombre}">Mi Academia</span></a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="navbar-text text-white me-3">
+                            <i class="bi bi-person-circle"></i> <span th:text="${usuario?.nombre + ' ' + usuario?.apellidos}">Usuario</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/logout}">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-md-block bg-light sidebar py-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/propietario/dashboard}">
+                            Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <main class="col-md-10 ms-sm-auto px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Panel de Negocio</h1>
+                </div>
+
+                <!-- KPIs de la Academia -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-white bg-success">
+                            <div class="card-body">
+                                <h6 class="card-title">Alumnos Activos</h6>
+                                <h2 th:text="${stats?.alumnosActivos ?: 0}">0</h2>
+                                <small>matriculados actualmente</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-info">
+                            <div class="card-body">
+                                <h6 class="card-title">Total Alumnos</h6>
+                                <h2 th:text="${stats?.totalAlumnos ?: 0}">0</h2>
+                                <small>en la academia</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-primary">
+                            <div class="card-body">
+                                <h6 class="card-title">Total Profesores</h6>
+                                <h2 th:text="${stats?.totalProfesores ?: 0}">0</h2>
+                                <small>en plantilla</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-warning">
+                            <div class="card-body">
+                                <h6 class="card-title">Alumnos Inactivos</h6>
+                                <h2 th:text="${stats?.alumnosInactivos ?: 0}">0</h2>
+                                <small>dados de baja</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de la Academia -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5>Información de la Academia</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Nombre:</strong> <span th:text="${stats?.nombreAcademia}">Mi Academia</span></p>
+                                <p><strong>Total Usuarios:</strong> <span th:text="${stats?.totalUsuarios ?: 0}">0</span></p>
+                                <p class="mb-0"><strong>Estado:</strong> <span class="badge bg-success">Activa</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header bg-info text-white">
+                                <h5>Resumen Operativo</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-success" role="progressbar"
+                                         th:style="'width: ' + ${stats?.totalAlumnos > 0 ? (stats.alumnosActivos * 100 / stats.totalAlumnos) : 0} + '%'">
+                                    </div>
+                                </div>
+                                <p><small>Tasa de Ocupación: <span th:text="${stats?.totalAlumnos > 0 ? (stats.alumnosActivos * 100 / stats.totalAlumnos) : 0}">0</span>%</small></p>
+                                <hr>
+                                <p class="mb-0"><small><i>Panel en construcción - más KPIs próximamente</i></small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+</body>
+</html>

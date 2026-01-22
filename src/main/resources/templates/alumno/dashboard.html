@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Alumno - Gestor de Academias</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Alumno - <span th:text="${usuario?.academia?.nombre}">Mi Academia</span></a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="navbar-text text-white me-3">
+                            <i class="bi bi-person-circle"></i> <span th:text="${usuario?.nombre + ' ' + usuario?.apellidos}">Usuario</span>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/logout}">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-md-block bg-light sidebar py-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/alumno/dashboard}">
+                            Mi Perfil
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <main class="col-md-10 ms-sm-auto px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Mi Panel de Alumno</h1>
+                </div>
+
+                <!-- Información del Alumno -->
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h5>Mi Información Personal</h5>
+                            </div>
+                            <div class="card-body">
+                                <div th:if="${error}" class="alert alert-warning" th:text="${error}"></div>
+
+                                <div th:if="${alumno != null}">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <p><strong>Nombre Completo:</strong></p>
+                                            <p th:text="${alumno.usuario.nombre + ' ' + alumno.usuario.apellidos}">Nombre Apellidos</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Email:</strong></p>
+                                            <p th:text="${alumno.usuario.email}">email@test.com</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <p><strong>Fecha de Registro:</strong></p>
+                                            <p th:text="${alumno.fechaRegistro != null ? #temporals.format(alumno.fechaRegistro, 'dd/MM/yyyy') : 'No especificada'}">20/01/2026</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Estado de Matrícula:</strong></p>
+                                            <p>
+                                                <span th:if="${alumno.estadoMatricula == 'ACTIVO'}" class="badge bg-success">Activo</span>
+                                                <span th:if="${alumno.estadoMatricula == 'INACTIVO'}" class="badge bg-secondary">Inactivo</span>
+                                                <span th:if="${alumno.estadoMatricula == 'COMPLETADO'}" class="badge bg-info">Completado</span>
+                                                <span th:if="${alumno.estadoMatricula == 'SUSPENDIDO'}" class="badge bg-warning">Suspendido</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <p><strong>Academia:</strong></p>
+                                            <p th:text="${alumno.academia.nombre}">Mi Academia</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" th:if="${alumno.observaciones != null && !#strings.isEmpty(alumno.observaciones)}">
+                                        <div class="col-md-12">
+                                            <p><strong>Observaciones:</strong></p>
+                                            <div class="alert alert-light">
+                                                <p th:text="${alumno.observaciones}" class="mb-0">Observaciones del alumno...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div th:if="${alumno == null && error == null}" class="alert alert-info">
+                                    <p class="mb-0">No se encontró información de perfil de alumno.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5>Acceso Rápido</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Usuario:</strong> <span th:text="${usuario?.username}">username</span></p>
+                                <p><strong>Rol:</strong> <span class="badge bg-info">Alumno</span></p>
+                                <hr>
+                                <div class="alert alert-info">
+                                    <p class="mb-0"><small><i>Próximamente: horarios, cursos matriculados, calificaciones.</i></small></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h5>Estado Académico</h5>
+                            </div>
+                            <div class="card-body">
+                                <p th:if="${alumno != null && alumno.estadoMatricula == 'ACTIVO'}" class="text-success">
+                                    <i class="bi bi-check-circle"></i> Tu matrícula está activa
+                                </p>
+                                <p th:if="${alumno != null && alumno.estadoMatricula != 'ACTIVO'}" class="text-warning">
+                                    <i class="bi bi-exclamation-triangle"></i> Tu matrícula no está activa
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+</body>
+</html>
