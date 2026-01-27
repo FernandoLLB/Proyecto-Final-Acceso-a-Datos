@@ -1,6 +1,7 @@
 package es.fempa.acd.demosecurityproductos.service;
 
 import es.fempa.acd.demosecurityproductos.model.Curso;
+import es.fempa.acd.demosecurityproductos.model.Profesor;
 import es.fempa.acd.demosecurityproductos.repository.CursoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,10 +13,14 @@ import java.util.List;
 public class CursoService {
 
     private final CursoRepository cursoRepository;
+    private final ProfesorService profesorService;
     private final SecurityUtils securityUtils;
 
-    public CursoService(CursoRepository cursoRepository, SecurityUtils securityUtils) {
+    public CursoService(CursoRepository cursoRepository,
+                       ProfesorService profesorService,
+                       SecurityUtils securityUtils) {
         this.cursoRepository = cursoRepository;
+        this.profesorService = profesorService;
         this.securityUtils = securityUtils;
     }
 
@@ -104,11 +109,17 @@ public class CursoService {
         }
 
         // Validar profesor pertenece a la academia
-        if (cursoActualizado.getProfesor() != null) {
+        if (cursoActualizado.getProfesor() != null && cursoActualizado.getProfesor().getId() != null) {
             Long academiaId = securityUtils.getAcademiaIdActual();
-            if (!cursoActualizado.getProfesor().getAcademia().getId().equals(academiaId)) {
+            // Obtener el profesor completo desde la base de datos
+            Profesor profesorCompleto = profesorService.obtenerPorId(cursoActualizado.getProfesor().getId());
+
+            if (!profesorCompleto.getAcademia().getId().equals(academiaId)) {
                 throw new IllegalArgumentException("El profesor no pertenece a esta academia");
             }
+
+            // Usar el profesor completo para la actualización
+            cursoExistente.setProfesor(profesorCompleto);
         }
 
         cursoExistente.setNombre(cursoActualizado.getNombre());
@@ -118,7 +129,6 @@ public class CursoService {
         cursoExistente.setFechaInicio(cursoActualizado.getFechaInicio());
         cursoExistente.setFechaFin(cursoActualizado.getFechaFin());
         cursoExistente.setCategoria(cursoActualizado.getCategoria());
-        cursoExistente.setProfesor(cursoActualizado.getProfesor());
         cursoExistente.setPlazasDisponibles(cursoActualizado.getPlazasDisponibles());
 
         return cursoRepository.save(cursoExistente);
