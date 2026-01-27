@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Profesor</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Sistema de Academias</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3">
+                    <i class="bi bi-person-circle"></i> <span sec:authentication="name"></span>
+                </span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0"><i class="bi bi-person-badge"></i> Nuevo Profesor</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${error}" class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+                        </div>
+
+                        <form th:action="@{/profesores/crear}" method="post">
+                            <div class="alert alert-info">
+                                <strong><i class="bi bi-info-circle"></i> Información:</strong>
+                                Se creará un usuario con rol PROFESOR y un perfil de profesor asociado.
+                            </div>
+
+                            <h5 class="mt-4 mb-3">Datos de Usuario</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="username" class="form-label">Usuario <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="username" name="username"
+                                           required maxlength="50" placeholder="profesor1">
+                                    <small class="form-text text-muted">Único en el sistema</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           required maxlength="100" placeholder="profesor@academia.com">
+                                    <small class="form-text text-muted">Único en el sistema</small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label">Contraseña <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" id="password" name="password"
+                                           required minlength="6" maxlength="100">
+                                    <small class="form-text text-muted">Mínimo 6 caracteres</small>
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4 mb-3">Datos Personales</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre"
+                                           required maxlength="100" placeholder="Juan">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="apellidos" class="form-label">Apellidos <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="apellidos" name="apellidos"
+                                           required maxlength="100" placeholder="Martínez García">
+                                </div>
+                            </div>
+
+                            <h5 class="mt-4 mb-3">Datos Profesionales</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="especialidad" class="form-label">Especialidad</label>
+                                    <input type="text" class="form-control" id="especialidad" name="especialidad"
+                                           maxlength="200" placeholder="Ej: Programación Web, Matemáticas">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="biografia" class="form-label">Biografía</label>
+                                <textarea class="form-control" id="biografia" name="biografia"
+                                          rows="4" maxlength="1000"
+                                          placeholder="Breve descripción sobre experiencia y trayectoria profesional..."></textarea>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/profesores}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Crear Profesor
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

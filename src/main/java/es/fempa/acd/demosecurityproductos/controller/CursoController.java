@@ -47,7 +47,23 @@ public class CursoController {
     @GetMapping("/nuevo")
     public String nuevoCursoForm(Model model) {
         Long academiaId = securityUtils.getAcademiaIdActual();
+        System.out.println("=== DEBUG: Formulario Nuevo Curso ===");
+        System.out.println("Academia ID: " + academiaId);
+
         List<Profesor> profesores = profesorService.listarPorAcademia(academiaId);
+        System.out.println("Número de profesores encontrados: " + (profesores != null ? profesores.size() : 0));
+
+        if (profesores != null && !profesores.isEmpty()) {
+            System.out.println("Lista de profesores:");
+            for (Profesor p : profesores) {
+                System.out.println("  - ID: " + p.getId() +
+                                 ", Nombre: " + p.getUsuario().getNombre() +
+                                 " " + p.getUsuario().getApellidos() +
+                                 ", Academia: " + p.getAcademia().getId());
+            }
+        } else {
+            System.out.println("⚠️ ADVERTENCIA: No hay profesores disponibles para esta academia");
+        }
 
         model.addAttribute("curso", new Curso());
         model.addAttribute("profesores", profesores);

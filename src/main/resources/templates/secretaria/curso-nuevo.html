@@ -65,6 +65,14 @@
                                                 th:text="${prof.usuario.nombre + ' ' + prof.usuario.apellidos}">
                                         </option>
                                     </select>
+                                    <div th:if="${profesores == null || #lists.isEmpty(profesores)}" class="alert alert-warning mt-2">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        <strong>No hay profesores disponibles.</strong><br>
+                                        Primero debe crear profesores para la academia antes de poder crear cursos.
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Total de profesores disponibles: <strong th:text="${profesores != null ? profesores.size() : 0}">0</strong>
+                                    </small>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="duracionHoras" class="form-label">Duración (horas) <span class="text-danger">*</span></label>

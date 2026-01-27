@@ -80,29 +80,33 @@ public class ReservaAulaController {
     }
 
     @PostMapping("/crear")
-    public String crearReserva(@Valid @ModelAttribute ReservaAula reserva,
-                              BindingResult result,
-                              RedirectAttributes redirectAttributes,
-                              Model model) {
+    public String crearReserva(@ModelAttribute("reserva") ReservaAula reserva,
+                               BindingResult result,
+                               RedirectAttributes redirectAttributes,
+                               Model model) {
+
+        Long academiaId = securityUtils.getAcademiaIdActual();
+        List<Aula> aulas = aulaService.listarActivasPorAcademia(academiaId);
+        model.addAttribute("aulas", aulas);  // siempre, haya errores o no
+
         if (result.hasErrors()) {
-            Long academiaId = securityUtils.getAcademiaIdActual();
-            List<Aula> aulas = aulaService.listarActivasPorAcademia(academiaId);
-            model.addAttribute("aulas", aulas);
+            System.out.println(">>> Hay errores de validación en ReservaAula");
+            result.getAllErrors().forEach(e -> System.out.println(">>> " + e));
             return "secretaria/reserva-nueva";
         }
+
 
         try {
             reservaAulaService.crear(reserva);
             redirectAttributes.addFlashAttribute("success", "Reserva creada exitosamente");
             return "redirect:/secretaria/reservas";
         } catch (IllegalStateException | IllegalArgumentException e) {
-            Long academiaId = securityUtils.getAcademiaIdActual();
-            List<Aula> aulas = aulaService.listarActivasPorAcademia(academiaId);
+            // En este bloque también se sigue manteniendo 'reserva' en el modelo
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("aulas", aulas);
             return "secretaria/reserva-nueva";
         }
     }
+
 
     @GetMapping("/{id}/editar")
     public String editarReservaForm(@PathVariable Long id, Model model) {

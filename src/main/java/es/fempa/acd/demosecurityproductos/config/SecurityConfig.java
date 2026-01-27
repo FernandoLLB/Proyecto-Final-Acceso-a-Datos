@@ -37,6 +37,11 @@ public class SecurityConfig {
                         .requestMatchers("/secretaria/**").hasRole(Rol.SECRETARIA.name())
                         .requestMatchers("/profesor/**").hasRole(Rol.PROFESOR.name())
                         .requestMatchers("/alumno/**").hasRole(Rol.ALUMNO.name())
+                        .requestMatchers("/profesores/**").hasAnyRole(
+                                Rol.ADMIN.name(),
+                                Rol.PROPIETARIO.name(),
+                                Rol.SECRETARIA.name()
+                        )
                         .requestMatchers("/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
