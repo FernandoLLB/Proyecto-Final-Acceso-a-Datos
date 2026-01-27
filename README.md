@@ -4,20 +4,22 @@ Sistema web diseñado para academias que desean digitalizar procesos administrat
 
 El sistema garantiza **aislamiento de datos por academia**, control de acceso por roles, trazabilidad y un módulo de **reservas de aulas** con validación anti-solapamiento.
 
-**🎉 Versión Actual: 0.5.0 - BETA (Backend + Frontend + Módulo Académico Funcional)**
+**🎉 Versión Actual: 0.6.0 - BETA (Backend + Frontend + Módulo Académico + Seguridad Reforzada)**
 
 ---
 
 ## 📦 Estado del Proyecto
 
-### ✅ Implementado (Fases 1, 2 y 3 Completadas)
+### ✅ Implementado (Fases 1, 2, 3 y 4 Completadas)
 
-#### Backend (Fases 1 y 3) ✅
+#### Backend (Fases 1, 3 y 4) ✅
 - ✅ Entidades JPA completas: Academia, Usuario, Profesor, Alumno, Aula, ReservaAula, **Curso, Matrícula**
 - ✅ Repositorios con consultas optimizadas e índices
 - ✅ Servicios con validaciones y aislamiento por academia (tenant scope)
 - ✅ Controladores MVC para ADMIN, SECRETARIA, PROPIETARIO, PROFESOR, ALUMNO
-- ✅ Seguridad Spring Security con 5 roles diferenciados
+- ✅ **Seguridad Spring Security con CSRF habilitado**
+- ✅ **Gestión de sesiones mejorada (1 sesión por usuario)**
+- ✅ **Manejo global de excepciones con logging**
 - ✅ Validación anti-solapamiento de reservas (transaccional)
 - ✅ **Sistema de matriculación con control de plazas y validación de duplicados**
 - ✅ Bean Validation en todas las entidades
@@ -36,9 +38,9 @@ El sistema garantiza **aislamiento de datos por academia**, control de acceso po
 
 ### 🚧 Pendiente (Próximas Fases)
 
-- [ ] **Fase 4**: Vistas para Profesor y Alumno (ver cursos, matrículas)
-- [ ] **Fase 5**: Suite completa de tests (unitarios, integración, UI)
-- [ ] **Fase 6**: Mejoras de producción (CSRF, paginación, gráficos, caché)
+- [ ] **Fase 5**: Optimización y Performance (paginación, caché, consultas optimizadas)
+- [ ] **Fase 6**: Suite completa de tests (unitarios, integración, UI)
+- [ ] **Fase 7**: Vistas para Profesor y Alumno (ver cursos, matrículas)
 
 ---
 

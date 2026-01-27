@@ -28,14 +28,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http	
-        		.cors(Customizer.withDefaults())
-        		.csrf(csrf -> csrf.disable()) // Deshabilitar CSRF (habilítalo según el caso)
+                .cors(Customizer.withDefaults())
+                // CSRF habilitado con configuración por defecto (Thymeleaf añade tokens automáticamente)
+                .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole(Rol.ADMIN.name())
                         .requestMatchers("/propietario/**").hasRole(Rol.PROPIETARIO.name())
                         .requestMatchers("/secretaria/**").hasRole(Rol.SECRETARIA.name())
                         .requestMatchers("/profesor/**").hasRole(Rol.PROFESOR.name())
                         .requestMatchers("/alumno/**").hasRole(Rol.ALUMNO.name())
+                        .requestMatchers("/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -46,10 +48,18 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
-                // Elimina la configuración de acceso denegado y deja que @ControllerAdvice maneje la excepción
-                .exceptionHandling(Customizer.withDefaults());
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/error/403")
+                )
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .expiredUrl("/login?expired=true")
+                );
 
         return http.build();
     }
