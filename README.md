@@ -4,6 +4,42 @@ Sistema web diseñado para academias que desean digitalizar procesos administrat
 
 El sistema garantiza **aislamiento de datos por academia**, control de acceso por roles, trazabilidad y un módulo de **reservas de aulas** con validación anti-solapamiento.
 
+**🎉 Versión Actual: 0.5.0 - BETA (Backend + Frontend + Módulo Académico Funcional)**
+
+---
+
+## 📦 Estado del Proyecto
+
+### ✅ Implementado (Fases 1, 2 y 3 Completadas)
+
+#### Backend (Fases 1 y 3) ✅
+- ✅ Entidades JPA completas: Academia, Usuario, Profesor, Alumno, Aula, ReservaAula, **Curso, Matrícula**
+- ✅ Repositorios con consultas optimizadas e índices
+- ✅ Servicios con validaciones y aislamiento por academia (tenant scope)
+- ✅ Controladores MVC para ADMIN, SECRETARIA, PROPIETARIO, PROFESOR, ALUMNO
+- ✅ Seguridad Spring Security con 5 roles diferenciados
+- ✅ Validación anti-solapamiento de reservas (transaccional)
+- ✅ **Sistema de matriculación con control de plazas y validación de duplicados**
+- ✅ Bean Validation en todas las entidades
+
+#### Frontend (Fases 2 y 3) ✅
+- ✅ **14 vistas Thymeleaf completas** con Bootstrap 5
+- ✅ Dashboard de Secretaria con KPIs y accesos rápidos
+- ✅ CRUD completo de Aulas (lista, crear, editar, activar/desactivar)
+- ✅ CRUD completo de Reservas con filtros (por aula, fecha, estado)
+- ✅ CRUD completo de Alumnos con filtros (por estado de matrícula)
+- ✅ **CRUD completo de Cursos (lista, crear, editar, activar/desactivar)**
+- ✅ **Sistema de Matriculación (matricular, completar, cancelar)**
+- ✅ Diseño responsive y moderno
+- ✅ Validaciones HTML5 + JavaScript
+- ✅ Navegación intuitiva con iconos Bootstrap
+
+### 🚧 Pendiente (Próximas Fases)
+
+- [ ] **Fase 4**: Vistas para Profesor y Alumno (ver cursos, matrículas)
+- [ ] **Fase 5**: Suite completa de tests (unitarios, integración, UI)
+- [ ] **Fase 6**: Mejoras de producción (CSRF, paginación, gráficos, caché)
+
 ---
 
 ## 🚀 Funcionalidades Principales
@@ -74,10 +110,15 @@ Entidades principales:
 - `Alumno`
 - `Aula`
 - `ReservaAula`
+- **`Curso`** ✅ Implementado
+- **`Matricula`** ✅ Implementado
 
-Entidades opcionales (académico):
-- `Curso`
-- `Matricula`
+**Módulo Académico Completado:**
+- Sistema de cursos con profesor asignado
+- Control de plazas disponibles
+- Matriculación de alumnos con validación de duplicados
+- Estados de matrícula (ACTIVA, COMPLETADA, CANCELADA)
+- Trazabilidad completa
 
 ---
 

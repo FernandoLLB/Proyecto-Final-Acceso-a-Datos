@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Matricular Alumno</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Sistema de Academias</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0"><i class="bi bi-person-plus-fill"></i> Matricular Alumno</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                        <!-- Información del curso -->
+                        <div class="alert alert-info">
+                            <h5><strong>Curso:</strong> <span th:text="${curso.nombre}">Curso de Java</span></h5>
+                            <p class="mb-0">
+                                <strong>Profesor:</strong> <span th:text="${curso.profesor.usuario.nombre + ' ' + curso.profesor.usuario.apellidos}"></span><br>
+                                <strong>Duración:</strong> <span th:text="${curso.duracionHoras}">40</span> horas<br>
+                                <strong>Fechas:</strong>
+                                <span th:text="${#temporals.format(curso.fechaInicio, 'dd/MM/yyyy')}"></span> -
+                                <span th:text="${#temporals.format(curso.fechaFin, 'dd/MM/yyyy')}"></span>
+                            </p>
+                        </div>
+
+                        <form th:action="@{/secretaria/matriculas/crear}" method="post">
+                            <input type="hidden" name="cursoId" th:value="${curso.id}">
+
+                            <div class="mb-3">
+                                <label for="alumnoId" class="form-label">
+                                    Seleccione el Alumno <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select" id="alumnoId" name="alumnoId" required>
+                                    <option value="">Seleccione un alumno...</option>
+                                    <option th:each="alumno : ${alumnos}"
+                                            th:value="${alumno.id}"
+                                            th:text="${alumno.usuario.nombre + ' ' + alumno.usuario.apellidos + ' (' + alumno.usuario.email + ')'}">
+                                        Juan Pérez (juan@email.com)
+                                    </option>
+                                </select>
+                                <small class="form-text text-muted">Solo se muestran alumnos activos de la academia</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="observaciones" class="form-label">Observaciones</label>
+                                <textarea class="form-control"
+                                          id="observaciones"
+                                          name="observaciones"
+                                          rows="3"
+                                          maxlength="500"
+                                          placeholder="Observaciones opcionales sobre la matrícula"></textarea>
+                            </div>
+
+                            <div class="alert alert-warning">
+                                <h6><i class="bi bi-exclamation-triangle"></i> Importante:</h6>
+                                <ul class="mb-0">
+                                    <li>Se verificará que el alumno no esté ya matriculado</li>
+                                    <li>Se validará que haya plazas disponibles (si aplica)</li>
+                                    <li>La matrícula quedará en estado ACTIVA</li>
+                                </ul>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/secretaria/matriculas/curso/{id}(id=${curso.id})}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle"></i> Matricular
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

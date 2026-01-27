@@ -13,6 +13,8 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Long> {
 
     List<Alumno> findByAcademiaId(Long academiaId);
 
+    List<Alumno> findByAcademiaIdAndEstadoMatricula(Long academiaId, String estadoMatricula);
+
     long countByAcademiaId(Long academiaId);
 
     long countByAcademiaIdAndEstadoMatricula(Long academiaId, String estadoMatricula);

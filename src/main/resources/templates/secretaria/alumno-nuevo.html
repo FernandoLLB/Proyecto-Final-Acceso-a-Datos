@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Alumno</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Sistema de Academias</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3">
+                    <i class="bi bi-person-circle"></i> <span sec:authentication="name"></span>
+                </span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0"><i class="bi bi-person-plus"></i> Alta de Nuevo Alumno</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Mensaje de error -->
+                        <div th:if="${error}" class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+                        </div>
+
+                        <form th:action="@{/secretaria/alumnos/crear}" method="post">
+
+                            <!-- Datos de Usuario (Cuenta de Acceso) -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0"><i class="bi bi-key"></i> Datos de Acceso</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="username" class="form-label">
+                                                    Usuario <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="username"
+                                                       name="username"
+                                                       required
+                                                       minlength="3"
+                                                       maxlength="50"
+                                                       pattern="[a-zA-Z0-9_]+"
+                                                       placeholder="Ej: juanperez">
+                                                <small class="form-text text-muted">Solo letras, números y guión bajo. Debe ser único.</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="password" class="form-label">
+                                                    Contraseña <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="password"
+                                                       class="form-control"
+                                                       id="password"
+                                                       name="password"
+                                                       required
+                                                       minlength="3"
+                                                       placeholder="Mínimo 3 caracteres">
+                                                <small class="form-text text-muted">La contraseña será cifrada automáticamente.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">
+                                            Email <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="email"
+                                               class="form-control"
+                                               id="email"
+                                               name="email"
+                                               required
+                                               maxlength="100"
+                                               placeholder="ejemplo@dominio.com">
+                                        <small class="form-text text-muted">Debe ser único en el sistema.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Datos Personales -->
+                            <div class="card mb-4">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0"><i class="bi bi-person"></i> Datos Personales</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="nombre" class="form-label">
+                                                    Nombre <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="nombre"
+                                                       name="nombre"
+                                                       required
+                                                       maxlength="100"
+                                                       placeholder="Ej: Juan">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="apellidos" class="form-label">
+                                                    Apellidos <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text"
+                                                       class="form-control"
+                                                       id="apellidos"
+                                                       name="apellidos"
+                                                       required
+                                                       maxlength="100"
+                                                       placeholder="Ej: Pérez García">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="observaciones" class="form-label">
+                                            Observaciones
+                                        </label>
+                                        <textarea class="form-control"
+                                                  id="observaciones"
+                                                  name="observaciones"
+                                                  rows="3"
+                                                  maxlength="1000"
+                                                  placeholder="Notas adicionales sobre el alumno (opcional)"></textarea>
+                                        <small class="form-text text-muted">Información relevante: alergias, necesidades especiales, etc.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Información del sistema -->
+                            <div class="alert alert-info">
+                                <h6><i class="bi bi-info-circle"></i> Información:</h6>
+                                <ul class="mb-0">
+                                    <li>El alumno se creará con estado <strong>ACTIVO</strong> por defecto</li>
+                                    <li>El rol será <strong>ALUMNO</strong> automáticamente</li>
+                                    <li>La cuenta de usuario quedará vinculada al alumno</li>
+                                    <li>El alumno será asignado a su academia actual</li>
+                                    <li>La fecha de registro será la fecha actual</li>
+                                </ul>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/secretaria/alumnos}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Dar de Alta
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Consejos -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6><i class="bi bi-lightbulb"></i> Consejos:</h6>
+                        <ul class="mb-0">
+                            <li>Use nombres de usuario descriptivos y fáciles de recordar</li>
+                            <li>Verifique que el email sea correcto antes de guardar</li>
+                            <li>Documente cualquier información relevante en observaciones</li>
+                            <li>Puede modificar los datos posteriormente desde la opción de editar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+    <script>
+        // Validación adicional del formulario
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const username = document.getElementById('username');
+
+            // Convertir username a minúsculas automáticamente
+            username.addEventListener('input', function() {
+                this.value = this.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+            });
+        });
+    </script>
+</body>
+</html>

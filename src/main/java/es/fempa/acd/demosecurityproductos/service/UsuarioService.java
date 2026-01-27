@@ -5,7 +5,9 @@ import es.fempa.acd.demosecurityproductos.model.Usuario;
 import es.fempa.acd.demosecurityproductos.repository.UsuarioRepository;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +16,11 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Buscar un usuario por su nombre de usuario
@@ -55,5 +59,30 @@ public class UsuarioService {
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }
-}
 
+    // Crear usuario
+    @Transactional
+    public Usuario crearUsuario(String username, String password, String email, Rol rol) {
+        if (usuarioRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+        }
+        if (usuarioRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("El email ya está en uso");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setUsername(username);
+        usuario.setPassword(passwordEncoder.encode(password));
+        usuario.setEmail(email);
+        usuario.setRol(rol);
+        usuario.setActivo(true);
+
+        return usuarioRepository.save(usuario);
+    }
+
+    // Actualizar usuario
+    @Transactional
+    public Usuario actualizar(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+}

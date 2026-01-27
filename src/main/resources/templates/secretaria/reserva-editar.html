@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Reserva</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Sistema de Academias</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3">
+                    <i class="bi bi-person-circle"></i> <span sec:authentication="name"></span>
+                </span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h3 class="mb-0"><i class="bi bi-pencil"></i> Editar Reserva #<span th:text="${reserva.id}">1</span></h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Mensaje de error -->
+                        <div th:if="${error}" class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+                        </div>
+
+                        <form th:action="@{/secretaria/reservas/{id}/actualizar(id=${reserva.id})}"
+                              th:object="${reserva}"
+                              method="post">
+
+                            <input type="hidden" th:field="*{id}">
+
+                            <!-- Info de creación -->
+                            <div class="alert alert-info">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Creada por:</strong> <span th:text="${reserva.creadaPor.username}">usuario1</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Fecha de creación:</strong>
+                                        <span th:text="${#temporals.format(reserva.fechaCreacion, 'dd/MM/yyyy HH:mm')}">25/01/2026 10:00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Selección de aula -->
+                            <div class="mb-3">
+                                <label for="aula" class="form-label">
+                                    Aula <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select"
+                                        id="aula"
+                                        th:field="*{aula.id}"
+                                        required
+                                        onchange="mostrarInfoAula(this)"
+                                        th:classappend="${#fields.hasErrors('aula')} ? 'is-invalid' : ''">
+                                    <option value="">Seleccione un aula...</option>
+                                    <option th:each="aulaItem : ${aulas}"
+                                            th:value="${aulaItem.id}"
+                                            th:text="${aulaItem.nombre + ' - Capacidad: ' + aulaItem.capacidad + ' personas'}"
+                                            th:selected="${aulaItem.id == reserva.aula.id}"
+                                            th:attr="data-capacidad=${aulaItem.capacidad}, data-recursos=${aulaItem.recursos}">
+                                        Aula 101
+                                    </option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('aula')}" class="invalid-feedback" th:errors="*{aula}"></div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Fecha y hora de inicio -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="fechaInicio" class="form-label">
+                                            Fecha/Hora de Inicio <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="datetime-local"
+                                               class="form-control"
+                                               id="fechaInicio"
+                                               th:field="*{fechaInicio}"
+                                               required
+                                               th:classappend="${#fields.hasErrors('fechaInicio')} ? 'is-invalid' : ''">
+                                        <div th:if="${#fields.hasErrors('fechaInicio')}" class="invalid-feedback" th:errors="*{fechaInicio}"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Fecha y hora de fin -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="fechaFin" class="form-label">
+                                            Fecha/Hora de Fin <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="datetime-local"
+                                               class="form-control"
+                                               id="fechaFin"
+                                               th:field="*{fechaFin}"
+                                               required
+                                               th:classappend="${#fields.hasErrors('fechaFin')} ? 'is-invalid' : ''">
+                                        <div th:if="${#fields.hasErrors('fechaFin')}" class="invalid-feedback" th:errors="*{fechaFin}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">
+                                    Descripción / Motivo de la Reserva
+                                </label>
+                                <textarea class="form-control"
+                                          id="descripcion"
+                                          th:field="*{descripcion}"
+                                          rows="3"
+                                          maxlength="500"
+                                          th:classappend="${#fields.hasErrors('descripcion')} ? 'is-invalid' : ''"></textarea>
+                                <div th:if="${#fields.hasErrors('descripcion')}" class="invalid-feedback" th:errors="*{descripcion}"></div>
+                            </div>
+
+                            <!-- Estado actual -->
+                            <div class="alert alert-light border">
+                                <strong>Estado Actual:</strong>
+                                <span th:if="${reserva.estado.name() == 'ACTIVA'}" class="badge bg-success">ACTIVA</span>
+                                <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge bg-danger">CANCELADA</span>
+                            </div>
+
+                            <!-- Advertencias -->
+                            <div class="alert alert-warning">
+                                <h6><i class="bi bi-exclamation-triangle"></i> Importante:</h6>
+                                <ul class="mb-0">
+                                    <li>El sistema verificará que no existan solapamientos con otras reservas activas</li>
+                                    <li>Los cambios no afectarán el registro de quién creó la reserva originalmente</li>
+                                </ul>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/secretaria/reservas}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+    <script>
+        function mostrarInfoAula(select) {
+            const selectedOption = select.options[select.selectedIndex];
+            if (selectedOption.value) {
+                const capacidad = selectedOption.getAttribute('data-capacidad');
+                const recursos = selectedOption.getAttribute('data-recursos');
+                console.log('Aula seleccionada - Capacidad:', capacidad, 'Recursos:', recursos);
+            }
+        }
+
+        // Validación de fechas
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaInicio = document.getElementById('fechaInicio');
+            const fechaFin = document.getElementById('fechaFin');
+
+            fechaInicio.addEventListener('change', function() {
+                fechaFin.min = this.value;
+                if (fechaFin.value && fechaFin.value <= this.value) {
+                    alert('La fecha de fin debe ser posterior a la fecha de inicio');
+                    fechaFin.value = '';
+                }
+            });
+
+            fechaFin.addEventListener('change', function() {
+                if (fechaInicio.value && this.value <= fechaInicio.value) {
+                    alert('La fecha de fin debe ser posterior a la fecha de inicio');
+                    this.value = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

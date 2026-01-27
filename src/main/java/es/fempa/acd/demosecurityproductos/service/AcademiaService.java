@@ -5,6 +5,9 @@ import es.fempa.acd.demosecurityproductos.repository.AcademiaRepository;
 import es.fempa.acd.demosecurityproductos.repository.AlumnoRepository;
 import es.fempa.acd.demosecurityproductos.repository.ProfesorRepository;
 import es.fempa.acd.demosecurityproductos.repository.UsuarioRepository;
+import es.fempa.acd.demosecurityproductos.repository.AulaRepository;
+import es.fempa.acd.demosecurityproductos.repository.ReservaAulaRepository;
+import es.fempa.acd.demosecurityproductos.model.EstadoReserva;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,15 +24,21 @@ public class AcademiaService {
     private final UsuarioRepository usuarioRepository;
     private final ProfesorRepository profesorRepository;
     private final AlumnoRepository alumnoRepository;
+    private final AulaRepository aulaRepository;
+    private final ReservaAulaRepository reservaAulaRepository;
 
     public AcademiaService(AcademiaRepository academiaRepository,
                           UsuarioRepository usuarioRepository,
                           ProfesorRepository profesorRepository,
-                          AlumnoRepository alumnoRepository) {
+                          AlumnoRepository alumnoRepository,
+                          AulaRepository aulaRepository,
+                          ReservaAulaRepository reservaAulaRepository) {
         this.academiaRepository = academiaRepository;
         this.usuarioRepository = usuarioRepository;
         this.profesorRepository = profesorRepository;
         this.alumnoRepository = alumnoRepository;
+        this.aulaRepository = aulaRepository;
+        this.reservaAulaRepository = reservaAulaRepository;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -108,6 +117,9 @@ public class AcademiaService {
         stats.put("alumnosInactivos", alumnoRepository.countByAcademiaIdAndEstadoMatricula(academiaId, "INACTIVO"));
         stats.put("totalProfesores", profesorRepository.countByAcademiaId(academiaId));
         stats.put("totalUsuarios", usuarioRepository.countByAcademiaId(academiaId));
+        stats.put("totalAulas", aulaRepository.countByAcademiaId(academiaId));
+        stats.put("aulasActivas", aulaRepository.countByAcademiaIdAndActiva(academiaId, true));
+        stats.put("reservasActivas", reservaAulaRepository.countByAcademiaIdAndEstado(academiaId, EstadoReserva.ACTIVA));
 
         return stats;
     }

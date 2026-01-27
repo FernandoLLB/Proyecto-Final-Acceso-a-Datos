@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Reserva</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Sistema de Academias</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3">
+                    <i class="bi bi-person-circle"></i> <span sec:authentication="name"></span>
+                </span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0"><i class="bi bi-calendar-plus"></i> Nueva Reserva de Aula</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Mensaje de error -->
+                        <div th:if="${error}" class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+                        </div>
+
+                        <form th:action="@{/secretaria/reservas/crear}" th:object="${reserva}" method="post">
+
+                            <!-- Selección de aula -->
+                            <div class="mb-3">
+                                <label for="aula" class="form-label">
+                                    Aula <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select"
+                                        id="aula"
+                                        th:field="*{aula.id}"
+                                        required
+                                        onchange="mostrarInfoAula(this)"
+                                        th:classappend="${#fields.hasErrors('aula')} ? 'is-invalid' : ''">
+                                    <option value="">Seleccione un aula...</option>
+                                    <option th:each="aula : ${aulas}"
+                                            th:value="${aula.id}"
+                                            th:text="${aula.nombre + ' - Capacidad: ' + aula.capacidad + ' personas'}"
+                                            th:attr="data-capacidad=${aula.capacidad}, data-recursos=${aula.recursos}">
+                                        Aula 101
+                                    </option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('aula')}" class="invalid-feedback" th:errors="*{aula}"></div>
+
+                                <!-- Info del aula seleccionada -->
+                                <div id="aulaInfo" class="alert alert-info mt-2" style="display: none;">
+                                    <strong>Capacidad:</strong> <span id="aulaCapacidad"></span> personas<br>
+                                    <strong>Recursos:</strong> <span id="aulaRecursos"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Fecha y hora de inicio -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="fechaInicio" class="form-label">
+                                            Fecha/Hora de Inicio <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="datetime-local"
+                                               class="form-control"
+                                               id="fechaInicio"
+                                               th:field="*{fechaInicio}"
+                                               required
+                                               th:classappend="${#fields.hasErrors('fechaInicio')} ? 'is-invalid' : ''">
+                                        <div th:if="${#fields.hasErrors('fechaInicio')}" class="invalid-feedback" th:errors="*{fechaInicio}"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Fecha y hora de fin -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="fechaFin" class="form-label">
+                                            Fecha/Hora de Fin <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="datetime-local"
+                                               class="form-control"
+                                               id="fechaFin"
+                                               th:field="*{fechaFin}"
+                                               required
+                                               th:classappend="${#fields.hasErrors('fechaFin')} ? 'is-invalid' : ''">
+                                        <div th:if="${#fields.hasErrors('fechaFin')}" class="invalid-feedback" th:errors="*{fechaFin}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">
+                                    Descripción / Motivo de la Reserva
+                                </label>
+                                <textarea class="form-control"
+                                          id="descripcion"
+                                          th:field="*{descripcion}"
+                                          rows="3"
+                                          maxlength="500"
+                                          placeholder="Ej: Clase de Matemáticas - Grupo A, Reunión de profesores, Taller de programación"
+                                          th:classappend="${#fields.hasErrors('descripcion')} ? 'is-invalid' : ''"></textarea>
+                                <div th:if="${#fields.hasErrors('descripcion')}" class="invalid-feedback" th:errors="*{descripcion}"></div>
+                                <small class="form-text text-muted">Describa el motivo de la reserva (máximo 500 caracteres)</small>
+                            </div>
+
+                            <!-- Advertencias importantes -->
+                            <div class="alert alert-warning">
+                                <h6><i class="bi bi-exclamation-triangle"></i> Importante:</h6>
+                                <ul class="mb-0">
+                                    <li>La fecha de fin debe ser posterior a la fecha de inicio</li>
+                                    <li>No se pueden crear reservas en fechas pasadas</li>
+                                    <li>El sistema verificará que no existan solapamientos con otras reservas activas</li>
+                                    <li>La reserva quedará registrada con su usuario como creador</li>
+                                </ul>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/secretaria/reservas}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Crear Reserva
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Consejos -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6><i class="bi bi-lightbulb"></i> Consejos:</h6>
+                        <ul class="mb-0">
+                            <li>Planifique las reservas con antelación para evitar conflictos</li>
+                            <li>Verifique la capacidad del aula según el número de asistentes esperados</li>
+                            <li>Revise que el aula tenga los recursos necesarios para su actividad</li>
+                            <li>Use descripciones claras para facilitar la gestión de reservas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+    <script>
+        function mostrarInfoAula(select) {
+            const selectedOption = select.options[select.selectedIndex];
+            if (selectedOption.value) {
+                const capacidad = selectedOption.getAttribute('data-capacidad');
+                const recursos = selectedOption.getAttribute('data-recursos');
+
+                document.getElementById('aulaCapacidad').textContent = capacidad;
+                document.getElementById('aulaRecursos').textContent = recursos || 'No especificados';
+                document.getElementById('aulaInfo').style.display = 'block';
+            } else {
+                document.getElementById('aulaInfo').style.display = 'none';
+            }
+        }
+
+        // Validación de fechas en el cliente
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaInicio = document.getElementById('fechaInicio');
+            const fechaFin = document.getElementById('fechaFin');
+
+            // Establecer fecha mínima como ahora
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            const minDate = now.toISOString().slice(0, 16);
+            fechaInicio.min = minDate;
+            fechaFin.min = minDate;
+
+            // Validar que fecha fin > fecha inicio
+            fechaInicio.addEventListener('change', function() {
+                fechaFin.min = this.value;
+                if (fechaFin.value && fechaFin.value <= this.value) {
+                    alert('La fecha de fin debe ser posterior a la fecha de inicio');
+                    fechaFin.value = '';
+                }
+            });
+
+            fechaFin.addEventListener('change', function() {
+                if (fechaInicio.value && this.value <= fechaInicio.value) {
+                    alert('La fecha de fin debe ser posterior a la fecha de inicio');
+                    this.value = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

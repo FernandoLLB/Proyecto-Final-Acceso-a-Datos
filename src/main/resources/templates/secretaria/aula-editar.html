@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Aula</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Sistema de Academias</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3">
+                    <i class="bi bi-person-circle"></i> <span sec:authentication="name"></span>
+                </span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h3 class="mb-0"><i class="bi bi-pencil"></i> Editar Aula #<span th:text="${aula.id}">1</span></h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Mensaje de error general -->
+                        <div th:if="${error}" class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+                        </div>
+
+                        <form th:action="@{/secretaria/aulas/{id}/actualizar(id=${aula.id})}"
+                              th:object="${aula}"
+                              method="post">
+
+                            <!-- ID oculto -->
+                            <input type="hidden" th:field="*{id}">
+                            <input type="hidden" th:field="*{academia.id}">
+
+                            <!-- Nombre del aula -->
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">
+                                    Nombre del Aula <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="nombre"
+                                       th:field="*{nombre}"
+                                       required
+                                       maxlength="100"
+                                       th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''">
+                                <div th:if="${#fields.hasErrors('nombre')}" class="invalid-feedback" th:errors="*{nombre}"></div>
+                            </div>
+
+                            <!-- Capacidad -->
+                            <div class="mb-3">
+                                <label for="capacidad" class="form-label">
+                                    Capacidad (personas) <span class="text-danger">*</span>
+                                </label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="capacidad"
+                                       th:field="*{capacidad}"
+                                       required
+                                       min="1"
+                                       max="500"
+                                       th:classappend="${#fields.hasErrors('capacidad')} ? 'is-invalid' : ''">
+                                <div th:if="${#fields.hasErrors('capacidad')}" class="invalid-feedback" th:errors="*{capacidad}"></div>
+                            </div>
+
+                            <!-- Recursos -->
+                            <div class="mb-3">
+                                <label for="recursos" class="form-label">
+                                    Recursos Disponibles
+                                </label>
+                                <textarea class="form-control"
+                                          id="recursos"
+                                          th:field="*{recursos}"
+                                          rows="4"
+                                          maxlength="500"
+                                          th:classappend="${#fields.hasErrors('recursos')} ? 'is-invalid' : ''"></textarea>
+                                <div th:if="${#fields.hasErrors('recursos')}" class="invalid-feedback" th:errors="*{recursos}"></div>
+                            </div>
+
+                            <!-- Estado actual -->
+                            <div class="alert alert-light border">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Estado Actual:</strong>
+                                        <span th:if="${aula.activa}" class="badge bg-success">Activa</span>
+                                        <span th:unless="${aula.activa}" class="badge bg-secondary">Inactiva</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Academia:</strong> <span th:text="${aula.academia.nombre}">Mi Academia</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/secretaria/aulas}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Información adicional -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6><i class="bi bi-info-circle"></i> Información:</h6>
+                        <ul class="mb-0">
+                            <li>Para activar o desactivar el aula, use los botones en el listado de aulas</li>
+                            <li>Los cambios afectarán a las nuevas reservas, no a las existentes</li>
+                            <li th:if="${aula.activa == false}">Esta aula está inactiva y no puede ser reservada</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

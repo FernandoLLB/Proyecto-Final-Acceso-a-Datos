@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cursos</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Sistema de Academias</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3">
+                    <i class="bi bi-person-circle"></i> <span sec:authentication="name"></span>
+                </span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi bi-book"></i> Gestión de Cursos</h1>
+            <div>
+                <a th:href="@{/secretaria/dashboard}" class="btn btn-secondary me-2">
+                    <i class="bi bi-arrow-left"></i> Volver al Dashboard
+                </a>
+                <a th:href="@{/secretaria/cursos/nuevo}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Nuevo Curso
+                </a>
+            </div>
+        </div>
+
+        <!-- Mensajes -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <h5>Total Cursos</h5>
+                        <p class="display-6" th:text="${cursos.size()}">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5>Cursos Activos</h5>
+                        <p class="display-6" th:text="${#lists.size(cursos.?[activo == true])}">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-secondary text-white">
+                    <div class="card-body text-center">
+                        <h5>Cursos Inactivos</h5>
+                        <p class="display-6" th:text="${#lists.size(cursos.?[activo == false])}">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de cursos -->
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-list"></i> Listado de Cursos</h5>
+            </div>
+            <div class="card-body">
+                <div th:if="${#lists.isEmpty(cursos)}" class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No hay cursos registrados.
+                    <a th:href="@{/secretaria/cursos/nuevo}">Crear el primer curso</a>
+                </div>
+
+                <div th:unless="${#lists.isEmpty(cursos)}" class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Profesor</th>
+                                <th>Duración</th>
+                                <th>Precio</th>
+                                <th>Fechas</th>
+                                <th>Plazas</th>
+                                <th>Estado</th>
+                                <th style="width: 200px;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="curso : ${cursos}">
+                                <td th:text="${curso.id}">1</td>
+                                <td>
+                                    <strong th:text="${curso.nombre}">Curso de Java</strong>
+                                    <br>
+                                    <small class="text-muted" th:text="${curso.categoria}">Programación</small>
+                                </td>
+                                <td th:text="${curso.profesor.usuario.nombre + ' ' + curso.profesor.usuario.apellidos}">
+                                    Juan Pérez
+                                </td>
+                                <td>
+                                    <i class="bi bi-clock"></i>
+                                    <span th:text="${curso.duracionHoras}">40</span> horas
+                                </td>
+                                <td>
+                                    <span th:if="${curso.precio != null}" th:text="${#numbers.formatDecimal(curso.precio, 1, 2) + ' €'}">
+                                        100.00 €
+                                    </span>
+                                    <span th:unless="${curso.precio != null}">-</span>
+                                </td>
+                                <td>
+                                    <small>
+                                        <i class="bi bi-calendar-event"></i>
+                                        <span th:text="${#temporals.format(curso.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</span>
+                                        <br>
+                                        <i class="bi bi-calendar-check"></i>
+                                        <span th:text="${#temporals.format(curso.fechaFin, 'dd/MM/yyyy')}">31/03/2026</span>
+                                    </small>
+                                </td>
+                                <td>
+                                    <span th:if="${curso.plazasDisponibles != null}" th:text="${curso.plazasDisponibles}">30</span>
+                                    <span th:unless="${curso.plazasDisponibles != null}">Ilimitadas</span>
+                                </td>
+                                <td>
+                                    <span th:if="${curso.activo}" class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Activo
+                                    </span>
+                                    <span th:unless="${curso.activo}" class="badge bg-secondary">
+                                        <i class="bi bi-x-circle"></i> Inactivo
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group-vertical" role="group">
+                                        <a th:href="@{/secretaria/matriculas/curso/{id}(id=${curso.id})}"
+                                           class="btn btn-sm btn-info">
+                                            <i class="bi bi-people"></i> Matrículas
+                                        </a>
+
+                                        <a th:href="@{/secretaria/cursos/{id}/editar(id=${curso.id})}"
+                                           class="btn btn-sm btn-warning">
+                                            <i class="bi bi-pencil"></i> Editar
+                                        </a>
+
+                                        <form th:if="${curso.activo}"
+                                              th:action="@{/secretaria/cursos/{id}/desactivar(id=${curso.id})}"
+                                              method="post">
+                                            <button type="submit" class="btn btn-sm btn-secondary w-100"
+                                                    onclick="return confirm('¿Desactivar este curso?');">
+                                                <i class="bi bi-toggle-off"></i> Desactivar
+                                            </button>
+                                        </form>
+
+                                        <form th:unless="${curso.activo}"
+                                              th:action="@{/secretaria/cursos/{id}/activar(id=${curso.id})}"
+                                              method="post">
+                                            <button type="submit" class="btn btn-sm btn-success w-100">
+                                                <i class="bi bi-toggle-on"></i> Activar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

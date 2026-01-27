@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Aula</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Sistema de Academias</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3">
+                    <i class="bi bi-person-circle"></i> <span sec:authentication="name"></span>
+                </span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0"><i class="bi bi-plus-circle"></i> Nueva Aula</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Mensaje de error general -->
+                        <div th:if="${error}" class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+                        </div>
+
+                        <form th:action="@{/secretaria/aulas/crear}" th:object="${aula}" method="post">
+                            <!-- Campo oculto para la academia -->
+                            <input type="hidden" th:field="*{academia.id}" th:value="${academia.id}">
+
+                            <!-- Nombre del aula -->
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">
+                                    Nombre del Aula <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="nombre"
+                                       th:field="*{nombre}"
+                                       required
+                                       maxlength="100"
+                                       placeholder="Ej: Aula 101, Laboratorio de Informática"
+                                       th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''">
+                                <div th:if="${#fields.hasErrors('nombre')}" class="invalid-feedback" th:errors="*{nombre}"></div>
+                                <small class="form-text text-muted">El nombre debe ser único en su academia</small>
+                            </div>
+
+                            <!-- Capacidad -->
+                            <div class="mb-3">
+                                <label for="capacidad" class="form-label">
+                                    Capacidad (personas) <span class="text-danger">*</span>
+                                </label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="capacidad"
+                                       th:field="*{capacidad}"
+                                       required
+                                       min="1"
+                                       max="500"
+                                       placeholder="Ej: 30"
+                                       th:classappend="${#fields.hasErrors('capacidad')} ? 'is-invalid' : ''">
+                                <div th:if="${#fields.hasErrors('capacidad')}" class="invalid-feedback" th:errors="*{capacidad}"></div>
+                                <small class="form-text text-muted">Número máximo de personas que puede albergar el aula</small>
+                            </div>
+
+                            <!-- Recursos -->
+                            <div class="mb-3">
+                                <label for="recursos" class="form-label">
+                                    Recursos Disponibles
+                                </label>
+                                <textarea class="form-control"
+                                          id="recursos"
+                                          th:field="*{recursos}"
+                                          rows="4"
+                                          maxlength="500"
+                                          placeholder="Ej: Proyector, Pizarra digital, Sistema de sonido, 30 sillas, Conexión WiFi"
+                                          th:classappend="${#fields.hasErrors('recursos')} ? 'is-invalid' : ''"></textarea>
+                                <div th:if="${#fields.hasErrors('recursos')}" class="invalid-feedback" th:errors="*{recursos}"></div>
+                                <small class="form-text text-muted">Describa los recursos y equipamiento del aula (máximo 500 caracteres)</small>
+                            </div>
+
+                            <!-- Info de la academia -->
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i>
+                                <strong>Academia:</strong> <span th:text="${academia.nombre}">Mi Academia</span>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/secretaria/aulas}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Crear Aula
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Consejos -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6><i class="bi bi-lightbulb"></i> Consejos:</h6>
+                        <ul class="mb-0">
+                            <li>Use nombres descriptivos y únicos para cada aula</li>
+                            <li>Indique la capacidad real considerando distancias de seguridad si aplica</li>
+                            <li>Liste todos los recursos para facilitar la gestión de reservas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

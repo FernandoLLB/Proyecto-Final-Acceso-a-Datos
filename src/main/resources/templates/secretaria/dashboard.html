@@ -31,7 +31,30 @@
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" th:href="@{/secretaria/dashboard}">
-                            Dashboard
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <hr class="my-2">
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/secretaria/alumnos}">
+                            <i class="bi bi-people"></i> Gestión de Alumnos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/secretaria/aulas}">
+                            <i class="bi bi-door-closed"></i> Gestión de Aulas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/secretaria/reservas}">
+                            <i class="bi bi-calendar-check"></i> Reservas de Aulas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/secretaria/cursos}">
+                            <i class="bi bi-book"></i> Gestión de Cursos
                         </a>
                     </li>
                 </ul>
@@ -49,6 +72,9 @@
                             <div class="card-body">
                                 <h6 class="card-title text-success">Alumnos Activos</h6>
                                 <h2 th:text="${stats?.alumnosActivos ?: 0}">0</h2>
+                                <a th:href="@{/secretaria/alumnos}" class="btn btn-sm btn-outline-success mt-2">
+                                    <i class="bi bi-people"></i> Ver todos
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -57,22 +83,64 @@
                             <div class="card-body">
                                 <h6 class="card-title text-warning">Alumnos Inactivos</h6>
                                 <h2 th:text="${stats?.alumnosInactivos ?: 0}">0</h2>
+                                <a th:href="@{/secretaria/alumnos?estado=INACTIVO}" class="btn btn-sm btn-outline-warning mt-2">
+                                    <i class="bi bi-list"></i> Ver listado
+                                </a>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card border-info">
                             <div class="card-body">
-                                <h6 class="card-title text-info">Total Alumnos</h6>
-                                <h2 th:text="${stats?.totalAlumnos ?: 0}">0</h2>
+                                <h6 class="card-title text-info">Aulas Activas</h6>
+                                <h2 th:text="${stats?.aulasActivas ?: 0}">0</h2>
+                                <a th:href="@{/secretaria/aulas}" class="btn btn-sm btn-outline-info mt-2">
+                                    <i class="bi bi-door-closed"></i> Gestionar
+                                </a>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card border-primary">
                             <div class="card-body">
-                                <h6 class="card-title text-primary">Profesores</h6>
-                                <h2 th:text="${stats?.totalProfesores ?: 0}">0</h2>
+                                <h6 class="card-title text-primary">Reservas Activas</h6>
+                                <h2 th:text="${stats?.reservasActivas ?: 0}">0</h2>
+                                <a th:href="@{/secretaria/reservas}" class="btn btn-sm btn-outline-primary mt-2">
+                                    <i class="bi bi-calendar-check"></i> Ver reservas
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accesos Rápidos -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="bi bi-lightning"></i> Acciones Rápidas</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <a th:href="@{/secretaria/alumnos/nuevo}" class="btn btn-success btn-lg w-100">
+                                            <i class="bi bi-person-plus"></i><br>
+                                            Alta de Alumno
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <a th:href="@{/secretaria/aulas/nueva}" class="btn btn-info btn-lg w-100">
+                                            <i class="bi bi-door-open"></i><br>
+                                            Crear Aula
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <a th:href="@{/secretaria/reservas/nueva}" class="btn btn-primary btn-lg w-100">
+                                            <i class="bi bi-calendar-plus"></i><br>
+                                            Nueva Reserva
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
