@@ -42,6 +42,42 @@
                     <h1 class="h2">Mi Panel de Profesor</h1>
                 </div>
 
+                <!-- Estadísticas Rápidas -->
+                <div class="row mb-4" th:if="${profesor != null}">
+                    <div class="col-md-3">
+                        <div class="card text-white bg-primary">
+                            <div class="card-body">
+                                <h5 class="card-title">Cursos Totales</h5>
+                                <h2 class="mb-0" th:text="${totalCursos}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-success">
+                            <div class="card-body">
+                                <h5 class="card-title">Cursos Activos</h5>
+                                <h2 class="mb-0" th:text="${cursosActivos}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-info">
+                            <div class="card-body">
+                                <h5 class="card-title">Reservas Totales</h5>
+                                <h2 class="mb-0" th:text="${totalReservas}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-warning">
+                            <div class="card-body">
+                                <h5 class="card-title">Reservas Activas</h5>
+                                <h2 class="mb-0" th:text="${reservasActivas}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Información del Profesor -->
                 <div class="row">
                     <div class="col-md-8">
@@ -100,14 +136,105 @@
                     <div class="col-md-4">
                         <div class="card mb-4">
                             <div class="card-header bg-info text-white">
-                                <h5>Información Adicional</h5>
+                                <h5>Información de Usuario</h5>
                             </div>
                             <div class="card-body">
                                 <p><strong>Usuario:</strong> <span th:text="${usuario?.username}">username</span></p>
                                 <p><strong>Rol:</strong> <span class="badge bg-success">Profesor</span></p>
-                                <hr>
-                                <p class="text-muted mb-0"><small><i>Funcionalidades adicionales (cursos asignados, horarios) se implementarán en próximas fases.</i></small></p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cursos Asignados -->
+                <div class="row" th:if="${profesor != null && cursos != null && !cursos.isEmpty()}">
+                    <div class="col-12">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5>Mis Cursos Asignados</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Descripción</th>
+                                                <th>Duración</th>
+                                                <th>Fecha Inicio</th>
+                                                <th>Fecha Fin</th>
+                                                <th>Plazas</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="curso : ${cursos}">
+                                                <td th:text="${curso.nombre}">Curso 1</td>
+                                                <td th:text="${#strings.abbreviate(curso.descripcion ?: 'Sin descripción', 50)}">Descripción...</td>
+                                                <td th:text="${curso.duracionHoras + ' h'}">40 h</td>
+                                                <td th:text="${#temporals.format(curso.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</td>
+                                                <td th:text="${#temporals.format(curso.fechaFin, 'dd/MM/yyyy')}">31/12/2026</td>
+                                                <td th:text="${curso.plazasDisponibles ?: 'N/A'}">20</td>
+                                                <td>
+                                                    <span th:if="${curso.activo}" class="badge bg-success">Activo</span>
+                                                    <span th:if="${!curso.activo}" class="badge bg-secondary">Inactivo</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservas de Aula -->
+                <div class="row" th:if="${profesor != null && reservas != null && !reservas.isEmpty()}">
+                    <div class="col-12">
+                        <div class="card mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h5>Mis Reservas de Aula</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Aula</th>
+                                                <th>Descripción</th>
+                                                <th>Fecha/Hora Inicio</th>
+                                                <th>Fecha/Hora Fin</th>
+                                                <th>Estado</th>
+                                                <th>Creada</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="reserva : ${reservas}">
+                                                <td th:text="${reserva.aula.nombre}">Aula 101</td>
+                                                <td th:text="${#strings.abbreviate(reserva.descripcion ?: 'Sin descripción', 40)}">Descripción...</td>
+                                                <td th:text="${#temporals.format(reserva.fechaInicio, 'dd/MM/yyyy HH:mm')}">01/01/2026 09:00</td>
+                                                <td th:text="${#temporals.format(reserva.fechaFin, 'dd/MM/yyyy HH:mm')}">01/01/2026 11:00</td>
+                                                <td>
+                                                    <span th:if="${reserva.estado.name() == 'ACTIVA'}" class="badge bg-success">Activa</span>
+                                                    <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge bg-danger">Cancelada</span>
+                                                    <span th:if="${reserva.estado.name() == 'COMPLETADA'}" class="badge bg-secondary">Completada</span>
+                                                </td>
+                                                <td th:text="${#temporals.format(reserva.fechaCreacion, 'dd/MM/yyyy')}">27/01/2026</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje si no hay cursos o reservas -->
+                <div class="row" th:if="${profesor != null && (cursos == null || cursos.isEmpty()) && (reservas == null || reservas.isEmpty())}">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <h5>Sin Cursos o Reservas</h5>
+                            <p class="mb-0">Actualmente no tiene cursos asignados ni reservas de aula creadas.</p>
                         </div>
                     </div>
                 </div>

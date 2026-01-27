@@ -159,6 +159,16 @@ public class ReservaAulaService {
         return reservaAulaRepository.countByAcademiaIdAndEstado(academiaId, EstadoReserva.ACTIVA);
     }
 
+    @Transactional(readOnly = true)
+    public List<ReservaAula> listarPorUsuarioCreador(Long usuarioId) {
+        return reservaAulaRepository.findByCreadaPorId(usuarioId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservaAula> listarActivasPorUsuarioCreador(Long usuarioId) {
+        return reservaAulaRepository.findByCreadaPorIdAndEstado(usuarioId, EstadoReserva.ACTIVA);
+    }
+
     private void validarFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         if (fechaInicio == null || fechaFin == null) {
             throw new IllegalArgumentException("Las fechas de inicio y fin son obligatorias");

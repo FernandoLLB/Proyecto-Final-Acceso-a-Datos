@@ -61,4 +61,8 @@ public interface ReservaAulaRepository extends JpaRepository<ReservaAula, Long> 
     );
 
     long countByAcademiaIdAndEstado(Long academiaId, EstadoReserva estado);
+
+    List<ReservaAula> findByCreadaPorId(Long usuarioId);
+
+    List<ReservaAula> findByCreadaPorIdAndEstado(Long usuarioId, EstadoReserva estado);
 }
