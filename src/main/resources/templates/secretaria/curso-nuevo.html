@@ -33,32 +33,31 @@
                             <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
                         </div>
 
-                        <form th:action="@{/secretaria/cursos/crear}" th:object="${curso}" method="post">
-                            <input type="hidden" th:field="*{academia.id}" th:value="${academia.id}">
+                        <form th:action="@{/secretaria/cursos/crear}" method="post" id="formCrearCurso">
 
                             <div class="row">
                                 <div class="col-md-8 mb-3">
                                     <label for="nombre" class="form-label">Nombre del Curso <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nombre" th:field="*{nombre}"
+                                    <input type="text" class="form-control" id="nombre" name="nombre"
                                            required maxlength="200" placeholder="Ej: Programación en Java Avanzado">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="categoria" class="form-label">Categoría</label>
-                                    <input type="text" class="form-control" id="categoria" th:field="*{categoria}"
+                                    <input type="text" class="form-control" id="categoria" name="categoria"
                                            maxlength="100" placeholder="Ej: Programación">
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="descripcion" class="form-label">Descripción</label>
-                                <textarea class="form-control" id="descripcion" th:field="*{descripcion}"
+                                <textarea class="form-control" id="descripcion" name="descripcion"
                                           rows="3" maxlength="1000"></textarea>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-4 mb-3">
-                                    <label for="profesor" class="form-label">Profesor <span class="text-danger">*</span></label>
-                                    <select class="form-select" id="profesor" th:field="*{profesor.id}" required>
+                                    <label for="profesorId" class="form-label">Profesor <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="profesorId" name="profesorId" required>
                                         <option value="">Seleccione un profesor...</option>
                                         <option th:each="prof : ${profesores}"
                                                 th:value="${prof.id}"
@@ -76,12 +75,12 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="duracionHoras" class="form-label">Duración (horas) <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="duracionHoras" th:field="*{duracionHoras}"
+                                    <input type="number" class="form-control" id="duracionHoras" name="duracionHoras"
                                            required min="1" placeholder="40">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="plazasDisponibles" class="form-label">Plazas Disponibles</label>
-                                    <input type="number" class="form-control" id="plazasDisponibles" th:field="*{plazasDisponibles}"
+                                    <input type="number" class="form-control" id="plazasDisponibles" name="plazasDisponibles"
                                            min="0" placeholder="30 (vacío = ilimitado)">
                                 </div>
                             </div>
@@ -89,16 +88,16 @@
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="precio" class="form-label">Precio (€)</label>
-                                    <input type="number" class="form-control" id="precio" th:field="*{precio}"
+                                    <input type="number" class="form-control" id="precio" name="precio"
                                            step="0.01" min="0" placeholder="150.00">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="fechaInicio" class="form-label">Fecha Inicio <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" id="fechaInicio" th:field="*{fechaInicio}" required>
+                                    <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="fechaFin" class="form-label">Fecha Fin <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control" id="fechaFin" th:field="*{fechaFin}" required>
+                                    <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
                                 </div>
                             </div>
 
@@ -122,5 +121,16 @@
     </div>
 
     <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+    <script>
+        // Debug: verificar que el formulario se envía
+        document.getElementById('formCrearCurso').addEventListener('submit', function(e) {
+            console.log('🚀 FORMULARIO ENVIÁNDOSE...');
+            console.log('Datos del formulario:');
+            const formData = new FormData(this);
+            for (let [key, value] of formData.entries()) {
+                console.log(key + ': ' + value);
+            }
+        });
+    </script>
 </body>
 </html>
