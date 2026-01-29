@@ -34,10 +34,10 @@
                     <div class="empty-state-icon">
                         <i class="bi bi-person-badge"></i>
                     </div>
-                    <h3 class="empty-state-title">No hay profesores registrados</h3>
-                    <p class="empty-state-description">Comienza creando tu primer profesor en el sistema</p>
+                    <h3 class="empty-state-title" th:text="#{teacher.no.registered}">No hay profesores registrados</h3>
+                    <p class="empty-state-description" th:text="#{teacher.create.first}">Comienza creando tu primer profesor en el sistema</p>
                     <a th:href="@{/profesores/nuevo}" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i> Crear Profesor
+                        <i class="bi bi-plus-lg"></i> <span th:text="#{teacher.new}">Crear Profesor</span>
                     </a>
                 </div>
             </div>
@@ -47,14 +47,14 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre Completo</th>
-                            <th>Email</th>
-                            <th>Usuario</th>
-                            <th>Especialidad</th>
-                            <th>Fecha Contratación</th>
-                            <th>Academia</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
+                            <th th:text="#{teacher.fullname}">Nombre Completo</th>
+                            <th th:text="#{app.email}">Email</th>
+                            <th th:text="#{login.username}">Usuario</th>
+                            <th th:text="#{teacher.specialty}">Especialidad</th>
+                            <th th:text="#{teacher.hire.date}">Fecha Contratación</th>
+                            <th th:text="#{academy.name}">Academia</th>
+                            <th th:text="#{app.status}">Estado</th>
+                            <th th:text="#{app.actions}">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,7 +67,7 @@
                             </td>
                             <td th:text="${profesor.usuario.email}">juan@academia.com</td>
                             <td th:text="${profesor.usuario.username}">profesor1</td>
-                            <td th:text="${profesor.especialidad != null && !profesor.especialidad.isEmpty()} ? ${profesor.especialidad} : 'Sin especialidad'">
+                            <td th:text="${profesor.especialidad != null && !profesor.especialidad.isEmpty()} ? ${profesor.especialidad} : #{teacher.no.specialty}">
                                 Programación Web
                             </td>
                             <td th:text="${#temporals.format(profesor.fechaContratacion, 'dd/MM/yyyy')}">
@@ -75,28 +75,28 @@
                             </td>
                             <td>
                                 <span th:if="${profesor.academia != null}" th:text="${profesor.academia.nombre}">TechLearn</span>
-                                <span th:unless="${profesor.academia != null}" class="text-muted">Sin academia</span>
+                                <span th:unless="${profesor.academia != null}" class="text-muted" th:text="#{teacher.no.academy}">Sin academia</span>
                             </td>
                             <td>
                                 <span th:if="${profesor.usuario.activo}" class="badge badge-success">
-                                    <i class="bi bi-check-circle"></i> Activo
+                                    <i class="bi bi-check-circle"></i> <span th:text="#{app.active}">Activo</span>
                                 </span>
                                 <span th:unless="${profesor.usuario.activo}" class="badge badge-danger">
-                                    <i class="bi bi-x-circle"></i> Inactivo
+                                    <i class="bi bi-x-circle"></i> <span th:text="#{app.inactive}">Inactivo</span>
                                 </span>
                             </td>
                             <td>
                                 <div class="action-buttons">
                                     <a th:href="@{/profesores/{id}/editar(id=${profesor.id})}"
                                        class="btn btn-sm btn-primary">
-                                        <i class="bi bi-pencil"></i> Editar
+                                        <i class="bi bi-pencil"></i> <span th:text="#{app.edit}">Editar</span>
                                     </a>
                                     <form th:action="@{/profesores/{id}/eliminar(id=${profesor.id})}"
                                           method="post" style="display: inline;">
                                         <button type="submit"
                                                 class="btn btn-sm btn-danger"
-                                                onclick="return confirm('¿Está seguro de eliminar este profesor? Esta acción no se puede deshacer.');">
-                                            <i class="bi bi-trash"></i> Eliminar
+                                                th:onclick="'return confirm(\'' + #{teacher.confirm.delete} + '\');'">
+                                            <i class="bi bi-trash"></i> <span th:text="#{app.delete}">Eliminar</span>
                                         </button>
                                     </form>
                                 </div>
@@ -112,9 +112,9 @@
             <div class="card-body">
                 <h6 style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
                     <i class="bi bi-info-circle" style="color: var(--primary-color);"></i>
-                    <span>Información</span>
+                    <span th:text="#{app.info}">Información</span>
                 </h6>
-                <p class="text-secondary" style="font-size: 0.875rem; margin: 0;">
+                <p class="text-secondary" style="font-size: 0.875rem; margin: 0;" th:text="#{teacher.info.description}">
                     Los profesores son usuarios con rol PROFESOR que pueden ser asignados a cursos.
                     Cada profesor debe estar vinculado a una academia específica.
                 </p>

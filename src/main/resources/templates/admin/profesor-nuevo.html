@@ -1,114 +1,101 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <title>Nuevo Profesor</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{teacher.new} + ' - ' + #{role.admin})}"></head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Sistema de Academias</a>
-            <div class="navbar-nav ms-auto">
-                <span class="navbar-text text-white me-3">
-                    <i class="bi bi-person-circle"></i> <span sec:authentication="name"></span>
-                </span>
-                <form th:action="@{/logout}" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
-                </form>
-            </div>
-        </div>
-    </nav>
+    <nav th:replace="~{fragments :: navbar('admin', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-admin('profesores')}"></aside>
 
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-10 offset-md-1">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="mb-0"><i class="bi bi-person-badge"></i> Nuevo Profesor</h3>
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <h1 class="page-title" th:text="#{teacher.new}">Nuevo Profesor</h1>
+            <p class="page-subtitle" th:text="#{teacher.new.description}">Crea un nuevo profesor en el sistema</p>
+        </div>
+
+        <div style="max-width: 900px;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title" th:text="#{teacher.information}">Información del Profesor</h3>
+                </div>
+                <div class="card-body">
+                    <div th:if="${error}" class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
                     </div>
-                    <div class="card-body">
-                        <div th:if="${error}" class="alert alert-danger">
-                            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+
+                    <form th:action="@{/profesores/crear}" method="post">
+                        <div class="alert alert-info">
+                            <strong><i class="bi bi-info-circle"></i> <span th:text="#{app.info}">Información</span>:</strong>
+                            <span th:text="#{teacher.create.info}">Se creará un usuario con rol PROFESOR y un perfil de profesor asociado.</span>
                         </div>
 
-                        <form th:action="@{/profesores/crear}" method="post">
-                            <div class="alert alert-info">
-                                <strong><i class="bi bi-info-circle"></i> Información:</strong>
-                                Se creará un usuario con rol PROFESOR y un perfil de profesor asociado.
+                        <h5 class="mt-4 mb-3" th:text="#{teacher.user.data}">Datos de Usuario</h5>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="username" class="form-label" th:text="#{login.username} + ' *'">Usuario *</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                       required maxlength="50" th:placeholder="#{teacher.username.placeholder}">
+                                <small class="form-text text-muted" th:text="#{validation.unique.system}">Único en el sistema</small>
                             </div>
+                            <div class="col-md-6 form-group">
+                                <label for="email" class="form-label" th:text="#{app.email} + ' *'">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       required maxlength="100" th:placeholder="#{teacher.email.placeholder}">
+                                <small class="form-text text-muted" th:text="#{validation.unique.system}">Único en el sistema</small>
+                            </div>
+                        </div>
 
-                            <h5 class="mt-4 mb-3">Datos de Usuario</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="username" class="form-label">Usuario <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="username" name="username"
-                                           required maxlength="50" placeholder="profesor1">
-                                    <small class="form-text text-muted">Único en el sistema</small>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" id="email" name="email"
-                                           required maxlength="100" placeholder="profesor@academia.com">
-                                    <small class="form-text text-muted">Único en el sistema</small>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="password" class="form-label" th:text="#{login.password} + ' *'">Contraseña *</label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       required minlength="6" maxlength="100">
+                                <small class="form-text text-muted" th:text="#{validation.password.min}">Mínimo 6 caracteres</small>
                             </div>
+                        </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="password" class="form-label">Contraseña <span class="text-danger">*</span></label>
-                                    <input type="password" class="form-control" id="password" name="password"
-                                           required minlength="6" maxlength="100">
-                                    <small class="form-text text-muted">Mínimo 6 caracteres</small>
-                                </div>
+                        <h5 class="mt-4 mb-3" th:text="#{teacher.personal.data}">Datos Personales</h5>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="nombre" class="form-label" th:text="#{teacher.name} + ' *'">Nombre *</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                       required maxlength="100" th:placeholder="#{teacher.name.placeholder}">
                             </div>
+                            <div class="col-md-6 form-group">
+                                <label for="apellidos" class="form-label" th:text="#{teacher.lastname} + ' *'">Apellidos *</label>
+                                <input type="text" class="form-control" id="apellidos" name="apellidos"
+                                       required maxlength="100" th:placeholder="#{teacher.lastname.placeholder}">
+                            </div>
+                        </div>
 
-                            <h5 class="mt-4 mb-3">Datos Personales</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre"
-                                           required maxlength="100" placeholder="Juan">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="apellidos" class="form-label">Apellidos <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="apellidos" name="apellidos"
-                                           required maxlength="100" placeholder="Martínez García">
-                                </div>
+                        <h5 class="mt-4 mb-3" th:text="#{teacher.professional.data}">Datos Profesionales</h5>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="especialidad" class="form-label" th:text="#{teacher.specialty}">Especialidad</label>
+                                <input type="text" class="form-control" id="especialidad" name="especialidad"
+                                       maxlength="200" th:placeholder="#{teacher.specialty.placeholder}">
                             </div>
+                        </div>
 
-                            <h5 class="mt-4 mb-3">Datos Profesionales</h5>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="especialidad" class="form-label">Especialidad</label>
-                                    <input type="text" class="form-control" id="especialidad" name="especialidad"
-                                           maxlength="200" placeholder="Ej: Programación Web, Matemáticas">
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label for="biografia" class="form-label" th:text="#{teacher.biography}">Biografía</label>
+                            <textarea class="form-control" id="biografia" name="biografia"
+                                      rows="4" maxlength="1000"
+                                      th:placeholder="#{teacher.biography.placeholder}"></textarea>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="biografia" class="form-label">Biografía</label>
-                                <textarea class="form-control" id="biografia" name="biografia"
-                                          rows="4" maxlength="1000"
-                                          placeholder="Breve descripción sobre experiencia y trayectoria profesional..."></textarea>
-                            </div>
-
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a th:href="@{/profesores}" class="btn btn-secondary">
-                                    <i class="bi bi-x-circle"></i> Cancelar
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-save"></i> Crear Profesor
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                            <a th:href="@{/profesores}" class="btn btn-outline">
+                                <i class="bi bi-x-lg"></i> <span th:text="#{app.cancel}">Cancelar</span>
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> <span th:text="#{teacher.create.button}">Crear Profesor</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+    <div th:replace="~{fragments :: scripts}"></div>
 </body>
 </html>
