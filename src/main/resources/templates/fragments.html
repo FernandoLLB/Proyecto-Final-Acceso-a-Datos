@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Gestor de Academias</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<!-- Navbar Fragment -->
+<nav th:fragment="navbar(role, username)" class="navbar-custom">
+    <div class="container-fluid" style="padding: 0 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a th:href="@{'/' + ${role} + '/dashboard'}" class="navbar-brand-custom">
+                <i class="bi bi-mortarboard-fill"></i> Gestor de Academias
+            </a>
+            <div class="navbar-user">
+                <div class="navbar-user-info">
+                    <div class="navbar-user-avatar" th:text="${username?.substring(0,1)?.toUpperCase()}">U</div>
+                    <span class="navbar-user-name" th:text="${username}">Usuario</span>
+                </div>
+                <a th:href="@{/logout}" class="btn-logout">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Admin Sidebar -->
+<aside th:fragment="sidebar-admin(active)" class="sidebar-container">
+    <ul class="sidebar-nav">
+        <li class="sidebar-nav-item">
+            <a th:href="@{/admin/dashboard}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'dashboard'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-grid-fill"></i></span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/admin/academias/lista}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'academias'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-building"></i></span>
+                <span>Academias</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/profesores}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'profesores'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-person-badge"></i></span>
+                <span>Profesores</span>
+            </a>
+        </li>
+    </ul>
+</aside>
+
+<!-- Secretaria Sidebar -->
+<aside th:fragment="sidebar-secretaria(active)" class="sidebar-container">
+    <ul class="sidebar-nav">
+        <li class="sidebar-nav-item">
+            <a th:href="@{/secretaria/dashboard}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'dashboard'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-grid-fill"></i></span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/secretaria/alumnos}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'alumnos'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-people-fill"></i></span>
+                <span>Alumnos</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/secretaria/cursos}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'cursos'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-book-fill"></i></span>
+                <span>Cursos</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/secretaria/aulas}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'aulas'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-door-closed-fill"></i></span>
+                <span>Aulas</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/secretaria/reservas}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'reservas'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-calendar-check-fill"></i></span>
+                <span>Reservas</span>
+            </a>
+        </li>
+    </ul>
+</aside>
+
+<!-- Profesor Sidebar -->
+<aside th:fragment="sidebar-profesor(active)" class="sidebar-container">
+    <ul class="sidebar-nav">
+        <li class="sidebar-nav-item">
+            <a th:href="@{/profesor/dashboard}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'dashboard'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-grid-fill"></i></span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+    </ul>
+</aside>
+
+<!-- Propietario Sidebar -->
+<aside th:fragment="sidebar-propietario(active)" class="sidebar-container">
+    <ul class="sidebar-nav">
+        <li class="sidebar-nav-item">
+            <a th:href="@{/propietario/dashboard}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'dashboard'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-grid-fill"></i></span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+    </ul>
+</aside>
+
+<!-- Alumno Sidebar -->
+<aside th:fragment="sidebar-alumno(active)" class="sidebar-container">
+    <ul class="sidebar-nav">
+        <li class="sidebar-nav-item">
+            <a th:href="@{/alumno/dashboard}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'dashboard'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-grid-fill"></i></span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+    </ul>
+</aside>
+
+<!-- Scripts Fragment -->
+<div th:fragment="scripts">
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+</div>
+
+</html>

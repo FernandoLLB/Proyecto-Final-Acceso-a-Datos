@@ -1,247 +1,227 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Profesor - Gestor de Academias</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
-</head>
+<head th:replace="~{fragments :: head('Dashboard - Profesor')}"></head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Profesor - <span th:text="${usuario?.academia?.nombre}">Mi Academia</span></a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <span class="navbar-text text-white me-3">
-                            <i class="bi bi-person-circle"></i> <span th:text="${usuario?.nombre + ' ' + usuario?.apellidos}">Usuario</span>
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" th:href="@{/logout}">Cerrar Sesión</a>
-                    </li>
-                </ul>
+    <nav th:replace="~{fragments :: navbar('profesor', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-profesor('dashboard')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <h1 class="page-title">Mi Panel de Profesor</h1>
+            <p class="page-subtitle" th:text="'Academia: ' + ${usuario?.academia?.nombre}">Mi Academia</p>
+        </div>
+
+        <!-- Mensajes de error -->
+        <div th:if="${error}" class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+        </div>
+
+        <!-- Estadísticas Rápidas -->
+        <div class="stats-grid" th:if="${profesor != null}">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Cursos Totales</span>
+                    <div class="stat-card-icon primary">
+                        <i class="bi bi-book-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${totalCursos}">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Cursos Activos</span>
+                    <div class="stat-card-icon success">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${cursosActivos}">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Reservas Totales</span>
+                    <div class="stat-card-icon primary">
+                        <i class="bi bi-calendar-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${totalReservas}">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Reservas Activas</span>
+                    <div class="stat-card-icon warning">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${reservasActivas}">0</div>
             </div>
         </div>
-    </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <nav class="col-md-2 d-md-block bg-light sidebar py-3">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/profesor/dashboard}">
-                            Mi Perfil
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <main class="col-md-10 ms-sm-auto px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Mi Panel de Profesor</h1>
+        <!-- Información del Profesor -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Mi Información Personal</h3>
                 </div>
+                <div class="card-body">
+                    <div th:if="${profesor != null}">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <label class="form-label">Nombre Completo</label>
+                                <p th:text="${profesor.usuario.nombre + ' ' + profesor.usuario.apellidos}" style="margin: 0; font-weight: 500;">Nombre Apellidos</p>
+                            </div>
+                            <div>
+                                <label class="form-label">Email</label>
+                                <p th:text="${profesor.usuario.email}" style="margin: 0; font-weight: 500;">email@test.com</p>
+                            </div>
+                        </div>
 
-                <!-- Estadísticas Rápidas -->
-                <div class="row mb-4" th:if="${profesor != null}">
-                    <div class="col-md-3">
-                        <div class="card text-white bg-primary">
-                            <div class="card-body">
-                                <h5 class="card-title">Cursos Totales</h5>
-                                <h2 class="mb-0" th:text="${totalCursos}">0</h2>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <label class="form-label">Especialidad</label>
+                                <p th:text="${profesor.especialidad ?: 'No especificada'}" style="margin: 0; font-weight: 500;">Matemáticas</p>
                             </div>
+                            <div>
+                                <label class="form-label">Fecha Contratación</label>
+                                <p th:text="${profesor.fechaContratacion != null ? #temporals.format(profesor.fechaContratacion, 'dd/MM/yyyy') : 'No especificada'}" style="margin: 0; font-weight: 500;">20/01/2026</p>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 1.5rem;">
+                            <label class="form-label">Biografía</label>
+                            <p th:text="${profesor.biografia ?: 'Sin biografía'}" class="text-secondary" style="margin: 0;">Biografía del profesor...</p>
+                        </div>
+
+                        <div>
+                            <label class="form-label">Academia</label>
+                            <p th:text="${profesor.academia.nombre}" style="margin: 0; font-weight: 500;">Mi Academia</p>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-success">
-                            <div class="card-body">
-                                <h5 class="card-title">Cursos Activos</h5>
-                                <h2 class="mb-0" th:text="${cursosActivos}">0</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-info">
-                            <div class="card-body">
-                                <h5 class="card-title">Reservas Totales</h5>
-                                <h2 class="mb-0" th:text="${totalReservas}">0</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-warning">
-                            <div class="card-body">
-                                <h5 class="card-title">Reservas Activas</h5>
-                                <h2 class="mb-0" th:text="${reservasActivas}">0</h2>
-                            </div>
-                        </div>
+
+                    <div th:if="${profesor == null && error == null}" class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> No se encontró información de perfil de profesor.
                     </div>
                 </div>
+            </div>
 
-                <!-- Información del Profesor -->
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="card mb-4">
-                            <div class="card-header bg-success text-white">
-                                <h5>Mi Información Personal</h5>
-                            </div>
-                            <div class="card-body">
-                                <div th:if="${error}" class="alert alert-warning" th:text="${error}"></div>
-
-                                <div th:if="${profesor != null}">
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <p><strong>Nombre Completo:</strong></p>
-                                            <p th:text="${profesor.usuario.nombre + ' ' + profesor.usuario.apellidos}">Nombre Apellidos</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p><strong>Email:</strong></p>
-                                            <p th:text="${profesor.usuario.email}">email@test.com</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <p><strong>Especialidad:</strong></p>
-                                            <p th:text="${profesor.especialidad ?: 'No especificada'}">Matemáticas</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p><strong>Fecha Contratación:</strong></p>
-                                            <p th:text="${profesor.fechaContratacion != null ? #temporals.format(profesor.fechaContratacion, 'dd/MM/yyyy') : 'No especificada'}">20/01/2026</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <div class="col-md-12">
-                                            <p><strong>Biografía:</strong></p>
-                                            <p th:text="${profesor.biografia ?: 'Sin biografía'}">Biografía del profesor...</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p><strong>Academia:</strong></p>
-                                            <p th:text="${profesor.academia.nombre}">Mi Academia</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div th:if="${profesor == null && error == null}" class="alert alert-info">
-                                    <p class="mb-0">No se encontró información de perfil de profesor.</p>
-                                </div>
-                            </div>
-                        </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Información de Usuario</h3>
+                </div>
+                <div class="card-body">
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label">Usuario</label>
+                        <p th:text="${usuario?.username}" style="margin: 0; font-weight: 500;">username</p>
                     </div>
-
-                    <div class="col-md-4">
-                        <div class="card mb-4">
-                            <div class="card-header bg-info text-white">
-                                <h5>Información de Usuario</h5>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>Usuario:</strong> <span th:text="${usuario?.username}">username</span></p>
-                                <p><strong>Rol:</strong> <span class="badge bg-success">Profesor</span></p>
-                            </div>
+                    <div>
+                        <label class="form-label">Rol</label>
+                        <div>
+                            <span class="badge badge-success">
+                                <i class="bi bi-person-badge"></i> Profesor
+                            </span>
                         </div>
                     </div>
                 </div>
-
-                <!-- Cursos Asignados -->
-                <div class="row" th:if="${profesor != null && cursos != null && !cursos.isEmpty()}">
-                    <div class="col-12">
-                        <div class="card mb-4">
-                            <div class="card-header bg-primary text-white">
-                                <h5>Mis Cursos Asignados</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre</th>
-                                                <th>Descripción</th>
-                                                <th>Duración</th>
-                                                <th>Fecha Inicio</th>
-                                                <th>Fecha Fin</th>
-                                                <th>Plazas</th>
-                                                <th>Estado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr th:each="curso : ${cursos}">
-                                                <td th:text="${curso.nombre}">Curso 1</td>
-                                                <td th:text="${#strings.abbreviate(curso.descripcion ?: 'Sin descripción', 50)}">Descripción...</td>
-                                                <td th:text="${curso.duracionHoras + ' h'}">40 h</td>
-                                                <td th:text="${#temporals.format(curso.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</td>
-                                                <td th:text="${#temporals.format(curso.fechaFin, 'dd/MM/yyyy')}">31/12/2026</td>
-                                                <td th:text="${curso.plazasDisponibles ?: 'N/A'}">20</td>
-                                                <td>
-                                                    <span th:if="${curso.activo}" class="badge bg-success">Activo</span>
-                                                    <span th:if="${!curso.activo}" class="badge bg-secondary">Inactivo</span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reservas de Aula -->
-                <div class="row" th:if="${profesor != null && reservas != null && !reservas.isEmpty()}">
-                    <div class="col-12">
-                        <div class="card mb-4">
-                            <div class="card-header bg-info text-white">
-                                <h5>Mis Reservas de Aula</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Aula</th>
-                                                <th>Descripción</th>
-                                                <th>Fecha/Hora Inicio</th>
-                                                <th>Fecha/Hora Fin</th>
-                                                <th>Estado</th>
-                                                <th>Creada</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr th:each="reserva : ${reservas}">
-                                                <td th:text="${reserva.aula.nombre}">Aula 101</td>
-                                                <td th:text="${#strings.abbreviate(reserva.descripcion ?: 'Sin descripción', 40)}">Descripción...</td>
-                                                <td th:text="${#temporals.format(reserva.fechaInicio, 'dd/MM/yyyy HH:mm')}">01/01/2026 09:00</td>
-                                                <td th:text="${#temporals.format(reserva.fechaFin, 'dd/MM/yyyy HH:mm')}">01/01/2026 11:00</td>
-                                                <td>
-                                                    <span th:if="${reserva.estado.name() == 'ACTIVA'}" class="badge bg-success">Activa</span>
-                                                    <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge bg-danger">Cancelada</span>
-                                                    <span th:if="${reserva.estado.name() == 'COMPLETADA'}" class="badge bg-secondary">Completada</span>
-                                                </td>
-                                                <td th:text="${#temporals.format(reserva.fechaCreacion, 'dd/MM/yyyy')}">27/01/2026</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mensaje si no hay cursos o reservas -->
-                <div class="row" th:if="${profesor != null && (cursos == null || cursos.isEmpty()) && (reservas == null || reservas.isEmpty())}">
-                    <div class="col-12">
-                        <div class="alert alert-info">
-                            <h5>Sin Cursos o Reservas</h5>
-                            <p class="mb-0">Actualmente no tiene cursos asignados ni reservas de aula creadas.</p>
-                        </div>
-                    </div>
-                </div>
-            </main>
+            </div>
         </div>
-    </div>
 
-    <script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+        <!-- Cursos Asignados -->
+        <div class="card mb-4" th:if="${profesor != null && cursos != null && !cursos.isEmpty()}">
+            <div class="card-header">
+                <h3 class="card-title">Mis Cursos Asignados</h3>
+            </div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Duración</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Plazas</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="curso : ${cursos}">
+                            <td><strong th:text="${curso.nombre}">Curso 1</strong></td>
+                            <td th:text="${#strings.abbreviate(curso.descripcion ?: 'Sin descripción', 50)}">Descripción...</td>
+                            <td th:text="${curso.duracionHoras + ' h'}">40 h</td>
+                            <td th:text="${#temporals.format(curso.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</td>
+                            <td th:text="${#temporals.format(curso.fechaFin, 'dd/MM/yyyy')}">31/12/2026</td>
+                            <td th:text="${curso.plazasDisponibles ?: 'N/A'}">20</td>
+                            <td>
+                                <span th:if="${curso.activo}" class="badge badge-success">
+                                    <i class="bi bi-check-circle"></i> Activo
+                                </span>
+                                <span th:if="${!curso.activo}" class="badge badge-secondary">
+                                    <i class="bi bi-x-circle"></i> Inactivo
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reservas de Aula -->
+        <div class="card mb-4" th:if="${profesor != null && reservas != null && !reservas.isEmpty()}">
+            <div class="card-header">
+                <h3 class="card-title">Mis Reservas de Aula</h3>
+            </div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Aula</th>
+                            <th>Descripción</th>
+                            <th>Fecha/Hora Inicio</th>
+                            <th>Fecha/Hora Fin</th>
+                            <th>Estado</th>
+                            <th>Creada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="reserva : ${reservas}">
+                            <td><strong th:text="${reserva.aula.nombre}">Aula 101</strong></td>
+                            <td th:text="${#strings.abbreviate(reserva.descripcion ?: 'Sin descripción', 40)}">Descripción...</td>
+                            <td th:text="${#temporals.format(reserva.fechaInicio, 'dd/MM/yyyy HH:mm')}">01/01/2026 09:00</td>
+                            <td th:text="${#temporals.format(reserva.fechaFin, 'dd/MM/yyyy HH:mm')}">01/01/2026 11:00</td>
+                            <td>
+                                <span th:if="${reserva.estado.name() == 'ACTIVA'}" class="badge badge-success">
+                                    <i class="bi bi-check-circle"></i> Activa
+                                </span>
+                                <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge badge-danger">
+                                    <i class="bi bi-x-circle"></i> Cancelada
+                                </span>
+                                <span th:if="${reserva.estado.name() == 'COMPLETADA'}" class="badge badge-secondary">
+                                    <i class="bi bi-check-circle-fill"></i> Completada
+                                </span>
+                            </td>
+                            <td th:text="${#temporals.format(reserva.fechaCreacion, 'dd/MM/yyyy')}">27/01/2026</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Mensaje si no hay cursos o reservas -->
+        <div class="card" th:if="${profesor != null && (cursos == null || cursos.isEmpty()) && (reservas == null || reservas.isEmpty())}">
+            <div class="card-body">
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="bi bi-inbox"></i>
+                    </div>
+                    <h3 class="empty-state-title">Sin Cursos o Reservas</h3>
+                    <p class="empty-state-description">Actualmente no tiene cursos asignados ni reservas de aula creadas.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments :: scripts}"></div>
 </body>
 </html>

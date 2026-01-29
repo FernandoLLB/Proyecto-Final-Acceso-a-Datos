@@ -1,124 +1,115 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Propietario - Gestor de Academias</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
-</head>
+<head th:replace="~{fragments :: head('Dashboard - Propietario')}"></head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Propietario - <span th:text="${usuario?.academia?.nombre}">Mi Academia</span></a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <span class="navbar-text text-white me-3">
-                            <i class="bi bi-person-circle"></i> <span th:text="${usuario?.nombre + ' ' + usuario?.apellidos}">Usuario</span>
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" th:href="@{/logout}">Cerrar Sesión</a>
-                    </li>
-                </ul>
+    <nav th:replace="~{fragments :: navbar('propietario', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-propietario('dashboard')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <h1 class="page-title">Panel de Negocio</h1>
+            <p class="page-subtitle" th:text="'Academia: ' + ${usuario?.academia?.nombre}">Mi Academia</p>
+        </div>
+
+        <!-- KPIs de la Academia -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Alumnos Activos</span>
+                    <div class="stat-card-icon success">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${stats?.alumnosActivos ?: 0}">0</div>
+                <p class="text-secondary" style="font-size: 0.813rem; margin-top: 0.5rem;">Matriculados actualmente</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Total Alumnos</span>
+                    <div class="stat-card-icon primary">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${stats?.totalAlumnos ?: 0}">0</div>
+                <p class="text-secondary" style="font-size: 0.813rem; margin-top: 0.5rem;">En la academia</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Total Profesores</span>
+                    <div class="stat-card-icon primary">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${stats?.totalProfesores ?: 0}">0</div>
+                <p class="text-secondary" style="font-size: 0.813rem; margin-top: 0.5rem;">En plantilla</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Alumnos Inactivos</span>
+                    <div class="stat-card-icon warning">
+                        <i class="bi bi-person-x-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${stats?.alumnosInactivos ?: 0}">0</div>
+                <p class="text-secondary" style="font-size: 0.813rem; margin-top: 0.5rem;">Dados de baja</p>
             </div>
         </div>
-    </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <nav class="col-md-2 d-md-block bg-light sidebar py-3">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/propietario/dashboard}">
-                            Dashboard
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <main class="col-md-10 ms-sm-auto px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Panel de Negocio</h1>
+        <!-- Información de la Academia -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Información de la Academia</h3>
                 </div>
-
-                <!-- KPIs de la Academia -->
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <div class="card text-white bg-success">
-                            <div class="card-body">
-                                <h6 class="card-title">Alumnos Activos</h6>
-                                <h2 th:text="${stats?.alumnosActivos ?: 0}">0</h2>
-                                <small>matriculados actualmente</small>
-                            </div>
-                        </div>
+                <div class="card-body">
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label">Nombre</label>
+                        <p th:text="${stats?.nombreAcademia}" style="margin: 0; font-weight: 500;">Mi Academia</p>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-info">
-                            <div class="card-body">
-                                <h6 class="card-title">Total Alumnos</h6>
-                                <h2 th:text="${stats?.totalAlumnos ?: 0}">0</h2>
-                                <small>en la academia</small>
-                            </div>
-                        </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label">Total Usuarios</label>
+                        <p th:text="${stats?.totalUsuarios ?: 0}" style="margin: 0; font-weight: 500;">0</p>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-primary">
-                            <div class="card-body">
-                                <h6 class="card-title">Total Profesores</h6>
-                                <h2 th:text="${stats?.totalProfesores ?: 0}">0</h2>
-                                <small>en plantilla</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-warning">
-                            <div class="card-body">
-                                <h6 class="card-title">Alumnos Inactivos</h6>
-                                <h2 th:text="${stats?.alumnosInactivos ?: 0}">0</h2>
-                                <small>dados de baja</small>
-                            </div>
+                    <div>
+                        <label class="form-label">Estado</label>
+                        <div>
+                            <span class="badge badge-success">
+                                <i class="bi bi-check-circle"></i> Activa
+                            </span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Información de la Academia -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-3">
-                            <div class="card-header bg-primary text-white">
-                                <h5>Información de la Academia</h5>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>Nombre:</strong> <span th:text="${stats?.nombreAcademia}">Mi Academia</span></p>
-                                <p><strong>Total Usuarios:</strong> <span th:text="${stats?.totalUsuarios ?: 0}">0</span></p>
-                                <p class="mb-0"><strong>Estado:</strong> <span class="badge bg-success">Activa</span></p>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Resumen Operativo</h3>
+                </div>
+                <div class="card-body">
+                    <label class="form-label">Tasa de Ocupación</label>
+                    <div style="margin-bottom: 0.5rem;">
+                        <div style="height: 8px; background: var(--bg-tertiary); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; background: var(--success-color); border-radius: 4px;"
+                                 th:style="'width: ' + ${stats?.totalAlumnos > 0 ? (stats.alumnosActivos * 100 / stats.totalAlumnos) : 0} + '%'">
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-md-6">
-                        <div class="card mb-3">
-                            <div class="card-header bg-info text-white">
-                                <h5>Resumen Operativo</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="progress mb-2">
-                                    <div class="progress-bar bg-success" role="progressbar"
-                                         th:style="'width: ' + ${stats?.totalAlumnos > 0 ? (stats.alumnosActivos * 100 / stats.totalAlumnos) : 0} + '%'">
-                                    </div>
-                                </div>
-                                <p><small>Tasa de Ocupación: <span th:text="${stats?.totalAlumnos > 0 ? (stats.alumnosActivos * 100 / stats.totalAlumnos) : 0}">0</span>%</small></p>
-                                <hr>
-                                <p class="mb-0"><small><i>Panel en construcción - más KPIs próximamente</i></small></p>
-                            </div>
-                        </div>
+                    <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 1.5rem;">
+                        <span th:text="${stats?.totalAlumnos > 0 ? (stats.alumnosActivos * 100 / stats.totalAlumnos) : 0}">0</span>% de ocupación
+                    </p>
+                    <div class="alert alert-info" style="margin: 0;">
+                        <p style="margin: 0; font-size: 0.813rem;">
+                            <i class="bi bi-clock"></i> Panel en construcción - más KPIs próximamente
+                        </p>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
-    </div>
+    </main>
 
-    <script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+    <div th:replace="~{fragments :: scripts}"></div>
 </body>
 </html>

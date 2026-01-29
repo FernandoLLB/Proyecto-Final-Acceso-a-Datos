@@ -1,209 +1,150 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Secretaría - Gestor de Academias</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}" />
-</head>
+<head th:replace="~{fragments :: head('Dashboard - Secretaría')}"></head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Secretaría - <span th:text="${usuario?.academia?.nombre}">Mi Academia</span></a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <span class="navbar-text text-white me-3">
-                            <i class="bi bi-person-circle"></i> <span th:text="${usuario?.nombre + ' ' + usuario?.apellidos}">Usuario</span>
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" th:href="@{/logout}">Cerrar Sesión</a>
-                    </li>
-                </ul>
+    <nav th:replace="~{fragments :: navbar('secretaria', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-secretaria('dashboard')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <h1 class="page-title">Panel de Secretaría</h1>
+            <p class="page-subtitle" th:text="'Academia: ' + ${usuario?.academia?.nombre}">Gestiona tu academia</p>
+        </div>
+
+        <!-- KPIs Operativos -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Alumnos Activos</span>
+                    <div class="stat-card-icon success">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${stats?.alumnosActivos ?: 0}">0</div>
+                <a th:href="@{/secretaria/alumnos}" class="btn btn-sm btn-outline" style="margin-top: 0.75rem;">
+                    Ver todos <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Alumnos Inactivos</span>
+                    <div class="stat-card-icon warning">
+                        <i class="bi bi-person-x-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${stats?.alumnosInactivos ?: 0}">0</div>
+                <a th:href="@{/secretaria/alumnos?estado=INACTIVO}" class="btn btn-sm btn-outline" style="margin-top: 0.75rem;">
+                    Ver listado <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Aulas Activas</span>
+                    <div class="stat-card-icon primary">
+                        <i class="bi bi-door-closed-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${stats?.aulasActivas ?: 0}">0</div>
+                <a th:href="@{/secretaria/aulas}" class="btn btn-sm btn-outline" style="margin-top: 0.75rem;">
+                    Gestionar <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Reservas Activas</span>
+                    <div class="stat-card-icon primary">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-value" th:text="${stats?.reservasActivas ?: 0}">0</div>
+                <a th:href="@{/secretaria/reservas}" class="btn btn-sm btn-outline" style="margin-top: 0.75rem;">
+                    Ver reservas <i class="bi bi-arrow-right"></i>
+                </a>
             </div>
         </div>
-    </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <nav class="col-md-2 d-md-block bg-light sidebar py-3">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/secretaria/dashboard}">
-                            <i class="bi bi-speedometer2"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <hr class="my-2">
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/secretaria/alumnos}">
-                            <i class="bi bi-people"></i> Gestión de Alumnos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/profesores}">
-                            <i class="bi bi-person-badge"></i> Gestión de Profesores
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/secretaria/aulas}">
-                            <i class="bi bi-door-closed"></i> Gestión de Aulas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/secretaria/reservas}">
-                            <i class="bi bi-calendar-check"></i> Reservas de Aulas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/secretaria/cursos}">
-                            <i class="bi bi-book"></i> Gestión de Cursos
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <main class="col-md-10 ms-sm-auto px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Panel de Secretaría</h1>
+        <!-- Acciones Rápidas -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title">Acciones Rápidas</h3>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+                    <a th:href="@{/secretaria/alumnos/nuevo}" class="btn btn-success" style="height: auto; padding: 1.5rem;">
+                        <i class="bi bi-person-plus" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                        <span style="font-size: 1rem;">Alta de Alumno</span>
+                    </a>
+                    <a th:href="@{/secretaria/cursos/nuevo}" class="btn btn-primary" style="height: auto; padding: 1.5rem;">
+                        <i class="bi bi-book" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                        <span style="font-size: 1rem;">Crear Curso</span>
+                    </a>
+                    <a th:href="@{/secretaria/aulas/nueva}" class="btn btn-primary" style="height: auto; padding: 1.5rem;">
+                        <i class="bi bi-door-open" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                        <span style="font-size: 1rem;">Crear Aula</span>
+                    </a>
+                    <a th:href="@{/secretaria/reservas/nueva}" class="btn btn-primary" style="height: auto; padding: 1.5rem;">
+                        <i class="bi bi-calendar-plus" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                        <span style="font-size: 1rem;">Nueva Reserva</span>
+                    </a>
                 </div>
-
-                <!-- KPIs Operativos -->
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <div class="card border-success">
-                            <div class="card-body">
-                                <h6 class="card-title text-success">Alumnos Activos</h6>
-                                <h2 th:text="${stats?.alumnosActivos ?: 0}">0</h2>
-                                <a th:href="@{/secretaria/alumnos}" class="btn btn-sm btn-outline-success mt-2">
-                                    <i class="bi bi-people"></i> Ver todos
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card border-warning">
-                            <div class="card-body">
-                                <h6 class="card-title text-warning">Alumnos Inactivos</h6>
-                                <h2 th:text="${stats?.alumnosInactivos ?: 0}">0</h2>
-                                <a th:href="@{/secretaria/alumnos?estado=INACTIVO}" class="btn btn-sm btn-outline-warning mt-2">
-                                    <i class="bi bi-list"></i> Ver listado
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card border-info">
-                            <div class="card-body">
-                                <h6 class="card-title text-info">Aulas Activas</h6>
-                                <h2 th:text="${stats?.aulasActivas ?: 0}">0</h2>
-                                <a th:href="@{/secretaria/aulas}" class="btn btn-sm btn-outline-info mt-2">
-                                    <i class="bi bi-door-closed"></i> Gestionar
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card border-primary">
-                            <div class="card-body">
-                                <h6 class="card-title text-primary">Reservas Activas</h6>
-                                <h2 th:text="${stats?.reservasActivas ?: 0}">0</h2>
-                                <a th:href="@{/secretaria/reservas}" class="btn btn-sm btn-outline-primary mt-2">
-                                    <i class="bi bi-calendar-check"></i> Ver reservas
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Accesos Rápidos -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header bg-primary text-white">
-                                <h5 class="mb-0"><i class="bi bi-lightning"></i> Acciones Rápidas</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4 mb-3">
-                                        <a th:href="@{/secretaria/alumnos/nuevo}" class="btn btn-success btn-lg w-100">
-                                            <i class="bi bi-person-plus"></i><br>
-                                            Alta de Alumno
-                                        </a>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <a th:href="@{/secretaria/aulas/nueva}" class="btn btn-info btn-lg w-100">
-                                            <i class="bi bi-door-open"></i><br>
-                                            Crear Aula
-                                        </a>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <a th:href="@{/secretaria/reservas/nueva}" class="btn btn-primary btn-lg w-100">
-                                            <i class="bi bi-calendar-plus"></i><br>
-                                            Nueva Reserva
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Últimos Alumnos Registrados -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header bg-secondary text-white">
-                                <h5>Últimos Alumnos Registrados</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Nombre Completo</th>
-                                                <th>Email</th>
-                                                <th>Fecha Registro</th>
-                                                <th>Estado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr th:each="alumno : ${ultimosAlumnos}">
-                                                <td th:text="${alumno.usuario.nombre + ' ' + alumno.usuario.apellidos}">Alumno Test</td>
-                                                <td th:text="${alumno.usuario.email}">email@test.com</td>
-                                                <td th:text="${#temporals.format(alumno.fechaRegistro, 'dd/MM/yyyy')}">20/01/2026</td>
-                                                <td>
-                                                    <span th:if="${alumno.estadoMatricula == 'ACTIVO'}" class="badge bg-success">Activo</span>
-                                                    <span th:if="${alumno.estadoMatricula == 'INACTIVO'}" class="badge bg-secondary">Inactivo</span>
-                                                    <span th:if="${alumno.estadoMatricula == 'COMPLETADO'}" class="badge bg-info">Completado</span>
-                                                </td>
-                                            </tr>
-                                            <tr th:if="${#lists.isEmpty(ultimosAlumnos)}">
-                                                <td colspan="4" class="text-center text-muted">No hay alumnos registrados</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Accesos Rápidos -->
-                <div class="row mt-4">
-                    <div class="col-md-12">
-                        <h5>Accesos Rápidos</h5>
-                        <div class="alert alert-info">
-                            <p class="mb-0"><i class="bi bi-info-circle"></i> Funcionalidades de gestión de alumnos se implementarán en próximas fases.</p>
-                        </div>
-                    </div>
-                </div>
-            </main>
+            </div>
         </div>
-    </div>
 
-    <script th:src="@{/js/bootstrap/bootstrap.bundle.js}"></script>
+        <!-- Últimos Alumnos Registrados -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Últimos Alumnos Registrados</h3>
+            </div>
+            <div th:if="${#lists.isEmpty(ultimosAlumnos)}" class="card-body">
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h3 class="empty-state-title">No hay alumnos registrados</h3>
+                    <p class="empty-state-description">Comienza registrando tu primer alumno</p>
+                    <a th:href="@{/secretaria/alumnos/nuevo}" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> Registrar Alumno
+                    </a>
+                </div>
+            </div>
+            <div th:unless="${#lists.isEmpty(ultimosAlumnos)}" class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Fecha Registro</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="alumno : ${ultimosAlumnos}">
+                            <td>
+                                <strong th:text="${alumno.usuario.nombre + ' ' + alumno.usuario.apellidos}">Alumno Test</strong>
+                            </td>
+                            <td th:text="${alumno.usuario.email}">email@test.com</td>
+                            <td th:text="${#temporals.format(alumno.fechaRegistro, 'dd/MM/yyyy')}">20/01/2026</td>
+                            <td>
+                                <span th:if="${alumno.estadoMatricula == 'ACTIVO'}" class="badge badge-success">
+                                    <i class="bi bi-check-circle"></i> Activo
+                                </span>
+                                <span th:if="${alumno.estadoMatricula == 'INACTIVO'}" class="badge badge-secondary">
+                                    <i class="bi bi-x-circle"></i> Inactivo
+                                </span>
+                                <span th:if="${alumno.estadoMatricula == 'COMPLETADO'}" class="badge badge-primary">
+                                    <i class="bi bi-check-circle-fill"></i> Completado
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments :: scripts}"></div>
 </body>
 </html>
