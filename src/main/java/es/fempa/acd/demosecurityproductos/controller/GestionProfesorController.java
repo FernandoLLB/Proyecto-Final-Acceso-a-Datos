@@ -3,9 +3,11 @@ package es.fempa.acd.demosecurityproductos.controller;
 import es.fempa.acd.demosecurityproductos.model.Profesor;
 import es.fempa.acd.demosecurityproductos.model.Usuario;
 import es.fempa.acd.demosecurityproductos.model.Rol;
+import es.fempa.acd.demosecurityproductos.model.Academia;
 import es.fempa.acd.demosecurityproductos.service.ProfesorService;
 import es.fempa.acd.demosecurityproductos.service.UsuarioService;
 import es.fempa.acd.demosecurityproductos.service.SecurityUtils;
+import es.fempa.acd.demosecurityproductos.service.AcademiaService;
 import es.fempa.acd.demosecurityproductos.repository.ProfesorRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequestMapping("/profesores")
@@ -24,15 +27,18 @@ public class GestionProfesorController {
     private final UsuarioService usuarioService;
     private final SecurityUtils securityUtils;
     private final ProfesorRepository profesorRepository;
+    private final AcademiaService academiaService;
 
     public GestionProfesorController(ProfesorService profesorService,
                                     UsuarioService usuarioService,
                                     SecurityUtils securityUtils,
-                                    ProfesorRepository profesorRepository) {
+                                    ProfesorRepository profesorRepository,
+                                    AcademiaService academiaService) {
         this.profesorService = profesorService;
         this.usuarioService = usuarioService;
         this.securityUtils = securityUtils;
         this.profesorRepository = profesorRepository;
+        this.academiaService = academiaService;
     }
 
     @GetMapping
@@ -49,6 +55,14 @@ public class GestionProfesorController {
 
     @GetMapping("/nuevo")
     public String nuevoProfesorForm(Model model) {
+        Usuario usuario = securityUtils.getUsuarioAutenticado();
+
+        // Si es ADMIN, cargar todas las academias activas para que pueda elegir
+        if (usuario.getRol() == Rol.ADMIN) {
+            List<Academia> academias = academiaService.listarActivas();
+            model.addAttribute("academias", academias);
+        }
+
         model.addAttribute("profesor", new Profesor());
         model.addAttribute("usuario", new Usuario());
         return "admin/profesor-nuevo";
@@ -62,27 +76,39 @@ public class GestionProfesorController {
                                @RequestParam String apellidos,
                                @RequestParam(required = false) String especialidad,
                                @RequestParam(required = false) String biografia,
+                               @RequestParam(required = false) Long academiaId,
                                RedirectAttributes redirectAttributes,
                                Model model) {
         try {
             Usuario usuario = securityUtils.getUsuarioAutenticado();
+            Academia academiaAsignar = null;
 
-            if (usuario.getAcademia() == null && usuario.getRol() != Rol.ADMIN) {
-                redirectAttributes.addFlashAttribute("error", "No se pudo identificar la academia");
-                return "redirect:/profesores";
+            // Determinar la academia a asignar
+            if (usuario.getRol() == Rol.ADMIN) {
+                // Si es ADMIN, debe proporcionar academiaId o puede ser null
+                if (academiaId != null) {
+                    academiaAsignar = academiaService.obtenerPorId(academiaId);
+                }
+            } else {
+                // Si no es ADMIN, usar su propia academia
+                if (usuario.getAcademia() == null) {
+                    redirectAttributes.addFlashAttribute("error", "No se pudo identificar la academia");
+                    return "redirect:/profesores";
+                }
+                academiaAsignar = usuario.getAcademia();
             }
 
             // Crear usuario con rol PROFESOR
             Usuario nuevoUsuario = usuarioService.crearUsuario(username, password, email, Rol.PROFESOR);
             nuevoUsuario.setNombre(nombre);
             nuevoUsuario.setApellidos(apellidos);
-            nuevoUsuario.setAcademia(usuario.getAcademia());
+            nuevoUsuario.setAcademia(academiaAsignar);
             usuarioService.actualizar(nuevoUsuario);
 
             // Crear profesor
             Profesor profesor = new Profesor();
             profesor.setUsuario(nuevoUsuario);
-            profesor.setAcademia(usuario.getAcademia());
+            profesor.setAcademia(academiaAsignar);
             profesor.setEspecialidad(especialidad);
             profesor.setBiografia(biografia);
             profesor.setFechaContratacion(LocalDate.now());
@@ -93,6 +119,14 @@ public class GestionProfesorController {
             return "redirect:/profesores";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
+
+            // Recargar academias si es ADMIN
+            Usuario usuario = securityUtils.getUsuarioAutenticado();
+            if (usuario.getRol() == Rol.ADMIN) {
+                List<Academia> academias = academiaService.listarActivas();
+                model.addAttribute("academias", academias);
+            }
+
             model.addAttribute("profesor", new Profesor());
             model.addAttribute("usuario", new Usuario());
             return "admin/profesor-nuevo";

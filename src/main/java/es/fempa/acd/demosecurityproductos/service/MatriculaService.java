@@ -165,6 +165,24 @@ public class MatriculaService {
         return matriculaRepository.countByAlumnoIdAndEstado(alumnoId, EstadoMatricula.ACTIVA);
     }
 
+    /**
+     * Obtiene todas las matrículas de un alumno específico (para uso del propio alumno)
+     * No valida tenant scope porque el alumno accede a sus propias matrículas
+     */
+    @Transactional(readOnly = true)
+    public List<Matricula> obtenerMisMatriculas(Long alumnoId) {
+        return matriculaRepository.findByAlumnoId(alumnoId);
+    }
+
+    /**
+     * Obtiene las matrículas activas de un alumno específico (para uso del propio alumno)
+     * No valida tenant scope porque el alumno accede a sus propias matrículas
+     */
+    @Transactional(readOnly = true)
+    public List<Matricula> obtenerMisMatriculasActivas(Long alumnoId) {
+        return matriculaRepository.findByAlumnoIdAndEstado(alumnoId, EstadoMatricula.ACTIVA);
+    }
+
     private void validarAccesoAcademia(Long academiaId) {
         if (!securityUtils.tieneRol("ADMIN")) {
             Long miAcademiaId = securityUtils.getAcademiaIdActual();

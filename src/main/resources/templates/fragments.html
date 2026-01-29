@@ -71,6 +71,14 @@
                 <span th:text="#{teacher.list}">Profesores</span>
             </a>
         </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/secretarias}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'secretarias'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-person-vcard"></i></span>
+                <span th:text="#{secretary.title}">Secretarias</span>
+            </a>
+        </li>
     </ul>
 </aside>
 
