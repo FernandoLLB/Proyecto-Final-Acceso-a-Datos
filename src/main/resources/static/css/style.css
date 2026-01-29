@@ -36,6 +36,7 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     font-size: 15px;
+    padding-top: 65px;
 }
 
 /* Typography */
@@ -58,6 +59,8 @@ h4 { font-size: 1.125rem; }
     justify-content: center;
     padding: 1rem;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin-top: -65px;
+    padding-top: 65px;
 }
 
 .login-card {
@@ -89,10 +92,15 @@ h4 { font-size: 1.125rem; }
 
 /* Navbar */
 .navbar-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     background: var(--bg-primary);
     border-bottom: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
     padding: 0.75rem 0;
+    z-index: 1000;
 }
 
 .navbar-brand-custom {
@@ -154,14 +162,16 @@ h4 { font-size: 1.125rem; }
 /* Sidebar */
 .sidebar-container {
     position: fixed;
-    top: 65px;
+    top: 0;
     left: 0;
     width: 260px;
-    height: calc(100vh - 65px);
+    height: 100vh;
     background: var(--bg-primary);
     border-right: 1px solid var(--border-color);
     padding: 1.5rem 1rem;
+    padding-top: calc(65px + 1.5rem);
     overflow-y: auto;
+    z-index: 999;
 }
 
 .sidebar-nav {
@@ -206,7 +216,6 @@ h4 { font-size: 1.125rem; }
 /* Main Content */
 .main-content {
     margin-left: 260px;
-    margin-top: 65px;
     padding: 2rem;
     min-height: calc(100vh - 65px);
 }

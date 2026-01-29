@@ -1,7 +1,12 @@
-# Solución: Botones con Estética Inconsistente
+# Solución: Botones con Estética Inconsistente y Navbar Fijo
 
 ## Problema Detectado
+
+### 1. Inconsistencia Estética (Solucionado)
 Había inconsistencias estéticas entre las diferentes páginas de la sección de secretaría. La página principal del dashboard mostraba el nuevo diseño moderno, pero al acceder a las páginas de listado (Alumnos, Cursos, Aulas, Reservas) se observaba el diseño antiguo con Bootstrap estándar.
+
+### 2. Navbar No Permanecía Visible (Solucionado)
+Al hacer scroll hacia abajo en las páginas, el navbar superior desaparecía, dificultando la navegación y el acceso al botón de cerrar sesión.
 
 ## Páginas Afectadas
 - ✅ `secretaria/alumnos-lista.html`
@@ -211,29 +216,117 @@ Había inconsistencias estéticas entre las diferentes páginas de la sección d
 - El sidebar ahora está presente en todas las páginas de listado
 - Fácil acceso a todas las secciones sin necesidad de volver al dashboard
 - Indicador visual de la sección activa
+- **Navbar fijo**: El navbar superior permanece visible al hacer scroll
 
 ### 3. **Experiencia de Usuario**
 - Diseño más limpio y profesional
 - Mejor jerarquía visual con page-title y page-subtitle
 - Cards de estadísticas con iconos más descriptivos
 - Botones mejor organizados con flexbox en lugar de btn-group-vertical
+- **Acceso constante**: Siempre se puede acceder al botón de cerrar sesión
 
 ### 4. **Mantenibilidad**
 - Uso de fragmentos reutilizables (navbar, sidebar, head)
 - Variables CSS para colores y estilos consistentes
 - Código más limpio y fácil de mantener
 
+## Implementación del Navbar Fijo
+
+### Cambios en CSS (`style.css`)
+
+#### 1. Navbar con posición fija
+```css
+.navbar-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    padding: 0.75rem 0;
+    z-index: 1000;
+}
+```
+
+#### 2. Body con padding-top
+```css
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 15px;
+    padding-top: 65px;
+}
+```
+
+#### 3. Sidebar ajustado
+```css
+.sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--bg-primary);
+    border-right: 1px solid var(--border-color);
+    padding: 1.5rem 1rem;
+    padding-top: calc(65px + 1.5rem);
+    overflow-y: auto;
+    z-index: 999;
+}
+```
+
+#### 4. Main content ajustado
+```css
+.main-content {
+    margin-left: 260px;
+    padding: 2rem;
+    min-height: calc(100vh - 65px);
+}
+```
+
+#### 5. Login page ajustado
+```css
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin-top: -65px;
+    padding-top: 65px;
+}
+```
+
+### Beneficios del Navbar Fijo
+
+✅ **Accesibilidad permanente**: El usuario siempre puede acceder al navbar sin necesidad de hacer scroll hacia arriba
+
+✅ **Mejor UX**: Navegación más intuitiva y profesional
+
+✅ **Coherencia**: El navbar siempre está visible, igual que en muchas aplicaciones web modernas
+
+✅ **Funcionalidad**: Acceso inmediato al botón de cerrar sesión desde cualquier punto de la página
+
 ## Resultado
 ✅ Todas las páginas de secretaría ahora tienen una estética consistente
 ✅ La navegación es más fluida y coherente
 ✅ Los botones y elementos interactivos siguen el mismo patrón de diseño
 ✅ Mejor experiencia de usuario en toda la aplicación
+✅ **El navbar superior permanece fijo y siempre visible al hacer scroll**
+✅ **Acceso inmediato al botón de cerrar sesión desde cualquier posición de la página**
 
 ## Verificación
 - [x] Compilación exitosa sin errores
 - [x] Todas las páginas de listado actualizadas
 - [x] Fragmentos reutilizables aplicados correctamente
 - [x] Estilos CSS modernos aplicados
+- [x] Navbar fijo implementado correctamente
+- [x] Sidebar y main-content ajustados para el navbar fijo
+- [x] Login page ajustada para evitar conflictos con el padding-top del body
 
 ## Fecha de Implementación
 29 de enero de 2026
