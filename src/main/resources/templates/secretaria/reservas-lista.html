@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Gestión de Reservas')}"></head>
+<head th:replace="~{fragments :: head(#{reservation.title})}"></head>
 <body>
     <nav th:replace="~{fragments :: navbar('secretaria', ${#authentication.name})}"></nav>
     <aside th:replace="~{fragments :: sidebar-secretaria('reservas')}"></aside>
@@ -9,12 +9,12 @@
         <div class="page-header">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h1 class="page-title"><i class="bi bi-calendar-check-fill"></i> Gestión de Reservas de Aulas</h1>
-                    <p class="page-subtitle">Administra las reservas de aulas de tu academia</p>
+                    <h1 class="page-title"><i class="bi bi-calendar-check-fill"></i> <span th:text="#{reservation.title}">Gestión de Reservas de Aulas</span></h1>
+                    <p class="page-subtitle" th:text="#{reservation.manage}">Administra las reservas de aulas de tu academia</p>
                 </div>
                 <div style="display: flex; gap: 0.75rem;">
                     <a th:href="@{/secretaria/reservas/nueva}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle"></i> Nueva Reserva
+                        <i class="bi bi-plus-circle"></i> <span th:text="#{reservation.new.button}">Nueva Reserva</span>
                     </a>
                 </div>
             </div>
@@ -31,14 +31,14 @@
         <!-- Filtros -->
         <div class="card mb-4">
             <div class="card-header">
-                <h3 class="card-title"><i class="bi bi-funnel"></i> Filtros de Búsqueda</h3>
+                <h3 class="card-title"><i class="bi bi-funnel"></i> <span th:text="#{filter.search}">Filtros de Búsqueda</span></h3>
             </div>
             <div class="card-body">
                 <form th:action="@{/secretaria/reservas}" method="get" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="aulaId" class="form-label">Aula</label>
+                        <label for="aulaId" class="form-label" th:text="#{filter.classroom}">Aula</label>
                         <select id="aulaId" name="aulaId" class="form-select">
-                            <option value="">Todas las aulas</option>
+                            <option value="" th:text="#{filter.all.classrooms}">Todas las aulas</option>
                             <option th:each="aula : ${aulas}"
                                     th:value="${aula.id}"
                                     th:text="${aula.nombre}"
@@ -48,7 +48,7 @@
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="fecha" class="form-label">Fecha</label>
+                        <label for="fecha" class="form-label" th:text="#{filter.date}">Fecha</label>
                         <input type="date"
                                id="fecha"
                                name="fecha"
@@ -56,12 +56,12 @@
                                th:value="${fechaFiltro}">
                     </div>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-search"></i> Filtrar
+                        <i class="bi bi-search"></i> <span th:text="#{filter.button}">Filtrar</span>
                     </button>
                 </form>
                 <div style="margin-top: 1rem;">
                     <a th:href="@{/secretaria/reservas}" class="btn btn-sm btn-outline">
-                        <i class="bi bi-x-circle"></i> Limpiar filtros
+                        <i class="bi bi-x-circle"></i> <span th:text="#{filter.clear}">Limpiar filtros</span>
                     </a>
                 </div>
             </div>
@@ -70,12 +70,12 @@
         <!-- Tabla de reservas -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><i class="bi bi-list-ul"></i> Listado de Reservas</h3>
+                <h3 class="card-title"><i class="bi bi-list-ul"></i> <span th:text="#{reservation.list.title}">Listado de Reservas</span></h3>
             </div>
             <div class="card-body">
                 <div th:if="${#lists.isEmpty(reservas)}" class="alert alert-info" style="border-radius: var(--radius-lg); border: 1px solid var(--primary-color); background: rgba(99, 102, 241, 0.1); color: var(--primary-color); padding: 1rem 1.25rem;">
-                    <i class="bi bi-info-circle"></i> No hay reservas que coincidan con los filtros.
-                    <a th:href="@{/secretaria/reservas/nueva}" style="color: var(--primary-color); font-weight: 600;">Crear una nueva reserva</a>
+                    <i class="bi bi-info-circle"></i> <span th:text="#{reservation.no.registered}">No hay reservas que coincidan con los filtros.</span>
+                    <a th:href="@{/secretaria/reservas/nueva}" style="color: var(--primary-color); font-weight: 600;" th:text="#{reservation.create.first}">Crear una nueva reserva</a>
                 </div>
 
                 <div th:unless="${#lists.isEmpty(reservas)}" class="table-responsive">
@@ -83,13 +83,13 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Aula</th>
-                                <th>Fecha/Hora Inicio</th>
-                                <th>Fecha/Hora Fin</th>
-                                <th>Descripción</th>
-                                <th>Creada Por</th>
-                                <th>Estado</th>
-                                <th style="width: 180px;">Acciones</th>
+                                <th th:text="#{reservation.classroom.header}">Aula</th>
+                                <th th:text="#{reservation.start.datetime.header}">Fecha/Hora Inicio</th>
+                                <th th:text="#{reservation.end.datetime.header}">Fecha/Hora Fin</th>
+                                <th th:text="#{reservation.description.header}">Descripción</th>
+                                <th th:text="#{reservation.created.by.header}">Creada Por</th>
+                                <th th:text="#{reservation.status.header}">Estado</th>
+                                <th style="width: 180px;" th:text="#{app.actions}">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,7 +108,7 @@
                                 <td th:text="${#temporals.format(reserva.fechaFin, 'dd/MM/yyyy HH:mm')}">
                                     01/01/2026 11:00
                                 </td>
-                                <td th:text="${reserva.descripcion != null && !reserva.descripcion.isEmpty()} ? ${reserva.descripcion} : 'Sin descripción'">
+                                <td th:text="${reserva.descripcion != null && !reserva.descripcion.isEmpty()} ? ${reserva.descripcion} : #{app.no.description}">
                                     Clase de programación
                                 </td>
                                 <td>
@@ -120,14 +120,14 @@
                                 </td>
                                 <td>
                                     <span th:if="${reserva.estado.name() == 'ACTIVA'}" class="badge bg-success">
-                                        <i class="bi bi-check-circle"></i> ACTIVA
+                                        <i class="bi bi-check-circle"></i> <span th:text="#{reservation.active}">ACTIVA</span>
                                     </span>
                                     <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge bg-danger">
-                                        <i class="bi bi-x-circle"></i> CANCELADA
+                                        <i class="bi bi-x-circle"></i> <span th:text="#{reservation.cancelled}">CANCELADA</span>
                                     </span>
                                     <div th:if="${reserva.estado.name() == 'CANCELADA'}" class="mt-1">
                                         <small class="text-muted">
-                                            Cancelada por: <span th:text="${reserva.canceladaPor?.username}">admin</span>
+                                            <span th:text="#{reservation.cancelled.by}">Cancelada por:</span> <span th:text="${reserva.canceladaPor?.username}">admin</span>
                                         </small>
                                     </div>
                                 </td>
@@ -136,7 +136,7 @@
                                         <a th:if="${reserva.estado.name() == 'ACTIVA'}"
                                            th:href="@{/secretaria/reservas/{id}/editar(id=${reserva.id})}"
                                            class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil"></i> Editar
+                                            <i class="bi bi-pencil"></i> <span th:text="#{app.edit}">Editar</span>
                                         </a>
 
                                         <form th:if="${reserva.estado.name() == 'ACTIVA'}"
@@ -145,13 +145,14 @@
                                               style="margin: 0;">
                                             <button type="submit"
                                                     class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('¿Está seguro de cancelar esta reserva?');">
-                                                <i class="bi bi-trash"></i> Cancelar
+                                                    th:attr="onclick='return confirm(\'' + #{reservation.confirm.cancel} + '\');'">
+                                                <i class="bi bi-trash"></i> <span th:text="#{reservation.cancel}">Cancelar</span>
                                             </button>
                                         </form>
 
                                         <span th:if="${reserva.estado.name() == 'CANCELADA'}"
-                                              class="btn btn-sm btn-secondary disabled">
+                                              class="btn btn-sm btn-secondary disabled"
+                                              th:text="#{reservation.no.actions}">
                                             Sin acciones
                                         </span>
                                     </div>
@@ -166,15 +167,15 @@
         <!-- Leyenda -->
         <div class="card mt-4">
             <div class="card-body">
-                <h6 style="margin-bottom: 1rem; font-weight: 600;"><i class="bi bi-info-circle"></i> Leyenda:</h6>
+                <h6 style="margin-bottom: 1rem; font-weight: 600;"><i class="bi bi-info-circle"></i> <span th:text="#{legend.title}">Leyenda:</span></h6>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
                     <div>
-                        <span class="badge" style="background: var(--success-color); padding: 0.375rem 0.75rem;"><i class="bi bi-check-circle"></i> ACTIVA</span>
-                        <span style="margin-left: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">- Reserva vigente</span>
+                        <span class="badge" style="background: var(--success-color); padding: 0.375rem 0.75rem;"><i class="bi bi-check-circle"></i> <span th:text="#{reservation.active}">ACTIVA</span></span>
+                        <span style="margin-left: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">- <span th:text="#{reservation.legend.active}">Reserva vigente</span></span>
                     </div>
                     <div>
-                        <span class="badge" style="background: var(--danger-color); padding: 0.375rem 0.75rem;"><i class="bi bi-x-circle"></i> CANCELADA</span>
-                        <span style="margin-left: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">- Reserva cancelada</span>
+                        <span class="badge" style="background: var(--danger-color); padding: 0.375rem 0.75rem;"><i class="bi bi-x-circle"></i> <span th:text="#{reservation.cancelled}">CANCELADA</span></span>
+                        <span style="margin-left: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">- <span th:text="#{reservation.legend.cancelled}">Reserva cancelada</span></span>
                     </div>
                 </div>
             </div>

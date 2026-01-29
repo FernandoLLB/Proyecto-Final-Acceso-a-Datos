@@ -20,13 +20,23 @@
                 <i class="bi bi-mortarboard-fill"></i> Gestor de Academias
             </a>
             <div class="navbar-user">
+                <!-- Language Switcher -->
+                <div class="language-switcher" style="display: flex; gap: 0.5rem; margin-right: 1rem;">
+                    <a th:href="@{''(lang='es')}" class="btn-language" th:classappend="${#locale.toString() == 'es' ? 'active' : ''}" title="Español">
+                        🇪🇸 ES
+                    </a>
+                    <a th:href="@{''(lang='en')}" class="btn-language" th:classappend="${#locale.toString() == 'en' ? 'active' : ''}" title="English">
+                        🇬🇧 EN
+                    </a>
+                </div>
+
                 <div class="navbar-user-info">
                     <div class="navbar-user-avatar" th:text="${username?.substring(0,1)?.toUpperCase()}">U</div>
                     <span class="navbar-user-name" th:text="${username}">Usuario</span>
                 </div>
                 <form th:action="@{/logout}" method="post" style="display: inline; margin: 0;">
                     <button type="submit" class="btn-logout">
-                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                        <i class="bi bi-box-arrow-right"></i> <span th:text="#{app.logout}">Cerrar Sesión</span>
                     </button>
                 </form>
             </div>
@@ -42,7 +52,7 @@
                class="sidebar-nav-link"
                th:classappend="${active == 'dashboard'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-grid-fill"></i></span>
-                <span>Dashboard</span>
+                <span th:text="#{app.dashboard}">Dashboard</span>
             </a>
         </li>
         <li class="sidebar-nav-item">
@@ -50,7 +60,7 @@
                class="sidebar-nav-link"
                th:classappend="${active == 'academias'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-building"></i></span>
-                <span>Academias</span>
+                <span th:text="#{academy.list}">Academias</span>
             </a>
         </li>
         <li class="sidebar-nav-item">
@@ -58,7 +68,7 @@
                class="sidebar-nav-link"
                th:classappend="${active == 'profesores'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-person-badge"></i></span>
-                <span>Profesores</span>
+                <span th:text="#{teacher.list}">Profesores</span>
             </a>
         </li>
     </ul>
@@ -72,7 +82,7 @@
                class="sidebar-nav-link"
                th:classappend="${active == 'dashboard'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-grid-fill"></i></span>
-                <span>Dashboard</span>
+                <span th:text="#{app.dashboard}">Dashboard</span>
             </a>
         </li>
         <li class="sidebar-nav-item">
@@ -80,7 +90,7 @@
                class="sidebar-nav-link"
                th:classappend="${active == 'alumnos'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-people-fill"></i></span>
-                <span>Alumnos</span>
+                <span th:text="#{student.list}">Alumnos</span>
             </a>
         </li>
         <li class="sidebar-nav-item">
@@ -88,7 +98,7 @@
                class="sidebar-nav-link"
                th:classappend="${active == 'cursos'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-book-fill"></i></span>
-                <span>Cursos</span>
+                <span th:text="#{course.list}">Cursos</span>
             </a>
         </li>
         <li class="sidebar-nav-item">
@@ -96,7 +106,7 @@
                class="sidebar-nav-link"
                th:classappend="${active == 'aulas'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-door-closed-fill"></i></span>
-                <span>Aulas</span>
+                <span th:text="#{classroom.list}">Aulas</span>
             </a>
         </li>
         <li class="sidebar-nav-item">
@@ -104,7 +114,7 @@
                class="sidebar-nav-link"
                th:classappend="${active == 'reservas'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-calendar-check-fill"></i></span>
-                <span>Reservas</span>
+                <span th:text="#{reservation.list}">Reservas</span>
             </a>
         </li>
     </ul>

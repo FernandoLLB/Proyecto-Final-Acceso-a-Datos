@@ -20,7 +20,7 @@
         <div class="stats-grid" th:if="${profesor != null}">
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Cursos Totales</span>
+                    <span class="stat-card-title" th:text="#{course.total}">Cursos Totales</span>
                     <div class="stat-card-icon primary">
                         <i class="bi bi-book-fill"></i>
                     </div>
@@ -30,7 +30,7 @@
 
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Cursos Activos</span>
+                    <span class="stat-card-title" th:text="#{course.active}">Cursos Activos</span>
                     <div class="stat-card-icon success">
                         <i class="bi bi-check-circle-fill"></i>
                     </div>
@@ -40,7 +40,7 @@
 
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Reservas Totales</span>
+                    <span class="stat-card-title" th:text="#{reservation.total}">Reservas Totales</span>
                     <div class="stat-card-icon primary">
                         <i class="bi bi-calendar-fill"></i>
                     </div>
@@ -130,35 +130,35 @@
         <!-- Cursos Asignados -->
         <div class="card mb-4" th:if="${profesor != null && cursos != null && !cursos.isEmpty()}">
             <div class="card-header">
-                <h3 class="card-title">Mis Cursos Asignados</h3>
+                <h3 class="card-title" th:text="#{teacher.my.courses}">Mis Cursos Asignados</h3>
             </div>
             <div class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Duración</th>
-                            <th>Fecha Inicio</th>
-                            <th>Fecha Fin</th>
-                            <th>Plazas</th>
-                            <th>Estado</th>
+                            <th th:text="#{course.name.header}">Nombre</th>
+                            <th th:text="#{app.description}">Descripción</th>
+                            <th th:text="#{course.duration.header}">Duración</th>
+                            <th th:text="#{course.start.date}">Fecha Inicio</th>
+                            <th th:text="#{course.end.date}">Fecha Fin</th>
+                            <th th:text="#{course.places.header}">Plazas</th>
+                            <th th:text="#{app.status}">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="curso : ${cursos}">
                             <td><strong th:text="${curso.nombre}">Curso 1</strong></td>
-                            <td th:text="${#strings.abbreviate(curso.descripcion ?: 'Sin descripción', 50)}">Descripción...</td>
+                            <td th:text="${#strings.abbreviate(curso.descripcion ?: #{app.no.description}, 50)}">Descripción...</td>
                             <td th:text="${curso.duracionHoras + ' h'}">40 h</td>
                             <td th:text="${#temporals.format(curso.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</td>
                             <td th:text="${#temporals.format(curso.fechaFin, 'dd/MM/yyyy')}">31/12/2026</td>
                             <td th:text="${curso.plazasDisponibles ?: 'N/A'}">20</td>
                             <td>
                                 <span th:if="${curso.activo}" class="badge badge-success">
-                                    <i class="bi bi-check-circle"></i> Activo
+                                    <i class="bi bi-check-circle"></i> <span th:text="#{app.active}">Activo</span>
                                 </span>
                                 <span th:if="${!curso.activo}" class="badge badge-secondary">
-                                    <i class="bi bi-x-circle"></i> Inactivo
+                                    <i class="bi bi-x-circle"></i> <span th:text="#{app.inactive}">Inactivo</span>
                                 </span>
                             </td>
                         </tr>
@@ -170,35 +170,35 @@
         <!-- Reservas de Aula -->
         <div class="card mb-4" th:if="${profesor != null && reservas != null && !reservas.isEmpty()}">
             <div class="card-header">
-                <h3 class="card-title">Mis Reservas de Aula</h3>
+                <h3 class="card-title" th:text="#{teacher.my.reservations}">Mis Reservas de Aula</h3>
             </div>
             <div class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Aula</th>
-                            <th>Descripción</th>
-                            <th>Fecha/Hora Inicio</th>
-                            <th>Fecha/Hora Fin</th>
-                            <th>Estado</th>
-                            <th>Creada</th>
+                            <th th:text="#{reservation.classroom.header}">Aula</th>
+                            <th th:text="#{app.description}">Descripción</th>
+                            <th th:text="#{reservation.start.datetime.header}">Fecha/Hora Inicio</th>
+                            <th th:text="#{reservation.end.datetime.header}">Fecha/Hora Fin</th>
+                            <th th:text="#{app.status}">Estado</th>
+                            <th th:text="#{app.date}">Creada</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="reserva : ${reservas}">
                             <td><strong th:text="${reserva.aula.nombre}">Aula 101</strong></td>
-                            <td th:text="${#strings.abbreviate(reserva.descripcion ?: 'Sin descripción', 40)}">Descripción...</td>
+                            <td th:text="${#strings.abbreviate(reserva.descripcion ?: #{app.no.description}, 40)}">Descripción...</td>
                             <td th:text="${#temporals.format(reserva.fechaInicio, 'dd/MM/yyyy HH:mm')}">01/01/2026 09:00</td>
                             <td th:text="${#temporals.format(reserva.fechaFin, 'dd/MM/yyyy HH:mm')}">01/01/2026 11:00</td>
                             <td>
                                 <span th:if="${reserva.estado.name() == 'ACTIVA'}" class="badge badge-success">
-                                    <i class="bi bi-check-circle"></i> Activa
+                                    <i class="bi bi-check-circle"></i> <span th:text="#{reservation.active}">Activa</span>
                                 </span>
                                 <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge badge-danger">
-                                    <i class="bi bi-x-circle"></i> Cancelada
+                                    <i class="bi bi-x-circle"></i> <span th:text="#{reservation.cancelled}">Cancelada</span>
                                 </span>
                                 <span th:if="${reserva.estado.name() == 'COMPLETADA'}" class="badge badge-secondary">
-                                    <i class="bi bi-check-circle-fill"></i> Completada
+                                    <i class="bi bi-check-circle-fill"></i> <span th:text="#{reservation.completed}">Completada</span>
                                 </span>
                             </td>
                             <td th:text="${#temporals.format(reserva.fechaCreacion, 'dd/MM/yyyy')}">27/01/2026</td>
@@ -215,8 +215,8 @@
                     <div class="empty-state-icon">
                         <i class="bi bi-inbox"></i>
                     </div>
-                    <h3 class="empty-state-title">Sin Cursos o Reservas</h3>
-                    <p class="empty-state-description">Actualmente no tiene cursos asignados ni reservas de aula creadas.</p>
+                    <h3 class="empty-state-title" th:text="#{teacher.no.courses.or.reservations}">Sin Cursos o Reservas</h3>
+                    <p class="empty-state-description" th:text="#{teacher.no.courses.or.reservations.message}">Actualmente no tiene cursos asignados ni reservas de aula creadas.</p>
                 </div>
             </div>
         </div>

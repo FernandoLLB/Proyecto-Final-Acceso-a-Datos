@@ -147,6 +147,14 @@ public class MatriculaService {
         matriculaRepository.save(matricula);
     }
 
+    @Transactional
+    public void eliminar(Long id) {
+        Matricula matricula = obtenerPorId(id);
+        // Eliminar físicamente la matrícula de la base de datos
+        // Esto permite eliminar cursos que tengan matrículas completadas o canceladas
+        matriculaRepository.delete(matricula);
+    }
+
     @Transactional(readOnly = true)
     public long contarMatriculasActivasCurso(Long cursoId) {
         return matriculaRepository.countByCursoIdAndEstado(cursoId, EstadoMatricula.ACTIVA);

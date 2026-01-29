@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Academias - Administrador')}"></head>
+<head th:replace="~{fragments :: head(#{academy.title} + ' - ' + #{role.admin})}"></head>
 <body>
     <nav th:replace="~{fragments :: navbar('admin', ${#authentication.name})}"></nav>
     <aside th:replace="~{fragments :: sidebar-admin('academias')}"></aside>
@@ -9,11 +9,11 @@
         <div class="page-header">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h1 class="page-title">Gestión de Academias</h1>
-                    <p class="page-subtitle">Administra todas las academias del sistema</p>
+                    <h1 class="page-title" th:text="#{academy.title}">Gestión de Academias</h1>
+                    <p class="page-subtitle" th:text="#{academy.subtitle}">Administra todas las academias del sistema</p>
                 </div>
                 <a th:href="@{/admin/academias/nueva}" class="btn btn-primary">
-                    <i class="bi bi-plus-lg"></i> Nueva Academia
+                    <i class="bi bi-plus-lg"></i> <span th:text="#{academy.new}">Nueva Academia</span>
                 </a>
             </div>
         </div>
@@ -24,13 +24,13 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>NIF/CIF</th>
-                            <th>Email Contacto</th>
-                            <th>Teléfono</th>
-                            <th>Estado</th>
-                            <th>Fecha Alta</th>
-                            <th>Acciones</th>
+                            <th th:text="#{app.name.label}">Nombre</th>
+                            <th th:text="#{academy.nif}">NIF/CIF</th>
+                            <th th:text="#{academy.email.contact}">Email Contacto</th>
+                            <th th:text="#{app.phone}">Teléfono</th>
+                            <th th:text="#{app.status}">Estado</th>
+                            <th th:text="#{academy.registration.date}">Fecha Alta</th>
+                            <th th:text="#{app.actions}">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,30 +44,30 @@
                             <td th:text="${academia.telefono}">600123456</td>
                             <td>
                                 <span th:if="${academia.activa}" class="badge badge-success">
-                                    <i class="bi bi-check-circle"></i> Activa
+                                    <i class="bi bi-check-circle"></i> <span th:text="#{app.active}">Activa</span>
                                 </span>
                                 <span th:unless="${academia.activa}" class="badge badge-secondary">
-                                    <i class="bi bi-x-circle"></i> Inactiva
+                                    <i class="bi bi-x-circle"></i> <span th:text="#{app.inactive}">Inactiva</span>
                                 </span>
                             </td>
                             <td th:text="${#temporals.format(academia.fechaAlta, 'dd/MM/yyyy HH:mm')}">20/01/2026</td>
                             <td>
                                 <div class="action-buttons">
                                     <a th:href="@{/admin/academias/{id}/editar(id=${academia.id})}" class="btn btn-sm btn-primary">
-                                        <i class="bi bi-pencil"></i> Editar
+                                        <i class="bi bi-pencil"></i> <span th:text="#{app.edit}">Editar</span>
                                     </a>
                                     <form th:if="${academia.activa}"
                                           th:action="@{/admin/academias/{id}/desactivar(id=${academia.id})}"
                                           method="post" style="display:inline;">
                                         <button type="submit" class="btn btn-sm btn-warning">
-                                            <i class="bi bi-pause-circle"></i> Desactivar
+                                            <i class="bi bi-pause-circle"></i> <span th:text="#{academy.deactivate}">Desactivar</span>
                                         </button>
                                     </form>
                                     <form th:unless="${academia.activa}"
                                           th:action="@{/admin/academias/{id}/activar(id=${academia.id})}"
                                           method="post" style="display:inline;">
                                         <button type="submit" class="btn btn-sm btn-success">
-                                            <i class="bi bi-play-circle"></i> Activar
+                                            <i class="bi bi-play-circle"></i> <span th:text="#{academy.activate}">Activar</span>
                                         </button>
                                     </form>
                                 </div>

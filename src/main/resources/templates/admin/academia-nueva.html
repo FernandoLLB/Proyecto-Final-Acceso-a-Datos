@@ -1,59 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Nueva Academia - Administrador')}"></head>
+<head th:replace="~{fragments :: head(#{academy.new.title} + ' - ' + #{role.admin})}"></head>
 <body>
     <nav th:replace="~{fragments :: navbar('admin', ${#authentication.name})}"></nav>
     <aside th:replace="~{fragments :: sidebar-admin('academias')}"></aside>
 
     <main class="main-content fade-in">
         <div class="page-header">
-            <h1 class="page-title">Nueva Academia</h1>
-            <p class="page-subtitle">Crea una nueva academia en el sistema</p>
+            <h1 class="page-title" th:text="#{academy.new.title}">Nueva Academia</h1>
+            <p class="page-subtitle" th:text="#{academy.new.description}">Crea una nueva academia en el sistema</p>
         </div>
 
         <div style="max-width: 800px;">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Información de la Academia</h3>
+                    <h3 class="card-title" th:text="#{academy.information}">Información de la Academia</h3>
                 </div>
                 <div class="card-body">
                     <form th:action="@{/admin/academias/crear}" th:object="${academia}" method="post">
                         <div class="form-group">
-                            <label for="nombre" class="form-label">Nombre <span style="color: var(--danger-color);">*</span></label>
+                            <label for="nombre" class="form-label" th:text="#{app.name.label} + ' *'">Nombre <span style="color: var(--danger-color);">*</span></label>
                             <input type="text" class="form-control" id="nombre" th:field="*{nombre}"
-                                   placeholder="Nombre de la academia" required>
+                                   th:placeholder="#{academy.name}" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="nifCif" class="form-label">NIF/CIF</label>
+                            <label for="nifCif" class="form-label" th:text="#{academy.nif}">NIF/CIF</label>
                             <input type="text" class="form-control" id="nifCif" th:field="*{nifCif}"
                                    placeholder="12345678A">
                         </div>
 
                         <div class="form-group">
-                            <label for="emailContacto" class="form-label">Email de Contacto</label>
+                            <label for="emailContacto" class="form-label" th:text="#{academy.email.contact}">Email de Contacto</label>
                             <input type="email" class="form-control" id="emailContacto" th:field="*{emailContacto}"
                                    placeholder="contacto@academia.com">
                         </div>
 
                         <div class="form-group">
-                            <label for="telefono" class="form-label">Teléfono</label>
+                            <label for="telefono" class="form-label" th:text="#{app.phone}">Teléfono</label>
                             <input type="text" class="form-control" id="telefono" th:field="*{telefono}"
                                    placeholder="600 123 456">
                         </div>
 
                         <div class="form-group">
-                            <label for="direccion" class="form-label">Dirección</label>
+                            <label for="direccion" class="form-label" th:text="#{app.address}">Dirección</label>
                             <textarea class="form-control" id="direccion" th:field="*{direccion}" rows="3"
-                                      placeholder="Dirección completa de la academia"></textarea>
+                                      th:placeholder="#{academy.address}"></textarea>
                         </div>
 
                         <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
                             <a th:href="@{/admin/academias/lista}" class="btn btn-outline">
-                                <i class="bi bi-x-lg"></i> Cancelar
+                                <i class="bi bi-x-lg"></i> <span th:text="#{app.cancel}">Cancelar</span>
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-lg"></i> Crear Academia
+                                <i class="bi bi-check-lg"></i> <span th:text="#{academy.create.button}">Crear Academia</span>
                             </button>
                         </div>
                     </form>

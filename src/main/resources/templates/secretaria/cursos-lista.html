@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Gestión de Cursos')}"></head>
+<head th:replace="~{fragments :: head(#{course.title})}"></head>
 <body>
     <nav th:replace="~{fragments :: navbar('secretaria', ${#authentication.name})}"></nav>
     <aside th:replace="~{fragments :: sidebar-secretaria('cursos')}"></aside>
@@ -9,12 +9,12 @@
         <div class="page-header">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h1 class="page-title"><i class="bi bi-book-fill"></i> Gestión de Cursos</h1>
-                    <p class="page-subtitle">Administra los cursos de tu academia</p>
+                    <h1 class="page-title"><i class="bi bi-book-fill"></i> <span th:text="#{course.title}">Gestión de Cursos</span></h1>
+                    <p class="page-subtitle" th:text="#{course.manage}">Administra los cursos de tu academia</p>
                 </div>
                 <div style="display: flex; gap: 0.75rem;">
                     <a th:href="@{/secretaria/cursos/nuevo}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle"></i> Nuevo Curso
+                        <i class="bi bi-plus-circle"></i> <span th:text="#{course.new.button}">Nuevo Curso</span>
                     </a>
                 </div>
             </div>
@@ -24,6 +24,9 @@
         <div th:if="${success}" class="alert alert-success" style="margin-bottom: 1.5rem; border-radius: var(--radius-lg); border: 1px solid #10b981; background: rgba(16, 185, 129, 0.1); color: #065f46; padding: 1rem 1.25rem;">
             <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
         </div>
+        <div th:if="${errorHtml}" class="alert alert-danger" style="margin-bottom: 1.5rem; border-radius: var(--radius-lg); border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.1); color: #991b1b; padding: 1rem 1.25rem;">
+            <i class="bi bi-exclamation-triangle"></i> <span th:utext="${errorHtml}"></span>
+        </div>
         <div th:if="${error}" class="alert alert-danger" style="margin-bottom: 1.5rem; border-radius: var(--radius-lg); border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.1); color: #991b1b; padding: 1rem 1.25rem;">
             <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
         </div>
@@ -32,7 +35,7 @@
         <div class="stats-grid mb-4">
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Total Cursos</span>
+                    <span class="stat-card-title" th:text="#{course.total}">Total Cursos</span>
                     <div class="stat-card-icon primary">
                         <i class="bi bi-book-fill"></i>
                     </div>
@@ -41,7 +44,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Cursos Activos</span>
+                    <span class="stat-card-title" th:text="#{course.active}">Cursos Activos</span>
                     <div class="stat-card-icon success">
                         <i class="bi bi-check-circle-fill"></i>
                     </div>
@@ -50,7 +53,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Cursos Inactivos</span>
+                    <span class="stat-card-title" th:text="#{course.inactive}">Cursos Inactivos</span>
                     <div class="stat-card-icon warning">
                         <i class="bi bi-x-circle-fill"></i>
                     </div>
@@ -62,12 +65,12 @@
         <!-- Tabla de cursos -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><i class="bi bi-list-ul"></i> Listado de Cursos</h3>
+                <h3 class="card-title"><i class="bi bi-list-ul"></i> <span th:text="#{course.list.title}">Listado de Cursos</span></h3>
             </div>
             <div class="card-body">
                 <div th:if="${#lists.isEmpty(cursos)}" class="alert alert-info" style="border-radius: var(--radius-lg); border: 1px solid var(--primary-color); background: rgba(99, 102, 241, 0.1); color: var(--primary-color); padding: 1rem 1.25rem;">
-                    <i class="bi bi-info-circle"></i> No hay cursos registrados.
-                    <a th:href="@{/secretaria/cursos/nuevo}" style="color: var(--primary-color); font-weight: 600;">Crear el primer curso</a>
+                    <i class="bi bi-info-circle"></i> <span th:text="#{course.no.registered}">No hay cursos registrados.</span>
+                    <a th:href="@{/secretaria/cursos/nuevo}" style="color: var(--primary-color); font-weight: 600;" th:text="#{course.create.first}">Crear el primer curso</a>
                 </div>
 
                 <div th:unless="${#lists.isEmpty(cursos)}" class="table-responsive">
@@ -75,14 +78,14 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Profesor</th>
-                                <th>Duración</th>
-                                <th>Precio</th>
-                                <th>Fechas</th>
-                                <th>Plazas</th>
-                                <th>Estado</th>
-                                <th style="width: 220px;">Acciones</th>
+                                <th th:text="#{course.name.header}">Nombre</th>
+                                <th th:text="#{course.teacher.header}">Profesor</th>
+                                <th th:text="#{course.duration.header}">Duración</th>
+                                <th th:text="#{course.price.header}">Precio</th>
+                                <th th:text="#{course.dates.header}">Fechas</th>
+                                <th th:text="#{course.places.header}">Plazas</th>
+                                <th th:text="#{app.status}">Estado</th>
+                                <th style="width: 220px;" th:text="#{app.actions}">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -98,7 +101,7 @@
                                 </td>
                                 <td>
                                     <i class="bi bi-clock"></i>
-                                    <span th:text="${curso.duracionHoras}">40</span> horas
+                                    <span th:text="${curso.duracionHoras}">40</span> <span th:text="#{course.duration.hours}">horas</span>
                                 </td>
                                 <td>
                                     <span th:if="${curso.precio != null}" th:text="${#numbers.formatDecimal(curso.precio, 1, 2) + ' €'}">
@@ -117,26 +120,26 @@
                                 </td>
                                 <td>
                                     <span th:if="${curso.plazasDisponibles != null}" th:text="${curso.plazasDisponibles}">30</span>
-                                    <span th:unless="${curso.plazasDisponibles != null}">Ilimitadas</span>
+                                    <span th:unless="${curso.plazasDisponibles != null}" th:text="#{course.unlimited}">Ilimitadas</span>
                                 </td>
                                 <td>
                                     <span th:if="${curso.activo}" class="badge bg-success">
-                                        <i class="bi bi-check-circle"></i> Activo
+                                        <i class="bi bi-check-circle"></i> <span th:text="#{app.active}">Activo</span>
                                     </span>
                                     <span th:unless="${curso.activo}" class="badge bg-secondary">
-                                        <i class="bi bi-x-circle"></i> Inactivo
+                                        <i class="bi bi-x-circle"></i> <span th:text="#{app.inactive}">Inactivo</span>
                                     </span>
                                 </td>
                                 <td>
                                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                                         <a th:href="@{/secretaria/matriculas/curso/{id}(id=${curso.id})}"
                                            class="btn btn-primary btn-sm">
-                                            <i class="bi bi-people"></i> Matrículas
+                                            <i class="bi bi-people"></i> <span th:text="#{course.enrollments}">Matrículas</span>
                                         </a>
 
                                         <a th:href="@{/secretaria/cursos/{id}/editar(id=${curso.id})}"
                                            class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil"></i> Editar
+                                            <i class="bi bi-pencil"></i> <span th:text="#{app.edit}">Editar</span>
                                         </a>
 
                                         <form th:if="${curso.activo}"
@@ -144,8 +147,8 @@
                                               method="post"
                                               style="margin: 0;">
                                             <button type="submit" class="btn btn-secondary btn-sm"
-                                                    onclick="return confirm('¿Desactivar este curso?');">
-                                                <i class="bi bi-toggle-off"></i> Desactivar
+                                                    th:onclick="'return confirm(\'' + #{course.confirm.deactivate} + '\');'">
+                                                <i class="bi bi-toggle-off"></i> <span th:text="#{course.deactivate}">Desactivar</span>
                                             </button>
                                         </form>
 
@@ -154,7 +157,16 @@
                                               method="post"
                                               style="margin: 0;">
                                             <button type="submit" class="btn btn-success btn-sm">
-                                                <i class="bi bi-toggle-on"></i> Activar
+                                                <i class="bi bi-toggle-on"></i> <span th:text="#{course.activate}">Activar</span>
+                                            </button>
+                                        </form>
+
+                                        <form th:action="@{/secretaria/cursos/{id}/eliminar(id=${curso.id})}"
+                                              method="post"
+                                              style="margin: 0;">
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('¿Está seguro de eliminar este curso? Esta acción no se puede deshacer y solo es posible si no tiene matrículas.');">
+                                                <i class="bi bi-trash"></i> Eliminar
                                             </button>
                                         </form>
                                     </div>

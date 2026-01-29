@@ -1,8 +1,11 @@
 package es.fempa.acd.demosecurityproductos.service;
 
+import es.fempa.acd.demosecurityproductos.exception.CursoConMatriculasException;
 import es.fempa.acd.demosecurityproductos.model.Curso;
+import es.fempa.acd.demosecurityproductos.model.Matricula;
 import es.fempa.acd.demosecurityproductos.model.Profesor;
 import es.fempa.acd.demosecurityproductos.repository.CursoRepository;
+import es.fempa.acd.demosecurityproductos.repository.MatriculaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,13 +16,16 @@ import java.util.List;
 public class CursoService {
 
     private final CursoRepository cursoRepository;
+    private final MatriculaRepository matriculaRepository;
     private final ProfesorService profesorService;
     private final SecurityUtils securityUtils;
 
     public CursoService(CursoRepository cursoRepository,
+                       MatriculaRepository matriculaRepository,
                        ProfesorService profesorService,
                        SecurityUtils securityUtils) {
         this.cursoRepository = cursoRepository;
+        this.matriculaRepository = matriculaRepository;
         this.profesorService = profesorService;
         this.securityUtils = securityUtils;
     }
@@ -146,6 +152,21 @@ public class CursoService {
         Curso curso = obtenerPorId(id);
         curso.setActivo(false);
         cursoRepository.save(curso);
+    }
+
+    @Transactional
+    public void eliminar(Long id) {
+        Curso curso = obtenerPorId(id);
+
+        // Verificar si el curso tiene matrículas
+        List<Matricula> matriculas = matriculaRepository.findByCursoId(id);
+
+        if (!matriculas.isEmpty()) {
+            throw new CursoConMatriculasException(id, matriculas.size());
+        }
+
+        // Eliminar el curso
+        cursoRepository.delete(curso);
     }
 
     @Transactional(readOnly = true)

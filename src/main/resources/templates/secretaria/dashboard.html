@@ -1,67 +1,67 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Dashboard - Secretaría')}"></head>
+<head th:replace="~{fragments :: head(#{dashboard.title} + ' - ' + #{role.secretary})}"></head>
 <body>
     <nav th:replace="~{fragments :: navbar('secretaria', ${#authentication.name})}"></nav>
     <aside th:replace="~{fragments :: sidebar-secretaria('dashboard')}"></aside>
 
     <main class="main-content fade-in">
         <div class="page-header">
-            <h1 class="page-title">Panel de Secretaría</h1>
-            <p class="page-subtitle" th:text="'Academia: ' + ${usuario?.academia?.nombre}">Gestiona tu academia</p>
+            <h1 class="page-title" th:text="#{secretary.panel}">Panel de Secretaría</h1>
+            <p class="page-subtitle" th:text="#{secretary.academy} + ': ' + ${usuario?.academia?.nombre}">Gestiona tu academia</p>
         </div>
 
         <!-- KPIs Operativos -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Alumnos Activos</span>
+                    <span class="stat-card-title" th:text="#{student.active}">Alumnos Activos</span>
                     <div class="stat-card-icon success">
                         <i class="bi bi-people-fill"></i>
                     </div>
                 </div>
                 <div class="stat-card-value" th:text="${stats?.alumnosActivos ?: 0}">0</div>
                 <a th:href="@{/secretaria/alumnos}" class="btn btn-sm btn-outline" style="margin-top: 0.75rem;">
-                    Ver todos <i class="bi bi-arrow-right"></i>
+                    <span th:text="#{stats.view.all}">Ver todos</span> <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
 
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Alumnos Inactivos</span>
+                    <span class="stat-card-title" th:text="#{student.inactive}">Alumnos Inactivos</span>
                     <div class="stat-card-icon warning">
                         <i class="bi bi-person-x-fill"></i>
                     </div>
                 </div>
                 <div class="stat-card-value" th:text="${stats?.alumnosInactivos ?: 0}">0</div>
                 <a th:href="@{/secretaria/alumnos?estado=INACTIVO}" class="btn btn-sm btn-outline" style="margin-top: 0.75rem;">
-                    Ver listado <i class="bi bi-arrow-right"></i>
+                    <span th:text="#{stats.view.list}">Ver listado</span> <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
 
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Aulas Activas</span>
+                    <span class="stat-card-title" th:text="#{classroom.active}">Aulas Activas</span>
                     <div class="stat-card-icon primary">
                         <i class="bi bi-door-closed-fill"></i>
                     </div>
                 </div>
                 <div class="stat-card-value" th:text="${stats?.aulasActivas ?: 0}">0</div>
                 <a th:href="@{/secretaria/aulas}" class="btn btn-sm btn-outline" style="margin-top: 0.75rem;">
-                    Gestionar <i class="bi bi-arrow-right"></i>
+                    <span th:text="#{stats.manage}">Gestionar</span> <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
 
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Reservas Activas</span>
+                    <span class="stat-card-title" th:text="#{reservation.active}">Reservas Activas</span>
                     <div class="stat-card-icon primary">
                         <i class="bi bi-calendar-check-fill"></i>
                     </div>
                 </div>
                 <div class="stat-card-value" th:text="${stats?.reservasActivas ?: 0}">0</div>
                 <a th:href="@{/secretaria/reservas}" class="btn btn-sm btn-outline" style="margin-top: 0.75rem;">
-                    Ver reservas <i class="bi bi-arrow-right"></i>
+                    <span th:text="#{stats.view.reservations}">Ver reservas</span> <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
         </div>
@@ -69,25 +69,25 @@
         <!-- Acciones Rápidas -->
         <div class="card mb-4">
             <div class="card-header">
-                <h3 class="card-title">Acciones Rápidas</h3>
+                <h3 class="card-title" th:text="#{dashboard.quick.actions}">Acciones Rápidas</h3>
             </div>
             <div class="card-body">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
                     <a th:href="@{/secretaria/alumnos/nuevo}" class="btn btn-success" style="height: auto; padding: 1.5rem;">
                         <i class="bi bi-person-plus" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
-                        <span style="font-size: 1rem;">Alta de Alumno</span>
+                        <span style="font-size: 1rem;" th:text="#{student.new}">Alta de Alumno</span>
                     </a>
                     <a th:href="@{/secretaria/cursos/nuevo}" class="btn btn-primary" style="height: auto; padding: 1.5rem;">
                         <i class="bi bi-book" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
-                        <span style="font-size: 1rem;">Crear Curso</span>
+                        <span style="font-size: 1rem;" th:text="#{course.new}">Crear Curso</span>
                     </a>
                     <a th:href="@{/secretaria/aulas/nueva}" class="btn btn-primary" style="height: auto; padding: 1.5rem;">
                         <i class="bi bi-door-open" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
-                        <span style="font-size: 1rem;">Crear Aula</span>
+                        <span style="font-size: 1rem;" th:text="#{classroom.new}">Crear Aula</span>
                     </a>
                     <a th:href="@{/secretaria/reservas/nueva}" class="btn btn-primary" style="height: auto; padding: 1.5rem;">
                         <i class="bi bi-calendar-plus" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
-                        <span style="font-size: 1rem;">Nueva Reserva</span>
+                        <span style="font-size: 1rem;" th:text="#{reservation.new}">Nueva Reserva</span>
                     </a>
                 </div>
             </div>
@@ -96,7 +96,7 @@
         <!-- Últimos Alumnos Registrados -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Últimos Alumnos Registrados</h3>
+                <h3 class="card-title" th:text="#{secretary.last.students}">Últimos Alumnos Registrados</h3>
             </div>
             <div th:if="${#lists.isEmpty(ultimosAlumnos)}" class="card-body">
                 <div class="empty-state">

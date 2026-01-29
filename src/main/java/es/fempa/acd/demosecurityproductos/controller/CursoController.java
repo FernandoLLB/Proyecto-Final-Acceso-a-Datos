@@ -1,5 +1,6 @@
 package es.fempa.acd.demosecurityproductos.controller;
 
+import es.fempa.acd.demosecurityproductos.exception.CursoConMatriculasException;
 import es.fempa.acd.demosecurityproductos.model.Academia;
 import es.fempa.acd.demosecurityproductos.model.Curso;
 import es.fempa.acd.demosecurityproductos.model.Profesor;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/secretaria/cursos")
-@PreAuthorize("hasRole('SECRETARIA')")
+@PreAuthorize("hasAnyRole('ADMIN', 'SECRETARIA')")
 public class CursoController {
 
     private final CursoService cursoService;
@@ -201,6 +202,25 @@ public class CursoController {
             redirectAttributes.addFlashAttribute("success", "Curso desactivado exitosamente");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/secretaria/cursos";
+    }
+
+    @PostMapping("/{id}/eliminar")
+    public String eliminarCurso(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            cursoService.eliminar(id);
+            redirectAttributes.addFlashAttribute("success", "Curso eliminado exitosamente");
+        } catch (CursoConMatriculasException e) {
+            // Crear mensaje con enlace directo a las matrículas
+            String mensajeHtml = e.getMessage() +
+                " <a href='/secretaria/matriculas/curso/" + e.getCursoId() +
+                "' class='alert-link'><strong>Click aquí para ver y cancelar las matrículas</strong></a>";
+            redirectAttributes.addFlashAttribute("errorHtml", mensajeHtml);
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar el curso: " + e.getMessage());
         }
         return "redirect:/secretaria/cursos";
     }

@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/secretaria/matriculas")
-@PreAuthorize("hasRole('SECRETARIA')")
+@PreAuthorize("hasAnyRole('ADMIN', 'SECRETARIA')")
 public class MatriculaController {
 
     private final MatriculaService matriculaService;
@@ -109,6 +109,21 @@ public class MatriculaController {
             return "redirect:/secretaria/matriculas/curso/" + cursoId;
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/secretaria/cursos";
+        }
+    }
+
+    @PostMapping("/{id}/eliminar")
+    public String eliminarMatricula(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            Matricula matricula = matriculaService.obtenerPorId(id);
+            Long cursoId = matricula.getCurso().getId();
+
+            matriculaService.eliminar(id);
+            redirectAttributes.addFlashAttribute("success", "Matrícula eliminada de la base de datos");
+            return "redirect:/secretaria/matriculas/curso/" + cursoId;
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar la matrícula: " + e.getMessage());
             return "redirect:/secretaria/cursos";
         }
     }

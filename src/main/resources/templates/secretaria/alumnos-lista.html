@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Gestión de Alumnos')}"></head>
+<head th:replace="~{fragments :: head(#{student.title})}"></head>
 <body>
     <nav th:replace="~{fragments :: navbar('secretaria', ${#authentication.name})}"></nav>
     <aside th:replace="~{fragments :: sidebar-secretaria('alumnos')}"></aside>
@@ -9,12 +9,12 @@
         <div class="page-header">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h1 class="page-title"><i class="bi bi-people-fill"></i> Gestión de Alumnos</h1>
-                    <p class="page-subtitle">Administra los alumnos de tu academia</p>
+                    <h1 class="page-title"><i class="bi bi-people-fill"></i> <span th:text="#{student.title}">Gestión de Alumnos</span></h1>
+                    <p class="page-subtitle" th:text="#{student.manage}">Administra los alumnos de tu academia</p>
                 </div>
                 <div style="display: flex; gap: 0.75rem;">
                     <a th:href="@{/secretaria/alumnos/nuevo}" class="btn btn-primary">
-                        <i class="bi bi-person-plus"></i> Nuevo Alumno
+                        <i class="bi bi-person-plus"></i> <span th:text="#{student.new}">Nuevo Alumno</span>
                     </a>
                 </div>
             </div>
@@ -31,26 +31,26 @@
         <!-- Filtros -->
         <div class="card mb-4">
             <div class="card-header">
-                <h3 class="card-title"><i class="bi bi-funnel"></i> Filtros</h3>
+                <h3 class="card-title"><i class="bi bi-funnel"></i> <span th:text="#{filter.title}">Filtros</span></h3>
             </div>
             <div class="card-body">
                 <form th:action="@{/secretaria/alumnos}" method="get" style="display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 1rem; align-items: end;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="estado" class="form-label">Estado de Matrícula</label>
+                        <label for="estado" class="form-label" th:text="#{filter.enrollment.status}">Estado de Matrícula</label>
                         <select id="estado" name="estado" class="form-select">
-                            <option value="">Todos</option>
-                            <option value="ACTIVO" th:selected="${estadoFiltro == 'ACTIVO'}">Activos</option>
-                            <option value="INACTIVO" th:selected="${estadoFiltro == 'INACTIVO'}">Inactivos</option>
-                            <option value="COMPLETADO" th:selected="${estadoFiltro == 'COMPLETADO'}">Completados</option>
-                            <option value="SUSPENDIDO" th:selected="${estadoFiltro == 'SUSPENDIDO'}">Suspendidos</option>
+                            <option value="" th:text="#{filter.all}">Todos</option>
+                            <option value="ACTIVO" th:selected="${estadoFiltro == 'ACTIVO'}" th:text="#{student.active}">Activos</option>
+                            <option value="INACTIVO" th:selected="${estadoFiltro == 'INACTIVO'}" th:text="#{student.inactive}">Inactivos</option>
+                            <option value="COMPLETADO" th:selected="${estadoFiltro == 'COMPLETADO'}" th:text="#{student.completed}">Completados</option>
+                            <option value="SUSPENDIDO" th:selected="${estadoFiltro == 'SUSPENDIDO'}" th:text="#{student.suspended}">Suspendidos</option>
                         </select>
                     </div>
                     <div></div>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-search"></i> Filtrar
+                        <i class="bi bi-search"></i> <span th:text="#{app.filter}">Filtrar</span>
                     </button>
                     <a th:href="@{/secretaria/alumnos}" class="btn btn-outline">
-                        <i class="bi bi-x-circle"></i> Limpiar
+                        <i class="bi bi-x-circle"></i> <span th:text="#{app.clear}">Limpiar</span>
                     </a>
                 </form>
             </div>
@@ -60,7 +60,7 @@
         <div class="stats-grid mb-4">
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Total Alumnos</span>
+                    <span class="stat-card-title" th:text="#{student.total}">Total Alumnos</span>
                     <div class="stat-card-icon primary">
                         <i class="bi bi-people-fill"></i>
                     </div>
@@ -69,7 +69,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Activos</span>
+                    <span class="stat-card-title" th:text="#{student.active}">Activos</span>
                     <div class="stat-card-icon success">
                         <i class="bi bi-check-circle-fill"></i>
                     </div>
@@ -78,7 +78,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Inactivos</span>
+                    <span class="stat-card-title" th:text="#{student.inactive}">Inactivos</span>
                     <div class="stat-card-icon warning">
                         <i class="bi bi-x-circle-fill"></i>
                     </div>
@@ -87,7 +87,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Otros</span>
+                    <span class="stat-card-title" th:text="#{student.other}">Otros</span>
                     <div class="stat-card-icon primary">
                         <i class="bi bi-info-circle-fill"></i>
                     </div>
@@ -99,12 +99,12 @@
         <!-- Tabla de alumnos -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title"><i class="bi bi-list-ul"></i> Listado de Alumnos</h3>
+                <h3 class="card-title"><i class="bi bi-list-ul"></i> <span th:text="#{student.list}">Listado de Alumnos</span></h3>
             </div>
             <div class="card-body">
                 <div th:if="${#lists.isEmpty(alumnos)}" class="alert alert-info" style="border-radius: var(--radius-lg); border: 1px solid var(--primary-color); background: rgba(99, 102, 241, 0.1); color: var(--primary-color); padding: 1rem 1.25rem;">
-                    <i class="bi bi-info-circle"></i> No hay alumnos registrados.
-                    <a th:href="@{/secretaria/alumnos/nuevo}" style="color: var(--primary-color); font-weight: 600;">Dar de alta el primer alumno</a>
+                    <i class="bi bi-info-circle"></i> <span th:text="#{student.no.registered}">No hay alumnos registrados</span>.
+                    <a th:href="@{/secretaria/alumnos/nuevo}" style="color: var(--primary-color); font-weight: 600;" th:text="#{student.create.first}">Dar de alta el primer alumno</a>
                 </div>
 
                 <div th:unless="${#lists.isEmpty(alumnos)}" class="table-responsive">
@@ -112,13 +112,13 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nombre Completo</th>
-                                <th>Usuario</th>
-                                <th>Email</th>
-                                <th>Fecha Registro</th>
-                                <th>Estado Matrícula</th>
-                                <th>Observaciones</th>
-                                <th style="width: 200px;">Acciones</th>
+                                <th th:text="#{student.fullname}">Nombre Completo</th>
+                                <th th:text="#{login.username}">Usuario</th>
+                                <th th:text="#{app.email}">Email</th>
+                                <th th:text="#{student.registration.date}">Fecha Registro</th>
+                                <th th:text="#{student.enrollment.status}">Estado Matrícula</th>
+                                <th th:text="#{student.observations}">Observaciones</th>
+                                <th style="width: 200px;" th:text="#{app.actions}">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,16 +136,16 @@
                                 </td>
                                 <td>
                                     <span th:if="${alumno.estadoMatricula == 'ACTIVO'}" class="badge bg-success">
-                                        <i class="bi bi-check-circle"></i> ACTIVO
+                                        <i class="bi bi-check-circle"></i> <span th:text="#{student.active}">ACTIVO</span>
                                     </span>
                                     <span th:if="${alumno.estadoMatricula == 'INACTIVO'}" class="badge bg-secondary">
-                                        <i class="bi bi-x-circle"></i> INACTIVO
+                                        <i class="bi bi-x-circle"></i> <span th:text="#{student.inactive}">INACTIVO</span>
                                     </span>
                                     <span th:if="${alumno.estadoMatricula == 'COMPLETADO'}" class="badge bg-primary">
-                                        <i class="bi bi-trophy"></i> COMPLETADO
+                                        <i class="bi bi-trophy"></i> <span th:text="#{student.completed}">COMPLETADO</span>
                                     </span>
                                     <span th:if="${alumno.estadoMatricula == 'SUSPENDIDO'}" class="badge bg-warning">
-                                        <i class="bi bi-pause-circle"></i> SUSPENDIDO
+                                        <i class="bi bi-pause-circle"></i> <span th:text="#{student.suspended}">SUSPENDIDO</span>
                                     </span>
                                 </td>
                                 <td>
@@ -157,7 +157,7 @@
                                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                                         <a th:href="@{/secretaria/alumnos/{id}/editar(id=${alumno.id})}"
                                            class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil"></i> Editar
+                                            <i class="bi bi-pencil"></i> <span th:text="#{app.edit}">Editar</span>
                                         </a>
 
                                         <form th:if="${alumno.estadoMatricula == 'INACTIVO'}"
@@ -165,7 +165,7 @@
                                               method="post"
                                               style="margin: 0;">
                                             <button type="submit" class="btn btn-success btn-sm">
-                                                <i class="bi bi-check-circle"></i> Activar
+                                                <i class="bi bi-check-circle"></i> <span th:text="#{student.activate}">Activar</span>
                                             </button>
                                         </form>
 
@@ -175,8 +175,8 @@
                                               style="margin: 0;">
                                             <button type="submit"
                                                     class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('¿Está seguro de dar de baja a este alumno?');">
-                                                <i class="bi bi-x-circle"></i> Dar de Baja
+                                                    th:onclick="'return confirm(\'' + #{student.confirm.deactivate} + '\');'">
+                                                <i class="bi bi-x-circle"></i> <span th:text="#{student.unenroll}">Dar de Baja</span>
                                             </button>
                                         </form>
                                     </div>

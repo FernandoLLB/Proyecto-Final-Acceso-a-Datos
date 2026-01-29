@@ -147,12 +147,10 @@ public class GestionProfesorController {
     @PostMapping("/{id}/eliminar")
     public String eliminarProfesor(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            Profesor profesor = profesorService.obtenerPorId(id);
-
-            // Eliminar el profesor y el usuario asociado
-            profesorRepository.delete(profesor);
-
+            profesorService.eliminarProfesor(id);
             redirectAttributes.addFlashAttribute("success", "Profesor eliminado exitosamente");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al eliminar el profesor: " + e.getMessage());
         }

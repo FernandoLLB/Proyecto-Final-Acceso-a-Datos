@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Dashboard - Administrador')}"></head>
+<head th:replace="~{fragments :: head(#{dashboard.title} + ' - ' + #{role.admin})}"></head>
 <body>
     <nav th:replace="~{fragments :: navbar('admin', ${#authentication.name})}"></nav>
     <aside th:replace="~{fragments :: sidebar-admin('dashboard')}"></aside>
 
     <main class="main-content fade-in">
         <div class="page-header">
-            <h1 class="page-title">Panel de Administración</h1>
-            <p class="page-subtitle">Gestiona todas las academias del sistema</p>
+            <h1 class="page-title" th:text="'Panel de ' + #{role.admin}">Panel de Administración</h1>
+            <p class="page-subtitle" th:text="#{academy.subtitle}">Gestiona todas las academias del sistema</p>
         </div>
 
         <!-- KPIs -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Total Academias</span>
+                    <span class="stat-card-title" th:text="#{academy.total}">Total Academias</span>
                     <div class="stat-card-icon primary">
                         <i class="bi bi-building"></i>
                     </div>
@@ -25,7 +25,7 @@
 
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Activas</span>
+                    <span class="stat-card-title" th:text="#{academy.active}">Activas</span>
                     <div class="stat-card-icon success">
                         <i class="bi bi-check-circle-fill"></i>
                     </div>
@@ -35,7 +35,7 @@
 
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Inactivas</span>
+                    <span class="stat-card-title" th:text="#{academy.inactive}">Inactivas</span>
                     <div class="stat-card-icon warning">
                         <i class="bi bi-exclamation-circle-fill"></i>
                     </div>
@@ -45,7 +45,7 @@
 
             <div class="stat-card">
                 <div class="stat-card-header">
-                    <span class="stat-card-title">Total Usuarios</span>
+                    <span class="stat-card-title" th:text="#{admin.total.users}">Total Usuarios</span>
                     <div class="stat-card-icon primary">
                         <i class="bi bi-people-fill"></i>
                     </div>
@@ -57,7 +57,7 @@
         <!-- Accesos Rápidos -->
         <div class="card mb-4">
             <div class="card-header">
-                <h3 class="card-title">Accesos Rápidos</h3>
+                <h3 class="card-title" th:text="#{dashboard.quick.actions}">Accesos Rápidos</h3>
             </div>
             <div class="card-body">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
@@ -65,10 +65,10 @@
                         <div style="width: 48px; height: 48px; border-radius: var(--radius); background: rgba(99, 102, 241, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
                             <i class="bi bi-building" style="font-size: 1.5rem; color: var(--primary-color);"></i>
                         </div>
-                        <h4 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Gestión de Academias</h4>
-                        <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 1rem;">Administrar todas las academias del sistema</p>
+                        <h4 style="font-size: 1.125rem; margin-bottom: 0.5rem;" th:text="#{academy.title}">Gestión de Academias</h4>
+                        <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 1rem;" th:text="#{academy.subtitle}">Administrar todas las academias del sistema</p>
                         <a th:href="@{/admin/academias/lista}" class="btn btn-primary">
-                            <i class="bi bi-arrow-right"></i> Ver Academias
+                            <i class="bi bi-arrow-right"></i> <span th:text="#{admin.view} + ' ' + #{academy.list}">Ver Academias</span>
                         </a>
                     </div>
 
@@ -76,10 +76,10 @@
                         <div style="width: 48px; height: 48px; border-radius: var(--radius); background: rgba(16, 185, 129, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
                             <i class="bi bi-plus-circle" style="font-size: 1.5rem; color: var(--success-color);"></i>
                         </div>
-                        <h4 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Nueva Academia</h4>
-                        <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 1rem;">Crear una nueva academia en el sistema</p>
+                        <h4 style="font-size: 1.125rem; margin-bottom: 0.5rem;" th:text="#{academy.new}">Nueva Academia</h4>
+                        <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 1rem;" th:text="#{admin.create.academy.description}">Crear una nueva academia en el sistema</p>
                         <a th:href="@{/admin/academias/nueva}" class="btn btn-success">
-                            <i class="bi bi-plus-lg"></i> Crear Academia
+                            <i class="bi bi-plus-lg"></i> <span th:text="#{admin.create} + ' ' + #{academy.name}">Crear Academia</span>
                         </a>
                     </div>
 
@@ -87,10 +87,10 @@
                         <div style="width: 48px; height: 48px; border-radius: var(--radius); background: rgba(99, 102, 241, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
                             <i class="bi bi-person-badge" style="font-size: 1.5rem; color: var(--primary-color);"></i>
                         </div>
-                        <h4 style="font-size: 1.125rem; margin-bottom: 0.5rem;">Gestión de Profesores</h4>
-                        <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 1rem;">Administrar profesores del sistema</p>
+                        <h4 style="font-size: 1.125rem; margin-bottom: 0.5rem;" th:text="#{teacher.title}">Gestión de Profesores</h4>
+                        <p class="text-secondary" style="font-size: 0.875rem; margin-bottom: 1rem;" th:text="#{teacher.subtitle}">Administrar profesores del sistema</p>
                         <a th:href="@{/profesores}" class="btn btn-primary">
-                            <i class="bi bi-arrow-right"></i> Ver Profesores
+                            <i class="bi bi-arrow-right"></i> <span th:text="#{admin.view} + ' ' + #{teacher.list}">Ver Profesores</span>
                         </a>
                     </div>
                 </div>
@@ -100,18 +100,18 @@
         <!-- Listado de Academias -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Academias en el Sistema</h3>
+                <h3 class="card-title" th:text="#{admin.system.academies}">Academias en el Sistema</h3>
             </div>
             <div class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
-                            <th>NIF/CIF</th>
-                            <th>Email</th>
-                            <th>Estado</th>
-                            <th>Fecha Alta</th>
+                            <th th:text="#{app.name.label}">Nombre</th>
+                            <th th:text="#{academy.nif}">NIF/CIF</th>
+                            <th th:text="#{app.email}">Email</th>
+                            <th th:text="#{app.status}">Estado</th>
+                            <th th:text="#{academy.registration.date}">Fecha Alta</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -124,10 +124,10 @@
                             <td th:text="${academia.emailContacto}">email@academia.com</td>
                             <td>
                                 <span th:if="${academia.activa}" class="badge badge-success">
-                                    <i class="bi bi-check-circle"></i> Activa
+                                    <i class="bi bi-check-circle"></i> <span th:text="#{app.active}">Activa</span>
                                 </span>
                                 <span th:unless="${academia.activa}" class="badge badge-secondary">
-                                    <i class="bi bi-x-circle"></i> Inactiva
+                                    <i class="bi bi-x-circle"></i> <span th:text="#{app.inactive}">Inactiva</span>
                                 </span>
                             </td>
                             <td th:text="${#temporals.format(academia.fechaAlta, 'dd/MM/yyyy HH:mm')}">20/01/2026</td>

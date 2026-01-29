@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión - Gestor de Academias</title>
+    <title th:text="#{login.title} + ' - Gestor de Academias'">Inicio de Sesión - Gestor de Academias</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" />
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -13,39 +13,49 @@
 </head>
 <body>
     <div class="login-container">
+        <!-- Language Switcher (fixed top-right) -->
+        <div style="position: fixed; top: 1.5rem; right: 1.5rem; z-index: 1000; display: flex; gap: 0.5rem;">
+            <a th:href="@{/login(lang='es')}" class="btn-language" th:classappend="${#locale.toString() == 'es' ? 'active' : ''}" title="Español">
+                🇪🇸 ES
+            </a>
+            <a th:href="@{/login(lang='en')}" class="btn-language" th:classappend="${#locale.toString() == 'en' ? 'active' : ''}" title="English">
+                🇬🇧 EN
+            </a>
+        </div>
+
         <div class="login-card fade-in">
             <div class="login-logo">
                 <i class="bi bi-mortarboard-fill" style="font-size: 3rem; color: var(--primary-color);"></i>
                 <h1>Gestor de Academias</h1>
-                <p>Sistema Multi-Academia</p>
+                <p th:text="#{login.welcome.message}">Sistema Multi-Academia</p>
             </div>
 
             <div th:if="${param.error}" class="alert alert-danger">
-                <i class="bi bi-exclamation-circle"></i> Usuario o contraseña incorrectos.
+                <i class="bi bi-exclamation-circle"></i> <span th:text="#{login.error}">Usuario o contraseña incorrectos.</span>
             </div>
             <div th:if="${param.logout}" class="alert alert-success">
-                <i class="bi bi-check-circle"></i> Has cerrado sesión correctamente.
+                <i class="bi bi-check-circle"></i> <span th:text="#{message.success}">Has cerrado sesión correctamente.</span>
             </div>
 
             <form th:action="@{/login}" method="post">
                 <div class="form-group">
-                    <label for="username" class="form-label">Usuario</label>
+                    <label for="username" class="form-label" th:text="#{login.username}">Usuario</label>
                     <input type="text" class="form-control" id="username" name="username"
-                           placeholder="Ingresa tu usuario" required autofocus>
+                           th:placeholder="#{login.username}" required autofocus>
                 </div>
                 <div class="form-group">
-                    <label for="password" class="form-label">Contraseña</label>
+                    <label for="password" class="form-label" th:text="#{login.password}">Contraseña</label>
                     <input type="password" class="form-control" id="password" name="password"
-                           placeholder="Ingresa tu contraseña" required>
+                           th:placeholder="#{login.password}" required>
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
-                    <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    <i class="bi bi-box-arrow-in-right"></i> <span th:text="#{login.signin}">Iniciar Sesión</span>
                 </button>
             </form>
 
             <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
                 <p class="text-muted" style="font-size: 0.813rem; margin: 0;">
-                    © 2026 Sistema Multi-Academia. Todos los derechos reservados.
+                    © 2026 Gestor de Academias.
                 </p>
             </div>
         </div>
