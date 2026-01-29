@@ -154,14 +154,64 @@ Añadidas las traducciones correspondientes en inglés.
 
 ## Solución de Problemas
 
-### Problema Identificado
+### Problema Identificado #1
 Los métodos originales `listarPorAlumno()` y `listarActivasPorAlumno()` validaban el acceso mediante `alumnoService.obtenerPorId()`, causando problemas de permisos cuando un alumno intentaba ver sus propias matrículas.
 
-### Solución Implementada
+### Solución Implementada #1
 Se crearon métodos específicos `obtenerMisMatriculas()` y `obtenerMisMatriculasActivas()` que no validan tenant scope, ya que se asume que el alumno está accediendo a su propia información. Esta solución:
 - ✅ Evita problemas de permisos
 - ✅ Mantiene la seguridad (el ID del alumno proviene del usuario autenticado)
 - ✅ No rompe la funcionalidad existente para administradores y secretarias
+
+### Problema Identificado #2: "Error Desconocido"
+Al intentar renderizar la tabla de cursos matriculados, aparecía el mensaje "Error Desconocido" debido a:
+1. Acceso inseguro a propiedades anidadas en Thymeleaf (ej: `matricula.curso.profesor.usuario.nombre`)
+2. Posibles valores null en las relaciones JPA que causaban excepciones en el template
+3. Falta de manejo de errores detallado en el controlador
+
+### Solución Implementada #2
+**Backend:**
+- ✅ Añadido logging completo con SLF4J para rastrear el flujo de datos
+- ✅ Implementado manejo de excepciones granular con try-catch específicos
+- ✅ Logging de cada matrícula cargada para facilitar debugging
+- ✅ Mensajes de error descriptivos pasados al modelo
+
+**Frontend:**
+- ✅ Uso del operador Elvis (`?:`) en Thymeleaf para valores por defecto
+- ✅ Verificación de null con safe navigation operator (`?.`)
+- ✅ Manejo condicional de cada campo con `th:if` y `th:unless`
+- ✅ Mensajes alternativos cuando los datos no están disponibles ("N/A", "No asignado", etc.)
+- ✅ Separación de la lógica de renderizado para evitar excepciones en cascada
+
+**Ejemplo de código defensivo implementado:**
+```html
+<td>
+    <span th:if="${matricula?.curso?.profesor?.usuario != null}" 
+          th:text="${matricula.curso.profesor.usuario.nombre + ' ' + matricula.curso.profesor.usuario.apellidos}">
+        Profesor
+    </span>
+    <span th:unless="${matricula?.curso?.profesor?.usuario != null}" class="text-muted">
+        No asignado
+    </span>
+</td>
+```
+
+### Verificación de Logs
+Para identificar problemas, revisar los logs de la aplicación. Los nuevos mensajes de log incluyen:
+- Información del alumno cargado
+- Cantidad de matrículas encontradas
+- Detalles de cada matrícula (ID, curso, estado)
+- Errores específicos con stack trace completo
+
+**Ejemplo de log esperado:**
+```
+INFO  - Cargando dashboard para alumno con usuario ID: 5
+INFO  - Alumno encontrado: ID=3, nombre=Juan
+INFO  - Matrículas totales encontradas: 2
+INFO  - Matrículas activas encontradas: 2
+INFO  - Matrícula 1: ID=1, Curso=Programación en Java avanzado, Estado=ACTIVA
+INFO  - Matrícula 2: ID=2, Curso=Base de Datos Relacionales, Estado=ACTIVA
+```
 
 ## Testing
 

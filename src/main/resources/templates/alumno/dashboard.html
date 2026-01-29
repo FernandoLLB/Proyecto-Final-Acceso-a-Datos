@@ -159,49 +159,60 @@
                         <tbody>
                             <tr th:each="matricula : ${matriculas}">
                                 <td>
-                                    <strong th:text="${matricula.curso.nombre}">Nombre del Curso</strong>
+                                    <strong th:text="${matricula?.curso?.nombre ?: 'N/A'}">Nombre del Curso</strong>
                                 </td>
                                 <td>
-                                    <span th:text="${matricula.curso.descripcion != null ? (matricula.curso.descripcion.length() > 50 ? matricula.curso.descripcion.substring(0, 50) + '...' : matricula.curso.descripcion) : #{enrollment.no.description}}">
+                                    <span th:text="${matricula?.curso?.descripcion != null && !#strings.isEmpty(matricula.curso.descripcion) ? (matricula.curso.descripcion.length() > 50 ? matricula.curso.descripcion.substring(0, 50) + '...' : matricula.curso.descripcion) : 'Sin descripción'}">
                                         Descripción del curso
                                     </span>
                                 </td>
-                                <td th:text="${matricula.curso.profesor.usuario.nombre + ' ' + matricula.curso.profesor.usuario.apellidos}">
-                                    Profesor
-                                </td>
                                 <td>
-                                    <span th:text="${matricula.curso.duracionHoras}">40</span> <span th:text="#{course.duration.hours}">horas</span>
-                                </td>
-                                <td th:text="${#temporals.format(matricula.curso.fechaInicio, 'dd/MM/yyyy')}">
-                                    01/02/2026
-                                </td>
-                                <td th:text="${#temporals.format(matricula.curso.fechaFin, 'dd/MM/yyyy')}">
-                                    30/06/2026
-                                </td>
-                                <td th:text="${#temporals.format(matricula.fechaMatriculacion, 'dd/MM/yyyy HH:mm')}">
-                                    20/01/2026 10:30
-                                </td>
-                                <td>
-                                    <span th:if="${matricula.estado.name() == 'ACTIVA'}" class="badge badge-success">
-                                        <i class="bi bi-check-circle"></i> <span th:text="#{enrollment.status.active}">Activa</span>
+                                    <span th:if="${matricula?.curso?.profesor?.usuario != null}"
+                                          th:text="${matricula.curso.profesor.usuario.nombre + ' ' + matricula.curso.profesor.usuario.apellidos}">
+                                        Profesor
                                     </span>
-                                    <span th:if="${matricula.estado.name() == 'COMPLETADA'}" class="badge badge-primary">
-                                        <i class="bi bi-check-circle-fill"></i> <span th:text="#{enrollment.status.completed}">Completada</span>
-                                    </span>
-                                    <span th:if="${matricula.estado.name() == 'CANCELADA'}" class="badge badge-danger">
-                                        <i class="bi bi-x-circle"></i> <span th:text="#{enrollment.status.cancelled}">Cancelada</span>
-                                    </span>
-                                    <span th:if="${matricula.estado.name() == 'SUSPENDIDA'}" class="badge badge-warning">
-                                        <i class="bi bi-exclamation-circle"></i> <span th:text="#{enrollment.status.suspended}">Suspendida</span>
+                                    <span th:unless="${matricula?.curso?.profesor?.usuario != null}" class="text-muted">
+                                        No asignado
                                     </span>
                                 </td>
                                 <td>
-                                    <span th:if="${matricula.observaciones != null && !#strings.isEmpty(matricula.observaciones)}"
+                                    <span th:if="${matricula?.curso?.duracionHoras != null}" th:text="${matricula.curso.duracionHoras + ' horas'}">40 horas</span>
+                                    <span th:unless="${matricula?.curso?.duracionHoras != null}" class="text-muted">N/A</span>
+                                </td>
+                                <td>
+                                    <span th:if="${matricula?.curso?.fechaInicio != null}" th:text="${#temporals.format(matricula.curso.fechaInicio, 'dd/MM/yyyy')}">01/02/2026</span>
+                                    <span th:unless="${matricula?.curso?.fechaInicio != null}" class="text-muted">N/A</span>
+                                </td>
+                                <td>
+                                    <span th:if="${matricula?.curso?.fechaFin != null}" th:text="${#temporals.format(matricula.curso.fechaFin, 'dd/MM/yyyy')}">30/06/2026</span>
+                                    <span th:unless="${matricula?.curso?.fechaFin != null}" class="text-muted">N/A</span>
+                                </td>
+                                <td>
+                                    <span th:if="${matricula?.fechaMatriculacion != null}" th:text="${#temporals.format(matricula.fechaMatriculacion, 'dd/MM/yyyy HH:mm')}">20/01/2026 10:30</span>
+                                    <span th:unless="${matricula?.fechaMatriculacion != null}" class="text-muted">N/A</span>
+                                </td>
+                                <td>
+                                    <span th:if="${matricula?.estado != null && matricula.estado.name() == 'ACTIVA'}" class="badge badge-success">
+                                        <i class="bi bi-check-circle"></i> Activa
+                                    </span>
+                                    <span th:if="${matricula?.estado != null && matricula.estado.name() == 'COMPLETADA'}" class="badge badge-primary">
+                                        <i class="bi bi-check-circle-fill"></i> Completada
+                                    </span>
+                                    <span th:if="${matricula?.estado != null && matricula.estado.name() == 'CANCELADA'}" class="badge badge-danger">
+                                        <i class="bi bi-x-circle"></i> Cancelada
+                                    </span>
+                                    <span th:if="${matricula?.estado != null && matricula.estado.name() == 'SUSPENDIDA'}" class="badge badge-warning">
+                                        <i class="bi bi-exclamation-circle"></i> Suspendida
+                                    </span>
+                                    <span th:unless="${matricula?.estado != null}" class="text-muted">N/A</span>
+                                </td>
+                                <td>
+                                    <span th:if="${matricula?.observaciones != null && !#strings.isEmpty(matricula.observaciones)}"
                                           th:text="${matricula.observaciones.length() > 30 ? matricula.observaciones.substring(0, 30) + '...' : matricula.observaciones}"
                                           th:title="${matricula.observaciones}">
                                         Observaciones
                                     </span>
-                                    <span th:unless="${matricula.observaciones != null && !#strings.isEmpty(matricula.observaciones)}" class="text-muted">
+                                    <span th:unless="${matricula?.observaciones != null && !#strings.isEmpty(matricula.observaciones)}" class="text-muted">
                                         -
                                     </span>
                                 </td>
