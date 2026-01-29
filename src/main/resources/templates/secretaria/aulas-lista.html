@@ -1,91 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Aulas</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}">
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Gestión de Aulas')}"></head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"><i class="bi bi-building"></i> Sistema de Academias</a>
-            <div class="navbar-nav ms-auto">
-                <span class="navbar-text text-white me-3">
-                    <i class="bi bi-person-circle"></i> <span sec:authentication="name"></span>
-                </span>
-                <form th:action="@{/logout}" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar Sesión</button>
-                </form>
-            </div>
-        </div>
-    </nav>
+    <nav th:replace="~{fragments :: navbar('secretaria', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-secretaria('aulas')}"></aside>
 
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1><i class="bi bi-door-closed"></i> Gestión de Aulas</h1>
-            <div>
-                <a th:href="@{/secretaria/dashboard}" class="btn btn-secondary me-2">
-                    <i class="bi bi-arrow-left"></i> Volver al Dashboard
-                </a>
-                <a th:href="@{/secretaria/aulas/nueva}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Nueva Aula
-                </a>
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="page-title"><i class="bi bi-door-closed-fill"></i> Gestión de Aulas</h1>
+                    <p class="page-subtitle">Administra las aulas de tu academia</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <a th:href="@{/secretaria/aulas/nueva}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Nueva Aula
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!-- Mensajes de éxito/error -->
-        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <!-- Mensajes -->
+        <div th:if="${success}" class="alert alert-success" style="margin-bottom: 1.5rem; border-radius: var(--radius-lg); border: 1px solid #10b981; background: rgba(16, 185, 129, 0.1); color: #065f46; padding: 1rem 1.25rem;">
             <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div th:if="${error}" class="alert alert-danger" style="margin-bottom: 1.5rem; border-radius: var(--radius-lg); border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.1); color: #991b1b; padding: 1rem 1.25rem;">
             <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <!-- Estadísticas rápidas -->
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="card bg-light">
-                    <div class="card-body">
-                        <h5 class="card-title">Total de Aulas</h5>
-                        <p class="card-text display-6" th:text="${aulas.size()}">0</p>
+        <!-- Estadísticas -->
+        <div class="stats-grid mb-4">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Total de Aulas</span>
+                    <div class="stat-card-icon primary">
+                        <i class="bi bi-door-closed-fill"></i>
                     </div>
                 </div>
+                <div class="stat-card-value" th:text="${aulas.size()}">0</div>
             </div>
-            <div class="col-md-4">
-                <div class="card bg-success text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Aulas Activas</h5>
-                        <p class="card-text display-6" th:text="${#lists.size(aulas.?[activa == true])}">0</p>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Aulas Activas</span>
+                    <div class="stat-card-icon success">
+                        <i class="bi bi-check-circle-fill"></i>
                     </div>
                 </div>
+                <div class="stat-card-value" th:text="${#lists.size(aulas.?[activa == true])}">0</div>
             </div>
-            <div class="col-md-4">
-                <div class="card bg-secondary text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Aulas Inactivas</h5>
-                        <p class="card-text display-6" th:text="${#lists.size(aulas.?[activa == false])}">0</p>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <span class="stat-card-title">Aulas Inactivas</span>
+                    <div class="stat-card-icon warning">
+                        <i class="bi bi-x-circle-fill"></i>
                     </div>
                 </div>
+                <div class="stat-card-value" th:text="${#lists.size(aulas.?[activa == false])}">0</div>
             </div>
         </div>
 
         <!-- Tabla de aulas -->
         <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-list"></i> Listado de Aulas</h5>
+            <div class="card-header">
+                <h3 class="card-title"><i class="bi bi-list-ul"></i> Listado de Aulas</h3>
             </div>
             <div class="card-body">
-                <div th:if="${#lists.isEmpty(aulas)}" class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> No hay aulas registradas. <a th:href="@{/secretaria/aulas/nueva}">Crear la primera aula</a>
+                <div th:if="${#lists.isEmpty(aulas)}" class="alert alert-info" style="border-radius: var(--radius-lg); border: 1px solid var(--primary-color); background: rgba(99, 102, 241, 0.1); color: var(--primary-color); padding: 1rem 1.25rem;">
+                    <i class="bi bi-info-circle"></i> No hay aulas registradas.
+                    <a th:href="@{/secretaria/aulas/nueva}" style="color: var(--primary-color); font-weight: 600;">Crear la primera aula</a>
                 </div>
 
                 <div th:unless="${#lists.isEmpty(aulas)}" class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-light">
+                    <table class="table">
+                        <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
@@ -115,28 +102,28 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="btn-group" role="group">
+                                    <div style="display: flex; gap: 0.5rem;">
                                         <a th:href="@{/secretaria/aulas/{id}/editar(id=${aula.id})}"
-                                           class="btn btn-sm btn-warning" title="Editar">
-                                            <i class="bi bi-pencil"></i>
+                                           class="btn btn-warning btn-sm" title="Editar">
+                                            <i class="bi bi-pencil"></i> Editar
                                         </a>
 
                                         <form th:if="${aula.activa}"
                                               th:action="@{/secretaria/aulas/{id}/desactivar(id=${aula.id})}"
-                                              method="post" style="display: inline;">
-                                            <button type="submit" class="btn btn-sm btn-secondary"
+                                              method="post" style="margin: 0;">
+                                            <button type="submit" class="btn btn-secondary btn-sm"
                                                     title="Desactivar"
                                                     onclick="return confirm('¿Está seguro de desactivar esta aula?');">
-                                                <i class="bi bi-toggle-off"></i>
+                                                <i class="bi bi-toggle-off"></i> Desactivar
                                             </button>
                                         </form>
 
                                         <form th:unless="${aula.activa}"
                                               th:action="@{/secretaria/aulas/{id}/activar(id=${aula.id})}"
-                                              method="post" style="display: inline;">
-                                            <button type="submit" class="btn btn-sm btn-success"
+                                              method="post" style="margin: 0;">
+                                            <button type="submit" class="btn btn-success btn-sm"
                                                     title="Activar">
-                                                <i class="bi bi-toggle-on"></i>
+                                                <i class="bi bi-toggle-on"></i> Activar
                                             </button>
                                         </form>
                                     </div>
@@ -147,7 +134,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
 </body>
