@@ -36,20 +36,37 @@
             <div th:if="${param.logout}" class="alert alert-success">
                 <i class="bi bi-check-circle"></i> <span th:text="#{message.success}">Has cerrado sesión correctamente.</span>
             </div>
-            <div th:if="${registroExitoso}" class="alert alert-success" style="border-left: 4px solid #28a745;">
+            <div th:if="${emailVerificado}" class="alert alert-success" style="border-left: 4px solid #28a745;">
                 <div style="display: flex; align-items: start; gap: 0.75rem;">
                     <i class="bi bi-check-circle-fill" style="font-size: 1.5rem; color: #28a745; flex-shrink: 0;"></i>
                     <div>
-                        <h5 style="margin: 0 0 0.5rem 0; font-weight: 600; color: #155724;" th:text="#{registro.exitoso.titulo}">¡Registro Completado Correctamente!</h5>
-                        <p style="margin: 0; font-size: 0.938rem;" th:if="${nombreCompleto}">
-                            <strong th:text="${nombreCompleto}">Nombre Completo</strong>, <span th:text="#{registro.exitoso.mensaje}">tu cuenta ha sido creada exitosamente.</span>
+                        <h5 style="margin: 0 0 0.5rem 0; font-weight: 600; color: #155724;">¡Email Verificado!</h5>
+                        <p style="margin: 0; font-size: 0.938rem;" th:text="${mensaje}">Tu cuenta ha sido verificada exitosamente. Ya puedes iniciar sesión.</p>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${registroExitoso}" class="alert alert-info" style="border-left: 4px solid #17a2b8;">
+                <div style="display: flex; align-items: start; gap: 0.75rem;">
+                    <i class="bi bi-envelope-fill" style="font-size: 1.5rem; color: #17a2b8; flex-shrink: 0;"></i>
+                    <div>
+                        <h5 style="margin: 0 0 0.5rem 0; font-weight: 600; color: #0c5460;">¡Registro Completado!</h5>
+                        <p style="margin: 0; font-size: 0.938rem;">
+                            Te hemos enviado un email de verificación a <strong th:text="${emailEnviado}">tu correo</strong>.
                         </p>
-                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;" th:if="${nombreUsuario}">
-                            <span th:text="#{registro.exitoso.instruccion}">Ahora puedes iniciar sesión con tu usuario:</span>
-                            <strong th:text="${nombreUsuario}">username</strong>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                            Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.
+                        </p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.813rem; color: #666;">
+                            ¿No recibiste el email? <a th:href="@{/reenviar-verificacion}" style="color: #17a2b8; text-decoration: underline;">Reenviar email de verificación</a>
                         </p>
                     </div>
                 </div>
+            </div>
+            <div th:if="${mensaje}" class="alert alert-success">
+                <i class="bi bi-check-circle"></i> <span th:text="${mensaje}">Mensaje</span>
+            </div>
+            <div th:if="${error}" class="alert alert-danger">
+                <i class="bi bi-exclamation-circle"></i> <span th:text="${error}">Error</span>
             </div>
 
             <form th:action="@{/login}" method="post">

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reenviar Email de Verificación - Gestor de Academias</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card fade-in" style="max-width: 500px;">
+            <div class="login-logo">
+                <i class="bi bi-envelope-check-fill" style="font-size: 3rem; color: var(--primary-color);"></i>
+                <h1>Reenviar Email de Verificación</h1>
+                <p>Ingresa tu email para recibir un nuevo enlace de verificación</p>
+            </div>
+
+            <div th:if="${error}" class="alert alert-danger">
+                <i class="bi bi-exclamation-circle"></i> <span th:text="${error}">Error</span>
+            </div>
+
+            <form th:action="@{/reenviar-verificacion}" method="post">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email"
+                           placeholder="tu@email.com" required autofocus>
+                    <small class="form-text text-muted">
+                        Ingresa el email con el que te registraste
+                    </small>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1rem;">
+                    <i class="bi bi-send-fill"></i> Reenviar Email
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a th:href="@{/login}" class="text-decoration-none">
+                    <i class="bi bi-arrow-left"></i> Volver al inicio de sesión
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                <p class="text-muted" style="font-size: 0.813rem; margin: 0;">
+                    © 2026 Gestor de Academias.
+                </p>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/bootstrap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

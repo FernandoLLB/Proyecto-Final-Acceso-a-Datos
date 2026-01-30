@@ -42,7 +42,8 @@ public class SecurityConfig {
                                 Rol.PROPIETARIO.name(),
                                 Rol.SECRETARIA.name()
                         )
-                        .requestMatchers("/css/**", "/js/**", "/locale/**", "/registro", "/registro/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/locale/**", "/registro", "/registro/**",
+                                "/verificar-email", "/reenviar-verificacion").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
