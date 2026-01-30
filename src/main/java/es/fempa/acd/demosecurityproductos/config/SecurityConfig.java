@@ -42,7 +42,7 @@ public class SecurityConfig {
                                 Rol.PROPIETARIO.name(),
                                 Rol.SECRETARIA.name()
                         )
-                        .requestMatchers("/css/**", "/js/**", "/locale/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/locale/**", "/registro", "/registro/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

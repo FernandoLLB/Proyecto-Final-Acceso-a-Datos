@@ -2,6 +2,7 @@ package es.fempa.acd.demosecurityproductos.service;
 
 import es.fempa.acd.demosecurityproductos.model.Rol;
 import es.fempa.acd.demosecurityproductos.model.Usuario;
+import es.fempa.acd.demosecurityproductos.model.Academia;
 import es.fempa.acd.demosecurityproductos.repository.UsuarioRepository;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -83,6 +84,30 @@ public class UsuarioService {
     // Actualizar usuario
     @Transactional
     public Usuario actualizar(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
+    // Crear usuario alumno con academia (para registro público)
+    @Transactional
+    public Usuario crearUsuarioAlumno(String username, String password, String email,
+                                       String nombre, String apellidos, Academia academia) {
+        if (usuarioRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+        }
+        if (usuarioRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("El email ya está en uso");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setUsername(username);
+        usuario.setPassword(passwordEncoder.encode(password));
+        usuario.setEmail(email);
+        usuario.setNombre(nombre);
+        usuario.setApellidos(apellidos);
+        usuario.setRol(Rol.ALUMNO);
+        usuario.setActivo(true);
+        usuario.setAcademia(academia);
+
         return usuarioRepository.save(usuario);
     }
 }

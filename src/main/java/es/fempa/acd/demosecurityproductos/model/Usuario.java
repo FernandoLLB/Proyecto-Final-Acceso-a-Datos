@@ -32,12 +32,16 @@ public class Usuario {
     @Column(nullable = false)
     private Boolean activo = true;
 
+    @Column(name = "email_verificado", nullable = false)
+    private Boolean emailVerificado = false;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "academia_id", nullable = true) // nullable solo para ADMIN
     private Academia academia;
 
     public Usuario() {
         this.activo = true;
+        this.emailVerificado = false;
     }
 
     // Getters y Setters
@@ -103,6 +107,14 @@ public class Usuario {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public Boolean getEmailVerificado() {
+        return emailVerificado;
+    }
+
+    public void setEmailVerificado(Boolean emailVerificado) {
+        this.emailVerificado = emailVerificado;
     }
 
     public Academia getAcademia() {

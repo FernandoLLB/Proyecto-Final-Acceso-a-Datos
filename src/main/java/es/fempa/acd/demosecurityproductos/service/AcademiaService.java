@@ -51,10 +51,25 @@ public class AcademiaService {
         return academiaRepository.findByActivaTrue();
     }
 
+    // Método público para registro de alumnos (sin autenticación)
+    public List<Academia> listarActivasParaRegistro() {
+        return academiaRepository.findByActivaTrue();
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     public Academia obtenerPorId(Long id) {
         return academiaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Academia no encontrada"));
+    }
+
+    // Método público para obtener academia por ID (para registro)
+    public Academia obtenerPorIdParaRegistro(Long id) {
+        Academia academia = academiaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Academia no encontrada"));
+        if (!academia.getActiva()) {
+            throw new IllegalArgumentException("La academia seleccionada no está activa");
+        }
+        return academia;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
