@@ -42,14 +42,30 @@ public class GestionProfesorController {
     }
 
     @GetMapping
-    public String listarProfesores(Model model) {
+    public String listarProfesores(@RequestParam(required = false, defaultValue = "true") Boolean soloActivos,
+                                   Model model) {
         Long academiaId = securityUtils.getAcademiaIdActual();
+        List<Profesor> profesores;
+
         if (academiaId == null) {
             // Si es ADMIN sin academia, mostrar todos
-            model.addAttribute("profesores", profesorRepository.findAll());
+            if (soloActivos) {
+                profesores = profesorRepository.findAll().stream()
+                    .filter(p -> p.getUsuario() != null && p.getUsuario().getActivo())
+                    .toList();
+            } else {
+                profesores = profesorRepository.findAll();
+            }
         } else {
-            model.addAttribute("profesores", profesorService.listarPorAcademia(academiaId));
+            if (soloActivos) {
+                profesores = profesorRepository.findByAcademiaIdAndUsuarioActivo(academiaId, true);
+            } else {
+                profesores = profesorService.listarPorAcademia(academiaId);
+            }
         }
+
+        model.addAttribute("profesores", profesores);
+        model.addAttribute("soloActivos", soloActivos);
         return "admin/profesores-lista";
     }
 
@@ -103,6 +119,7 @@ public class GestionProfesorController {
             nuevoUsuario.setNombre(nombre);
             nuevoUsuario.setApellidos(apellidos);
             nuevoUsuario.setAcademia(academiaAsignar);
+            nuevoUsuario.setEmailVerificado(true); // Verificar email automáticamente al crear desde admin
             usuarioService.actualizar(nuevoUsuario);
 
             // Crear profesor
@@ -182,11 +199,30 @@ public class GestionProfesorController {
     public String eliminarProfesor(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             profesorService.eliminarProfesor(id);
-            redirectAttributes.addFlashAttribute("success", "Profesor eliminado exitosamente");
+            redirectAttributes.addFlashAttribute("success", "Profesor desactivado exitosamente");
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al eliminar el profesor: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al desactivar el profesor: " + e.getMessage());
+        }
+        return "redirect:/profesores";
+    }
+
+    @PostMapping("/{id}/reactivar")
+    public String reactivarProfesor(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            Profesor profesor = profesorService.obtenerPorId(id);
+            Usuario usuario = profesor.getUsuario();
+
+            if (usuario != null) {
+                usuario.setActivo(true);
+                usuarioService.actualizar(usuario);
+                redirectAttributes.addFlashAttribute("success", "Profesor reactivado exitosamente");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "No se pudo encontrar el usuario del profesor");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al reactivar el profesor: " + e.getMessage());
         }
         return "redirect:/profesores";
     }

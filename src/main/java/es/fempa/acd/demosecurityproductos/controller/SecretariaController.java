@@ -107,6 +107,8 @@ public class SecretariaController {
             nuevoUsuario.setNombre(nombre);
             nuevoUsuario.setApellidos(apellidos);
             nuevoUsuario.setAcademia(usuario.getAcademia());
+            nuevoUsuario.setEmailVerificado(true); // Verificar email automáticamente al crear desde secretaria
+            usuarioService.actualizar(nuevoUsuario);
 
             // Crear alumno
             Alumno alumno = new Alumno();

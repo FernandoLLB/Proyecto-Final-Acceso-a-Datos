@@ -36,19 +36,29 @@ public class GestionSecretariaController {
     }
 
     @GetMapping
-    public String listarSecretarias(Model model) {
+    public String listarSecretarias(@RequestParam(required = false, defaultValue = "true") Boolean soloActivas,
+                                    Model model) {
         Long academiaId = securityUtils.getAcademiaIdActual();
         List<Usuario> secretarias;
 
         if (academiaId == null) {
             // Si es ADMIN sin academia, mostrar todas las secretarias
-            secretarias = usuarioRepository.findByRol(Rol.SECRETARIA);
+            if (soloActivas) {
+                secretarias = usuarioRepository.findByRolAndActivo(Rol.SECRETARIA, true);
+            } else {
+                secretarias = usuarioRepository.findByRol(Rol.SECRETARIA);
+            }
         } else {
             // Si tiene academia, mostrar solo las de su academia
-            secretarias = usuarioService.listarPorAcademiaYRol(academiaId, Rol.SECRETARIA);
+            if (soloActivas) {
+                secretarias = usuarioRepository.findByAcademiaIdAndRolAndActivo(academiaId, Rol.SECRETARIA, true);
+            } else {
+                secretarias = usuarioService.listarPorAcademiaYRol(academiaId, Rol.SECRETARIA);
+            }
         }
 
         model.addAttribute("secretarias", secretarias);
+        model.addAttribute("soloActivas", soloActivas);
         return "admin/secretarias-lista";
     }
 
@@ -83,6 +93,7 @@ public class GestionSecretariaController {
             nuevoUsuario.setNombre(nombre);
             nuevoUsuario.setApellidos(apellidos);
             nuevoUsuario.setAcademia(academiaAsignar);
+            nuevoUsuario.setEmailVerificado(true); // Verificar email automáticamente al crear desde admin
             usuarioService.actualizar(nuevoUsuario);
 
             redirectAttributes.addFlashAttribute("success", "Secretaria creada exitosamente");
@@ -172,10 +183,35 @@ public class GestionSecretariaController {
                 return "redirect:/secretarias";
             }
 
-            usuarioRepository.delete(secretaria);
-            redirectAttributes.addFlashAttribute("success", "Secretaria eliminada exitosamente");
+            // Desactivar en lugar de eliminar para mantener integridad referencial
+            secretaria.setActivo(false);
+            usuarioService.actualizar(secretaria);
+
+            redirectAttributes.addFlashAttribute("success", "Secretaria desactivada exitosamente");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error al eliminar la secretaria: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Error al desactivar la secretaria: " + e.getMessage());
+        }
+        return "redirect:/secretarias";
+    }
+
+    @PostMapping("/{id}/reactivar")
+    public String reactivarSecretaria(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            Usuario secretaria = usuarioService.obtenerUsuarioPorId(id);
+
+            // Verificar que sea una secretaria
+            if (secretaria.getRol() != Rol.SECRETARIA) {
+                redirectAttributes.addFlashAttribute("error", "El usuario no es una secretaria");
+                return "redirect:/secretarias";
+            }
+
+            // Reactivar el usuario
+            secretaria.setActivo(true);
+            usuarioService.actualizar(secretaria);
+
+            redirectAttributes.addFlashAttribute("success", "Secretaria reactivada exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al reactivar la secretaria: " + e.getMessage());
         }
         return "redirect:/secretarias";
     }

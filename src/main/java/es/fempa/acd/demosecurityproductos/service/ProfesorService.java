@@ -58,15 +58,14 @@ public class ProfesorService {
             );
         }
 
-        // Guardar referencia al usuario para eliminarlo después
+        // Desactivar usuario en lugar de eliminar para mantener integridad referencial
         Usuario usuario = profesor.getUsuario();
-
-        // Eliminar el profesor
-        profesorRepository.delete(profesor);
-
-        // Eliminar el usuario asociado
         if (usuario != null) {
-            usuarioRepository.delete(usuario);
+            usuario.setActivo(false);
+            usuarioRepository.save(usuario);
         }
+
+        // Eliminar el registro de profesor (no el usuario)
+        profesorRepository.delete(profesor);
     }
 }
