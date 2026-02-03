@@ -1,0 +1,202 @@
+@startuml Diagrama_ER_Gestor_Academias
+
+' Configuración del diagrama
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+' ========== ENTIDADES ==========
+
+entity "ACADEMIA" as academia {
+  * **id** : BIGINT <<PK>>
+  --
+  * nombre : VARCHAR(200)
+  * activa : BOOLEAN
+  * fecha_alta : DATETIME
+  nif_cif : VARCHAR(20)
+  email_contacto : VARCHAR(100)
+  telefono : VARCHAR(20)
+  direccion : VARCHAR(300)
+}
+
+entity "USUARIO" as usuario {
+  * **id** : BIGINT <<PK>>
+  --
+  * username : VARCHAR(50) <<UK>>
+  * password : VARCHAR(255)
+  * email : VARCHAR(100) <<UK>>
+  nombre : VARCHAR(100)
+  apellidos : VARCHAR(100)
+  * rol : ENUM
+  * activo : BOOLEAN
+  * email_verificado : BOOLEAN
+  academia_id : BIGINT <<FK>>
+}
+
+entity "TOKEN_VERIFICACION" as token {
+  * **id** : BIGINT <<PK>>
+  --
+  * token : VARCHAR(255) <<UK>>
+  * usuario_id : BIGINT <<FK>>
+  * fecha_expiracion : DATETIME
+  * fecha_creacion : DATETIME
+}
+
+entity "PROFESOR" as profesor {
+  * **id** : BIGINT <<PK>>
+  --
+  * usuario_id : BIGINT <<FK>> <<UK>>
+  * academia_id : BIGINT <<FK>>
+  especialidad : VARCHAR(200)
+  biografia : VARCHAR(1000)
+  fecha_contratacion : DATE
+}
+
+entity "ALUMNO" as alumno {
+  * **id** : BIGINT <<PK>>
+  --
+  * usuario_id : BIGINT <<FK>> <<UK>>
+  * academia_id : BIGINT <<FK>>
+  * fecha_registro : DATE
+  estado_matricula : VARCHAR(50)
+  observaciones : VARCHAR(1000)
+}
+
+entity "AULA" as aula {
+  * **id** : BIGINT <<PK>>
+  --
+  * academia_id : BIGINT <<FK>>
+  * nombre : VARCHAR(100)
+  * capacidad : INTEGER
+  * activa : BOOLEAN
+  recursos : VARCHAR(500)
+}
+
+entity "CURSO" as curso {
+  * **id** : BIGINT <<PK>>
+  --
+  * academia_id : BIGINT <<FK>>
+  * profesor_id : BIGINT <<FK>>
+  * nombre : VARCHAR(200)
+  descripcion : VARCHAR(1000)
+  * duracion_horas : INTEGER
+  precio : DECIMAL(10,2)
+  * fecha_inicio : DATE
+  * fecha_fin : DATE
+  categoria : VARCHAR(100)
+  plazas_disponibles : INTEGER
+  * activo : BOOLEAN
+}
+
+entity "MATRICULA" as matricula {
+  * **id** : BIGINT <<PK>>
+  --
+  * academia_id : BIGINT <<FK>>
+  * alumno_id : BIGINT <<FK>>
+  * curso_id : BIGINT <<FK>>
+  * fecha_matriculacion : DATETIME
+  * estado : ENUM
+  observaciones : VARCHAR(500)
+  matriculado_por : BIGINT <<FK>>
+}
+
+entity "RESERVA_AULA" as reserva {
+  * **id** : BIGINT <<PK>>
+  --
+  * academia_id : BIGINT <<FK>>
+  * aula_id : BIGINT <<FK>>
+  * fecha_inicio : DATETIME
+  * fecha_fin : DATETIME
+  * estado : ENUM
+  descripcion : VARCHAR(500)
+  * creada_por : BIGINT <<FK>>
+  cancelada_por : BIGINT <<FK>>
+  * fecha_creacion : DATETIME
+  fecha_cancelacion : DATETIME
+}
+
+' ========== RELACIONES ==========
+
+' Academia - Usuario
+academia ||--o{ usuario : "tiene"
+
+' Usuario - Token
+usuario ||--o| token : "tiene"
+
+' Usuario - Profesor
+usuario ||--o| profesor : "es"
+
+' Academia - Profesor
+academia ||--o{ profesor : "emplea"
+
+' Usuario - Alumno
+usuario ||--o| alumno : "es"
+
+' Academia - Alumno
+academia ||--o{ alumno : "inscribe"
+
+' Academia - Aula
+academia ||--o{ aula : "posee"
+
+' Academia - Curso
+academia ||--o{ curso : "ofrece"
+
+' Profesor - Curso
+profesor ||--o{ curso : "imparte"
+
+' Academia - Matricula
+academia ||--o{ matricula : "gestiona"
+
+' Alumno - Matricula
+alumno ||--o{ matricula : "se matricula"
+
+' Curso - Matricula
+curso ||--o{ matricula : "tiene"
+
+' Usuario - Matricula (registra)
+usuario ||--o{ matricula : "registra"
+
+' Academia - Reserva
+academia ||--o{ reserva : "administra"
+
+' Aula - Reserva
+aula ||--o{ reserva : "es reservada"
+
+' Usuario - Reserva (crea)
+usuario ||--o{ reserva : "crea"
+
+' Usuario - Reserva (cancela)
+usuario ||--o{ reserva : "cancela"
+
+' ========== NOTAS ==========
+
+note right of academia
+  Entidad principal
+  del sistema.
+  Puede estar activa
+  o inactiva.
+end note
+
+note left of usuario
+  ROL puede ser:
+  - ADMIN
+  - PROPIETARIO
+  - SECRETARIA
+  - PROFESOR
+  - ALUMNO
+end note
+
+note bottom of matricula
+  ESTADO puede ser:
+  - ACTIVA
+  - COMPLETADA
+  - CANCELADA
+end note
+
+note bottom of reserva
+  ESTADO puede ser:
+  - ACTIVA
+  - CANCELADA
+end note
+
+@enduml
