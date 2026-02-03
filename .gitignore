@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment Variables and Sensitive Configuration ###
+.env
+.env.local
+.env.*.local
+application-local.properties
+src/main/resources/application-local.properties
+**/application-dev.properties
+
+### Security - Exclude files with credentials ###
+**/secrets/
+**/*-credentials.properties
+

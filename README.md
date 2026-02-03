@@ -130,7 +130,30 @@ Entidades principales:
 - Aislamiento por academia (tenant scope)  
 - **RBAC** completo  
 - Protección frente a XSS, SQL Injection y CSRF  
-- Controller Advice para gestión centralizada de errores  
+- Controller Advice para gestión centralizada de errores
+- **✅ Variables de entorno para credenciales sensibles**
+- **✅ Perfiles de Spring (dev, prod) para diferentes entornos**
+- **✅ Configuración segura sin credenciales en código**
+
+### ⚙️ Configuración Segura
+
+**⚠️ IMPORTANTE**: Las credenciales ya NO están en el código fuente.
+
+**Para desarrollo local:**
+```powershell
+# Opción 1: Usar perfil de desarrollo (más fácil)
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+
+# Opción 2: Usar variables de entorno
+copy .env.example .env
+# Edita .env con tus credenciales
+.\load-env.ps1
+mvn spring-boot:run
+```
+
+**📖 Documentación completa:**
+- [🚀 Inicio Rápido](docs/INICIO_RAPIDO.md) - Configuración en 2 minutos
+- [🔐 Guía de Seguridad](docs/GUIA_SEGURIDAD_CONFIGURACION.md) - Configuración completa y producción
 
 ---
 
