@@ -27,6 +27,15 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 
     long countByProfesorId(Long profesorId);
 
+    /**
+     * Busca cursos de una academia dentro de un rango de fechas específico.
+     * Los cursos se ordenan por fecha de inicio.
+     *
+     * @param academiaId el ID de la academia
+     * @param fechaDesde la fecha de inicio del rango
+     * @param fechaHasta la fecha de fin del rango
+     * @return lista de cursos en el rango de fechas especificado
+     */
     @Query("SELECT c FROM Curso c WHERE c.academia.id = :academiaId " +
            "AND c.fechaInicio >= :fechaDesde " +
            "AND c.fechaFin <= :fechaHasta " +
@@ -37,6 +46,14 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
         @Param("fechaHasta") LocalDate fechaHasta
     );
 
+    /**
+     * Busca cursos activos de una academia filtrados por categoría.
+     * Los cursos se ordenan por fecha de inicio.
+     *
+     * @param academiaId el ID de la academia
+     * @param categoria la categoría del curso a buscar
+     * @return lista de cursos activos de la categoría especificada
+     */
     @Query("SELECT c FROM Curso c WHERE c.academia.id = :academiaId " +
            "AND c.categoria = :categoria " +
            "AND c.activo = true " +

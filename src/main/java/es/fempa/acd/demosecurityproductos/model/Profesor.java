@@ -3,31 +3,48 @@ package es.fempa.acd.demosecurityproductos.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * Entidad que representa un profesor en una academia.
+ * Un profesor está asociado a un usuario y puede impartir múltiples cursos.
+ *
+ * @author Sistema de Gestión de Academias
+ * @version 1.0
+ */
 @Entity
 @Table(name = "profesor")
 public class Profesor {
 
+    /** Identificador único del profesor */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Usuario asociado al profesor (relación uno a uno) */
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
 
+    /** Academia a la que pertenece el profesor */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "academia_id", nullable = false)
     private Academia academia;
 
+    /** Especialidad o área de conocimiento del profesor */
     @Column(length = 200)
     private String especialidad;
 
+    /** Biografía o descripción del profesor */
     @Column(length = 1000)
     private String biografia;
 
+    /** Fecha de contratación del profesor */
     @Column(name = "fecha_contratacion")
     private LocalDate fechaContratacion;
 
+    /**
+     * Constructor por defecto.
+     * Inicializa la fecha de contratación con la fecha actual.
+     */
     public Profesor() {
         this.fechaContratacion = LocalDate.now();
     }

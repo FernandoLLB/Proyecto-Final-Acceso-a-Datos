@@ -8,20 +8,36 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servicio para el envío de correos electrónicos.
+ * Gestiona el envío de emails de verificación, bienvenida y notificaciones
+ * utilizando plantillas HTML personalizadas.
+ *
+ * @author Sistema de Gestión de Academias
+ * @version 1.0
+ */
 @Service
 public class EmailService {
 
     @Autowired
     private JavaMailSender mailSender;
 
+    /** Dirección de correo desde la que se envían los emails */
     @Value("${spring.mail.username}")
     private String fromEmail;
 
+    /** URL base de la aplicación para enlaces en los emails */
     @Value("${app.base.url}")
     private String baseUrl;
 
     /**
-     * Envía un correo de verificación al usuario
+     * Envía un correo de verificación al usuario recién registrado.
+     * El correo contiene un enlace con un token único válido por 24 horas.
+     *
+     * @param destinatario dirección de correo del destinatario
+     * @param nombreUsuario nombre del usuario para personalizar el email
+     * @param token token único de verificación
+     * @throws RuntimeException si hay un error al enviar el correo
      */
     public void enviarEmailVerificacion(String destinatario, String nombreUsuario, String token) {
         try {
@@ -118,7 +134,12 @@ public class EmailService {
     }
 
     /**
-     * Envía un correo de bienvenida después de la verificación
+     * Envía un correo de bienvenida después de verificar la cuenta.
+     * Confirma al usuario que su cuenta ha sido activada exitosamente
+     * e incluye un enlace directo para iniciar sesión.
+     *
+     * @param destinatario dirección de correo del destinatario
+     * @param nombreCompleto nombre completo del usuario para personalizar el email
      */
     public void enviarEmailBienvenida(String destinatario, String nombreCompleto) {
         try {

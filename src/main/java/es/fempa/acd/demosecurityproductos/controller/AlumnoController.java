@@ -17,6 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlador para la gestión del área de alumnos.
+ * Maneja el dashboard y las operaciones específicas para usuarios con rol ALUMNO.
+ * Solo accesible por usuarios con rol ALUMNO.
+ *
+ * @author Sistema de Gestión de Academias
+ * @version 1.0
+ */
 @Controller
 @RequestMapping("/alumno")
 @PreAuthorize("hasRole('ALUMNO')")
@@ -28,12 +36,25 @@ public class AlumnoController {
     private final MatriculaService matriculaService;
     private final SecurityUtils securityUtils;
 
+    /**
+     * Constructor del controlador de alumnos.
+     *
+     * @param alumnoService servicio de gestión de alumnos
+     * @param matriculaService servicio de gestión de matrículas
+     * @param securityUtils utilidades de seguridad
+     */
     public AlumnoController(AlumnoService alumnoService, MatriculaService matriculaService, SecurityUtils securityUtils) {
         this.alumnoService = alumnoService;
         this.matriculaService = matriculaService;
         this.securityUtils = securityUtils;
     }
 
+    /**
+     * Muestra el dashboard del alumno con sus matrículas y cursos.
+     *
+     * @param model modelo para pasar datos a la vista
+     * @return nombre de la vista del dashboard del alumno
+     */
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         Usuario usuario = securityUtils.getUsuarioAutenticado();

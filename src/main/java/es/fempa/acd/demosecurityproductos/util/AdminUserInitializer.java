@@ -10,12 +10,23 @@ import es.fempa.acd.demosecurityproductos.model.Rol;
 import es.fempa.acd.demosecurityproductos.repository.UsuarioRepository;
 
 /**
- * Inicializador de usuario admin
+ * Inicializador de usuario administrador del sistema.
  * Este componente asegura que siempre exista un usuario admin con la contraseña correcta
+ * al iniciar la aplicación. Si el usuario no existe, lo crea automáticamente.
+ *
+ * @author Sistema de Gestión de Academias
+ * @version 1.0
  */
 @Configuration
 public class AdminUserInitializer {
 
+    /**
+     * Crea un CommandLineRunner que inicializa el usuario administrador.
+     * Se ejecuta automáticamente al iniciar la aplicación.
+     *
+     * @param usuarioRepository repositorio de usuarios
+     * @return CommandLineRunner que inicializa el admin
+     */
     @Bean
     public CommandLineRunner initAdminUser(UsuarioRepository usuarioRepository) {
         return args -> {

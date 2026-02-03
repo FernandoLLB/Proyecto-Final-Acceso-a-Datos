@@ -23,6 +23,14 @@ import es.fempa.acd.demosecurityproductos.service.TokenVerificacionService;
 
 import java.util.List;
 
+/**
+ * Controlador para la autenticación y registro de usuarios.
+ * Gestiona el login, registro de alumnos, verificación de email
+ * y redirección según roles.
+ *
+ * @author Sistema de Gestión de Academias
+ * @version 1.0
+ */
 @Controller
 public class AuthController {
 
@@ -38,16 +46,32 @@ public class AuthController {
 	@Autowired
 	TokenVerificacionService tokenVerificacionService;
 
+    /**
+     * Muestra la página de login.
+     *
+     * @return nombre de la vista de login
+     */
     @GetMapping("/login")
     public String login() {
         return "login";
     }
     
+    /**
+     * Redirige la página principal al login.
+     *
+     * @return nombre de la vista de login
+     */
     @GetMapping("/")
     public String home() {
         return "login";
     }
 
+    /**
+     * Muestra el formulario de registro de alumnos.
+     *
+     * @param model modelo para pasar datos a la vista
+     * @return nombre de la vista de registro
+     */
     @GetMapping("/registro")
     public String mostrarFormularioRegistro(Model model) {
         model.addAttribute("registroDTO", new RegistroAlumnoDTO());
@@ -56,6 +80,15 @@ public class AuthController {
         return "registro";
     }
 
+    /**
+     * Procesa el formulario de registro de un nuevo alumno.
+     * Valida los datos, crea el usuario y alumno, y envía un email de verificación.
+     *
+     * @param registroDTO datos del registro del alumno
+     * @param redirectAttributes atributos para mensajes en la redirección
+     * @param model modelo para pasar datos a la vista
+     * @return redirección al login si es exitoso, o la vista de registro con errores
+     */
     @PostMapping("/registro")
     public String procesarRegistro(@ModelAttribute("registroDTO") RegistroAlumnoDTO registroDTO,
                                    RedirectAttributes redirectAttributes,
@@ -116,7 +149,17 @@ public class AuthController {
     }
 
     /**
-     * Redirige a la página de inicio según el rol del usuario
+     * Redirige a la página de inicio correspondiente según el rol del usuario autenticado.
+     * ADMIN -> admin/dashboard
+     * PROPIETARIO -> propietario/dashboard
+     * SECRETARIA -> secretaria/dashboard
+     * PROFESOR -> profesor/dashboard
+     * ALUMNO -> alumno/dashboard
+     *
+     * @param authentication información de autenticación del usuario
+     * @param model modelo para pasar datos a la vista
+     * @return redirección al dashboard correspondiente
+     * @throws UsernameNotFoundException si el usuario no se encuentra
      */
     @RequestMapping("/default")
     public String defaultAfterLogin(Authentication authentication, Model model) {
@@ -142,6 +185,14 @@ public class AuthController {
         return "redirect:/login";
     }
 
+    /**
+     * Procesa la verificación de email mediante token.
+     * El token se envía por email al usuario tras el registro.
+     *
+     * @param token el token de verificación
+     * @param redirectAttributes atributos para redirección
+     * @return redirección a la página de login
+     */
     @GetMapping("/verificar-email")
     public String verificarEmail(@org.springframework.web.bind.annotation.RequestParam("token") String token,
                                   RedirectAttributes redirectAttributes) {
@@ -161,11 +212,23 @@ public class AuthController {
         return "redirect:/login";
     }
 
+    /**
+     * Muestra el formulario para reenviar el email de verificación.
+     *
+     * @return nombre de la vista del formulario
+     */
     @GetMapping("/reenviar-verificacion")
     public String mostrarReenviarVerificacion() {
         return "reenviar-verificacion";
     }
 
+    /**
+     * Procesa el reenvío del email de verificación.
+     *
+     * @param email el email del usuario
+     * @param redirectAttributes atributos para redirección
+     * @return redirección a la página de login
+     */
     @PostMapping("/reenviar-verificacion")
     public String reenviarVerificacion(@org.springframework.web.bind.annotation.RequestParam("email") String email,
                                        RedirectAttributes redirectAttributes) {
