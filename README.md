@@ -152,7 +152,7 @@ mvn spring-boot:run
 ```
 
 **📖 Documentación completa:**
-- [🚀 Inicio Rápido](docs/INICIO_RAPIDO.md) - Configuración en 2 minutos
+- [🚀 Inicio Rápido](docs/INICIO_RAPIDO_CAMBIOS_APPLICATION_PROPPERTIES.md) - Configuración en 2 minutos
 - [🔐 Guía de Seguridad](docs/GUIA_SEGURIDAD_CONFIGURACION.md) - Configuración completa y producción
 
 ---

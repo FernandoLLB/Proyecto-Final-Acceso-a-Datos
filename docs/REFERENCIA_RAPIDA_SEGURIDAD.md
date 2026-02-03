@@ -115,7 +115,7 @@ netstat -ano | findstr :8090
 
 ## Documentación Completa
 
-- 📘 [INICIO_RAPIDO.md](INICIO_RAPIDO.md) - Configuración paso a paso
+- 📘 [INICIO_RAPIDO.md](INICIO_RAPIDO_CAMBIOS_APPLICATION_PROPPERTIES.md) - Configuración paso a paso
 - 🔐 [GUIA_SEGURIDAD_CONFIGURACION.md](GUIA_SEGURIDAD_CONFIGURACION.md) - Guía completa
 - 📋 [RESUMEN_CAMBIOS_SEGURIDAD.md](RESUMEN_CAMBIOS_SEGURIDAD.md) - Cambios realizados
 

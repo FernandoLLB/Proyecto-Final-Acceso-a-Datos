@@ -200,7 +200,7 @@ Antes de desplegar a producción, verificar:
 ## 📞 Soporte
 
 Para dudas sobre la configuración:
-- Ver [INICIO_RAPIDO.md](INICIO_RAPIDO.md)
+- Ver [INICIO_RAPIDO.md](INICIO_RAPIDO_CAMBIOS_APPLICATION_PROPPERTIES.md)
 - Ver [GUIA_SEGURIDAD_CONFIGURACION.md](GUIA_SEGURIDAD_CONFIGURACION.md)
 - Contactar al equipo de desarrollo
 

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>es.fempa.acd</groupId>
-    <artifactId>demoSecurityProductos</artifactId>
+    <artifactId>gestorAcademiasAD</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>demoSecurityProductos</name>
     <description>demoSecurityProductos</description>
