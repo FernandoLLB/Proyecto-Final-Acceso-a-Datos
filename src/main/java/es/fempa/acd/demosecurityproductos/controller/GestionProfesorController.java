@@ -18,9 +18,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Controlador DEPRECADO para la gestión de profesores.
+ *
+ * @deprecated Este controlador ya no se usa en el modelo SaaS.
+ *             La gestión de profesores ahora es responsabilidad del PROPIETARIO.
+ *             Ver {@link PropietarioGestionProfesorController} para la implementación actual.
+ *
+ * @author Sistema de Gestión de Academias
+ * @version 1.0 (Deprecado en v2.0)
+ */
+@Deprecated
 @Controller
 @RequestMapping("/profesores")
-@PreAuthorize("hasAnyRole('ADMIN', 'PROPIETARIO', 'SECRETARIA')")
+@PreAuthorize("hasAnyRole('SECRETARIA')")
 public class GestionProfesorController {
 
     private final ProfesorService profesorService;

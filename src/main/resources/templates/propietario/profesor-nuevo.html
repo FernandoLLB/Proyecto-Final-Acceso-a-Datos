@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{teacher.new} + ' - ' + #{role.propietario})}"></head>
+<body>
+    <nav th:replace="~{fragments :: navbar('propietario', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-propietario('profesores')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <h1 class="page-title" th:text="#{teacher.new}">Nuevo Profesor</h1>
+            <p class="page-subtitle" th:text="#{teacher.new.description}">Crea un nuevo profesor para una de tus academias</p>
+        </div>
+
+        <div style="max-width: 900px;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title" th:text="#{teacher.information}">Información del Profesor</h3>
+                </div>
+                <div class="card-body">
+                    <div th:if="${error}" class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+                    </div>
+
+                    <form th:action="@{/propietario/profesores/crear}" method="post">
+                        <div class="alert alert-info">
+                            <strong><i class="bi bi-info-circle"></i> <span th:text="#{app.info}">Información</span>:</strong>
+                            <span th:text="#{teacher.create.info}">Se creará un usuario con rol PROFESOR y un perfil de profesor asociado.</span>
+                        </div>
+
+                        <h5 class="mt-4 mb-3" th:text="#{teacher.user.data}">Datos de Usuario</h5>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="username" class="form-label" th:text="#{login.username} + ' *'">Usuario *</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                       required maxlength="50" th:placeholder="#{teacher.username.placeholder}">
+                                <small class="form-text text-muted" th:text="#{validation.unique.system}">Único en el sistema</small>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="email" class="form-label" th:text="#{app.email} + ' *'">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       required maxlength="100" th:placeholder="#{teacher.email.placeholder}">
+                                <small class="form-text text-muted" th:text="#{validation.unique.system}">Único en el sistema</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="password" class="form-label" th:text="#{login.password} + ' *'">Contraseña *</label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       required minlength="6" maxlength="100">
+                                <small class="form-text text-muted" th:text="#{validation.password.min}">Mínimo 6 caracteres</small>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4 mb-3" th:text="#{teacher.personal.data}">Datos Personales</h5>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="nombre" class="form-label" th:text="#{teacher.name} + ' *'">Nombre *</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre"
+                                       required maxlength="100" th:placeholder="#{teacher.name.placeholder}">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="apellidos" class="form-label" th:text="#{teacher.lastname} + ' *'">Apellidos *</label>
+                                <input type="text" class="form-control" id="apellidos" name="apellidos"
+                                       required maxlength="100" th:placeholder="#{teacher.lastname.placeholder}">
+                            </div>
+                        </div>
+
+                        <!-- Campo Academia - Solo academias del propietario -->
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <label for="academiaId" class="form-label" th:text="#{academy.name} + ' *'">Academia *</label>
+                                <select class="form-control" id="academiaId" name="academiaId" required>
+                                    <option value="" th:text="#{teacher.select.academy}">Selecciona una academia</option>
+                                    <option th:each="academia : ${academias}"
+                                            th:value="${academia.id}"
+                                            th:text="${academia.nombre}">
+                                        Academia Ejemplo
+                                    </option>
+                                </select>
+                                <small class="form-text text-muted">
+                                    Selecciona la academia a la que pertenecerá este profesor
+                                </small>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4 mb-3" th:text="#{teacher.professional.data}">Datos Profesionales</h5>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="especialidad" class="form-label" th:text="#{teacher.specialty}">Especialidad</label>
+                                <input type="text" class="form-control" id="especialidad" name="especialidad"
+                                       maxlength="200" th:placeholder="#{teacher.specialty.placeholder}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="biografia" class="form-label" th:text="#{teacher.biography}">Biografía</label>
+                            <textarea class="form-control" id="biografia" name="biografia"
+                                      rows="4" maxlength="1000"
+                                      th:placeholder="#{teacher.biography.placeholder}"></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                            <a th:href="@{/propietario/profesores}" class="btn btn-outline">
+                                <i class="bi bi-x-lg"></i> <span th:text="#{app.cancel}">Cancelar</span>
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> <span th:text="#{teacher.create.button}">Crear Profesor</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments :: scripts}"></div>
+</body>
+</html>

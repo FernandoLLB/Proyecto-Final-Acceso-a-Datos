@@ -71,14 +71,6 @@
                 <span th:text="#{academy.list}">Academias</span>
             </a>
         </li>
-        <li class="sidebar-nav-item">
-            <a th:href="@{/profesores}"
-               class="sidebar-nav-link"
-               th:classappend="${active == 'profesores'} ? 'active' : ''">
-                <span class="sidebar-nav-icon"><i class="bi bi-person-badge"></i></span>
-                <span th:text="#{teacher.list}">Profesores</span>
-            </a>
-        </li>
     </ul>
 </aside>
 
@@ -167,6 +159,14 @@
                th:classappend="${active == 'secretarias'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-person-vcard"></i></span>
                 <span th:text="#{secretary.title}">Secretarias</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/propietario/profesores}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'profesores'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-person-badge"></i></span>
+                <span th:text="#{teacher.list}">Profesores</span>
             </a>
         </li>
     </ul>
