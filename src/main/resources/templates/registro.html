@@ -87,8 +87,26 @@
                         <option value="" th:text="#{registro.seleccionar.academia}">Selecciona una academia</option>
                         <option th:each="academia : ${academias}"
                                 th:value="${academia.id}"
-                                th:text="${academia.nombre}">Academia</option>
+                                th:text="${academia.nombre + (academia.direccion != null ? ' - ' + academia.direccion : '')}">
+                            Academia - Dirección
+                        </option>
                     </select>
+                    <small class="form-text text-muted">
+                        <i class="bi bi-info-circle"></i> Selecciona la academia a la que deseas inscribirte
+                    </small>
+                </div>
+
+                <!-- Información sobre verificación de email -->
+                <div class="alert alert-info" style="margin-top: 1rem;">
+                    <div style="display: flex; gap: 0.75rem;">
+                        <i class="bi bi-envelope-check" style="font-size: 1.5rem;"></i>
+                        <div>
+                            <strong>Verificación por Email</strong>
+                            <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem;">
+                                Tras el registro, recibirás un email de verificación. Debes confirmar tu cuenta antes de poder iniciar sesión.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1rem;">
