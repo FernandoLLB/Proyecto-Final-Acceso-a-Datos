@@ -20,10 +20,10 @@ import java.util.Map;
 /**
  * Servicio para la gestión de academias.
  * Proporciona métodos para crear, actualizar, listar y obtener estadísticas de academias.
- * Solo accesible por usuarios con rol ADMIN (excepto métodos públicos de registro).
+ * Accesible por usuarios con rol ADMIN y PROPIETARIO (excepto métodos públicos de registro).
  *
  * @author Sistema de Gestión de Academias
- * @version 1.0
+ * @version 2.0
  */
 @Service
 public class AcademiaService {
@@ -92,14 +92,38 @@ public class AcademiaService {
     }
 
     /**
+     * Lista todas las academias de un propietario específico.
+     * Accesible por administradores y el propio propietario.
+     *
+     * @param propietarioId ID del propietario
+     * @return lista de academias del propietario
+     */
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROPIETARIO')")
+    public List<Academia> listarPorPropietario(Long propietarioId) {
+        return academiaRepository.findByPropietarioId(propietarioId);
+    }
+
+    /**
+     * Lista solo las academias activas de un propietario específico.
+     * Accesible por administradores y el propio propietario.
+     *
+     * @param propietarioId ID del propietario
+     * @return lista de academias activas del propietario
+     */
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROPIETARIO')")
+    public List<Academia> listarActivasPorPropietario(Long propietarioId) {
+        return academiaRepository.findByPropietarioIdAndActivaTrue(propietarioId);
+    }
+
+    /**
      * Obtiene una academia por su ID.
-     * Solo accesible por administradores.
+     * Accesible por administradores y propietarios.
      *
      * @param id el ID de la academia
      * @return la academia encontrada
      * @throws IllegalArgumentException si la academia no existe
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROPIETARIO')")
     public Academia obtenerPorId(Long id) {
         return academiaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Academia no encontrada"));
@@ -126,12 +150,12 @@ public class AcademiaService {
     /**
      * Crea una nueva academia en el sistema.
      * Establece automáticamente la fecha de alta y el estado activo si no están definidos.
-     * Solo accesible por administradores.
+     * Accesible por administradores y propietarios.
      *
      * @param academia la academia a crear
      * @return la academia creada con su ID asignado
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROPIETARIO')")
     @Transactional
     public Academia crear(Academia academia) {
         if (academia.getFechaAlta() == null) {
@@ -145,14 +169,14 @@ public class AcademiaService {
 
     /**
      * Actualiza los datos de una academia existente.
-     * Solo accesible por administradores.
+     * Accesible por administradores y propietarios.
      *
      * @param id el ID de la academia a actualizar
      * @param academiaActualizada los nuevos datos de la academia
      * @return la academia actualizada
      * @throws IllegalArgumentException si la academia no existe
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROPIETARIO')")
     @Transactional
     public Academia actualizar(Long id, Academia academiaActualizada) {
         Academia academia = obtenerPorId(id);
@@ -166,12 +190,12 @@ public class AcademiaService {
 
     /**
      * Activa una academia previamente desactivada.
-     * Solo accesible por administradores.
+     * Accesible por administradores y propietarios.
      *
      * @param id el ID de la academia a activar
      * @throws IllegalArgumentException si la academia no existe
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROPIETARIO')")
     @Transactional
     public void activar(Long id) {
         Academia academia = obtenerPorId(id);
@@ -181,12 +205,12 @@ public class AcademiaService {
 
     /**
      * Desactiva una academia.
-     * Solo accesible por administradores.
+     * Accesible por administradores y propietarios.
      *
      * @param id el ID de la academia a desactivar
      * @throws IllegalArgumentException si la academia no existe
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROPIETARIO')")
     @Transactional
     public void desactivar(Long id) {
         Academia academia = obtenerPorId(id);

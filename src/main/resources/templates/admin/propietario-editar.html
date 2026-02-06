@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+</html>
+</body>
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+
+    </main>
+        </style>
+            }
+                color: var(--primary-color);
+                font-weight: 600;
+                font-size: 1.5rem;
+            .stat-value {
+            }
+                font-size: 0.875rem;
+            .stat-label {
+            }
+                text-align: center;
+            .stat-item {
+            }
+                border-bottom: none;
+            .info-item:last-child {
+            }
+                border-bottom: 1px solid #e5e7eb;
+                padding: 0.5rem 0;
+            .info-item {
+            }
+                font-weight: 600;
+                margin-bottom: 1rem;
+                color: var(--primary-color);
+            .section-title {
+            }
+                margin-bottom: 1.5rem;
+            .form-section {
+        <style>
+
+        </div>
+            </div>
+                </div>
+                    </div>
+                        </div>
+                            <span th:unless="${propietario.activo}" class="badge bg-danger">Inactivo</span>
+                            <span th:if="${propietario.activo}" class="badge bg-success">Activo</span>
+                            <div class="stat-label text-muted">Estado</div>
+                        <div class="stat-item">
+                        </div>
+                            <div class="stat-value" th:text="${#temporals.format(propietario.fechaAlta, 'dd/MM/yyyy')}">01/01/2026</div>
+                            <div class="stat-label text-muted">Fecha de Alta</div>
+                        <div class="stat-item mb-3">
+                        </div>
+                            <div class="stat-value h3 mb-0" th:text="${academias.size()}">0</div>
+                            <div class="stat-label text-muted">Total Academias</div>
+                        <div class="stat-item mb-3">
+                    <div class="card-body">
+                    </div>
+                        </h5>
+                            <i class="bi bi-bar-chart"></i> Estadísticas
+                        <h5 class="card-title mb-0">
+                    <div class="card-header">
+                <div class="card">
+                <!-- Estadísticas -->
+
+                </div>
+                    </div>
+                        </div>
+                            <span th:unless="${propietario.usuario.activo}" class="badge bg-danger">Inactivo</span>
+                            <span th:if="${propietario.usuario.activo}" class="badge bg-success">Activo</span>
+                            <strong>Estado:</strong>
+                        <div class="info-item">
+                        </div>
+                            <p th:text="${propietario.usuario.nombre} ?: 'No especificado'" class="mb-0">Juan</p>
+                            <strong>Nombre:</strong>
+                        <div class="info-item mb-2">
+                        </div>
+                            <p th:text="${propietario.usuario.email}" class="mb-0">email@example.com</p>
+                            <strong>Email:</strong>
+                        <div class="info-item mb-2">
+                        </div>
+                            <p th:text="${propietario.usuario.username}" class="mb-0">usuario123</p>
+                            <strong>Usuario:</strong>
+                        <div class="info-item mb-2">
+                    <div class="card-body">
+                    </div>
+                        </h5>
+                            <i class="bi bi-person"></i> Usuario Asociado
+                        <h5 class="card-title mb-0">
+                    <div class="card-header">
+                <div class="card mb-3">
+                <!-- Información del Usuario -->
+            <div class="col-md-4">
+
+            </div>
+                </div>
+                    </div>
+                        </form>
+                            </div>
+                                </button>
+                                    <i class="bi bi-check-circle"></i> <span th:text="#{app.save}">Guardar Cambios</span>
+                                <button type="submit" class="btn btn-primary">
+                                </a>
+                                    <i class="bi bi-x-circle"></i> <span th:text="#{app.cancel}">Cancelar</span>
+                                <a th:href="@{/admin/propietarios/lista}" class="btn btn-secondary">
+                            <div class="form-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <!-- Botones de acción -->
+
+                            </div>
+                                </div>
+                                    </div>
+                                        </div>
+                                                   th:field="*{direccion}" maxlength="300">
+                                            <input type="text" class="form-control" id="direccion"
+                                            </label>
+                                                <span th:text="#{owner.address}">Dirección</span>
+                                            <label for="direccion" class="form-label">
+                                        <div class="form-group mb-3">
+                                    <div class="col-md-12">
+                                <div class="row">
+
+                                </div>
+                                    </div>
+                                        </div>
+                                                   th:field="*{telefono}" maxlength="20">
+                                            <input type="tel" class="form-control" id="telefono"
+                                            </label>
+                                                <span th:text="#{owner.phone}">Teléfono</span>
+                                            <label for="telefono" class="form-label">
+                                        <div class="form-group mb-3">
+                                    <div class="col-md-6">
+                                    </div>
+                                        </div>
+                                                   th:field="*{nifCif}" maxlength="20">
+                                            <input type="text" class="form-control" id="nifCif"
+                                            </label>
+                                                <span th:text="#{owner.nif}">NIF/CIF</span>
+                                            <label for="nifCif" class="form-label">
+                                        <div class="form-group mb-3">
+                                    <div class="col-md-6">
+                                <div class="row">
+
+                                </div>
+                                    </div>
+                                        </div>
+                                                   th:field="*{razonSocial}" required maxlength="300">
+                                            <input type="text" class="form-control" id="razonSocial"
+                                            </label>
+                                                <span class="text-danger">*</span>
+                                                <span th:text="#{owner.business.name}">Razón Social</span>
+                                            <label for="razonSocial" class="form-label">
+                                        <div class="form-group mb-3">
+                                    <div class="col-md-12">
+                                <div class="row">
+
+                                </h5>
+                                    <i class="bi bi-building"></i> Información Comercial
+                                <h5 class="section-title">
+                            <div class="form-section">
+                            <!-- Datos del Propietario -->
+
+                              method="post">
+                              th:object="${propietario}"
+                        <form th:action="@{/admin/propietarios/{id}/actualizar(id=${propietario.id})}"
+                    <div class="card-body">
+                    </div>
+                        </h3>
+                            <i class="bi bi-person-badge"></i> Datos del Propietario
+                        <h3 class="card-title">
+                    <div class="card-header">
+                <div class="card">
+            <div class="col-md-8">
+        <div class="row">
+
+        </div>
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+        <div th:if="${error}" class="alert alert-danger">
+        </div>
+            <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+        <div th:if="${success}" class="alert alert-success">
+        <!-- Mensajes -->
+
+        </div>
+            </nav>
+                </ol>
+                    <li class="breadcrumb-item active" aria-current="page">Editar</li>
+                    <li class="breadcrumb-item"><a th:href="@{/admin/propietarios/lista}">Propietarios</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                <ol class="breadcrumb">
+            <nav aria-label="breadcrumb">
+            </h1>
+                <span th:text="#{owner.edit}">Editar Propietario</span>
+                <i class="bi bi-pencil-square"></i>
+            <h1 class="page-title">
+        <div class="page-header">
+    <main class="main-content fade-in">
+
+    <aside th:replace="~{fragments :: sidebar-admin('propietarios')}"></aside>
+    <nav th:replace="~{fragments :: navbar('admin', ${#authentication.name})}"></nav>
+<body>
+<head th:replace="~{fragments :: head(#{owner.edit})}"></head>
+<html xmlns:th="http://www.thymeleaf.org">

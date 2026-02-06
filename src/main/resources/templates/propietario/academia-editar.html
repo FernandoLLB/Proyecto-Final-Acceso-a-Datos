@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{academy.edit})}"></head>
+<body>
+    <nav th:replace="~{fragments :: navbar('propietario', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-propietario('academias')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="bi bi-pencil-square"></i>
+                <span th:text="#{academy.edit}">Editar Academia</span>
+            </h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/propietario/dashboard}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/propietario/academias/lista}">Mis Academias</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Editar</li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- Mensajes -->
+        <div th:if="${success}" class="alert alert-success">
+            <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="bi bi-building"></i> Datos de la Academia
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/propietario/academias/{id}/actualizar(id=${academia.id})}"
+                              th:object="${academia}"
+                              method="post">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label for="nombre" class="form-label">
+                                            <span th:text="#{academy.name}">Nombre de la Academia</span>
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control" id="nombre" th:field="*{nombre}"
+                                               required maxlength="200">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="nifCif" class="form-label">
+                                            <span th:text="#{academy.nif}">NIF/CIF</span>
+                                        </label>
+                                        <input type="text" class="form-control" id="nifCif" th:field="*{nifCif}"
+                                               maxlength="20">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="telefono" class="form-label">
+                                            <span th:text="#{academy.phone}">Teléfono</span>
+                                        </label>
+                                        <input type="tel" class="form-control" id="telefono" th:field="*{telefono}"
+                                               maxlength="20">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label for="emailContacto" class="form-label">
+                                            <span th:text="#{academy.email}">Email de Contacto</span>
+                                        </label>
+                                        <input type="email" class="form-control" id="emailContacto" th:field="*{emailContacto}"
+                                               maxlength="100">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label for="direccion" class="form-label">
+                                            <span th:text="#{academy.address}">Dirección</span>
+                                        </label>
+                                        <textarea class="form-control" id="direccion" th:field="*{direccion}"
+                                                  rows="2" maxlength="300"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botones de acción -->
+                            <div class="form-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                                <a th:href="@{/propietario/academias/lista}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> <span th:text="#{app.cancel}">Cancelar</span>
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle"></i> <span th:text="#{app.save}">Guardar Cambios</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Información de la academia -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-info-circle"></i> Información
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-item mb-3">
+                            <label class="info-label">ID</label>
+                            <p class="info-value" th:text="${academia.id}">1</p>
+                        </div>
+                        <div class="info-item mb-3">
+                            <label class="info-label">Fecha de Alta</label>
+                            <p class="info-value" th:text="${#temporals.format(academia.fechaAlta, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</p>
+                        </div>
+                        <div class="info-item">
+                            <label class="info-label">Estado</label>
+                            <p class="info-value">
+                                <span th:if="${academia.activa}" class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i> Activa
+                                </span>
+                                <span th:unless="${academia.activa}" class="badge bg-danger">
+                                    <i class="bi bi-x-circle"></i> Inactiva
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-tools"></i> Acciones
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/propietario/seleccionar-academia}" method="post" class="mb-2">
+                            <input type="hidden" name="academiaId" th:value="${academia.id}">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-box-arrow-in-right"></i> Trabajar con esta Academia
+                            </button>
+                        </form>
+
+                        <form th:if="${academia.activa}"
+                              th:action="@{/propietario/academias/{id}/desactivar(id=${academia.id})}"
+                              method="post"
+                              class="mb-2"
+                              th:attr="onsubmit='return confirm(\'¿Está seguro de desactivar esta academia?\');'">
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="bi bi-x-circle"></i> Desactivar Academia
+                            </button>
+                        </form>
+
+                        <form th:unless="${academia.activa}"
+                              th:action="@{/propietario/academias/{id}/activar(id=${academia.id})}"
+                              method="post"
+                              class="mb-2">
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-check-circle"></i> Activar Academia
+                            </button>
+                        </form>
+
+                        <a th:href="@{/propietario/academias/lista}" class="btn btn-secondary w-100">
+                            <i class="bi bi-arrow-left"></i> Volver a Mis Academias
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .info-item {
+                padding-bottom: 0.75rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .info-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            .info-label {
+                font-size: 0.875rem;
+                color: #6b7280;
+                font-weight: 500;
+                margin-bottom: 0.25rem;
+                display: block;
+            }
+            .info-value {
+                font-size: 1rem;
+                color: #111827;
+                margin: 0;
+            }
+        </style>
+    </main>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

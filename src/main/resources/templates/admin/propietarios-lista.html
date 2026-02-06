@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{owner.list})}"></head>
+<body>
+    <nav th:replace="~{fragments :: navbar('admin', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-admin('propietarios')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="page-title">
+                        <i class="bi bi-people-fill"></i>
+                        <span th:text="#{owner.list}">Lista de Propietarios</span>
+                    </h1>
+                    <p class="page-subtitle">Gestiona los propietarios del sistema SaaS</p>
+                </div>
+                <a th:href="@{/admin/propietarios/nuevo}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i>
+                    <span th:text="#{owner.new}">Nuevo Propietario</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Mensajes de éxito/error -->
+        <div th:if="${success}" class="alert alert-success" style="margin-bottom: 1.5rem; border-radius: var(--radius-lg); border: 1px solid #10b981; background: rgba(16, 185, 129, 0.1); color: #065f46; padding: 1rem 1.25rem;">
+            <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-danger" style="margin-bottom: 1.5rem; border-radius: var(--radius-lg); border: 1px solid #ef4444; background: rgba(239, 68, 68, 0.1); color: #991b1b; padding: 1rem 1.25rem;">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+        </div>
+
+        <!-- Información si no hay propietarios -->
+        <div th:if="${#lists.isEmpty(propietarios)}" class="alert alert-info" style="border-radius: var(--radius-lg); border: 1px solid var(--primary-color); background: rgba(99, 102, 241, 0.1); color: var(--primary-color); padding: 1rem 1.25rem;">
+            <i class="bi bi-info-circle"></i> No hay propietarios registrados en el sistema.
+            <a th:href="@{/admin/propietarios/nuevo}" style="color: var(--primary-color); font-weight: 600;">Crear el primer propietario</a>
+        </div>
+
+        <!-- Tabla de propietarios -->
+        <div th:unless="${#lists.isEmpty(propietarios)}" class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="bi bi-list-ul"></i>
+                    <span th:text="#{owner.list}">Listado de Propietarios</span>
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th th:text="#{owner.business.name}">Razón Social</th>
+                                <th th:text="#{owner.nif}">NIF/CIF</th>
+                                <th th:text="#{owner.user.username}">Usuario</th>
+                                <th th:text="#{owner.user.email}">Email</th>
+                                <th th:text="#{owner.phone}">Teléfono</th>
+                                <th th:text="#{owner.total.academies}">Academias</th>
+                                <th th:text="#{owner.registration.date}">Fecha Alta</th>
+                                <th th:text="#{owner.status}">Estado</th>
+                                <th style="width: 250px;" th:text="#{app.actions}">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="propietario : ${propietarios}">
+                                <td th:text="${propietario.id}">1</td>
+                                <td>
+                                    <strong th:text="${propietario.razonSocial}">Mi Academia S.L.</strong>
+                                </td>
+                                <td th:text="${propietario.nifCif ?: '-'}">B12345678</td>
+                                <td th:text="${propietario.usuario.username}">usuario1</td>
+                                <td th:text="${propietario.usuario.email}">email@example.com</td>
+                                <td th:text="${propietario.telefono ?: '-'}">600123456</td>
+                                <td>
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-building"></i>
+                                        <span th:text="${propietario.academias.size()}">3</span>
+                                    </span>
+                                </td>
+                                <td th:text="${#temporals.format(propietario.fechaAlta, 'dd/MM/yyyy')}">01/01/2026</td>
+                                <td>
+                                    <span th:if="${propietario.activo}" class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> <span th:text="#{app.active}">Activo</span>
+                                    </span>
+                                    <span th:unless="${propietario.activo}" class="badge bg-danger">
+                                        <i class="bi bi-x-circle"></i> <span th:text="#{app.inactive}">Inactivo</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <a th:href="@{/admin/propietarios/{id}/detalle(id=${propietario.id})}"
+                                           class="btn btn-info btn-sm"
+                                           title="Ver detalles">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a th:href="@{/admin/propietarios/{id}/editar(id=${propietario.id})}"
+                                           class="btn btn-warning btn-sm"
+                                           title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <form th:if="${propietario.activo}"
+                                              th:action="@{/admin/propietarios/{id}/desactivar(id=${propietario.id})}"
+                                              method="post"
+                                              style="margin: 0;"
+                                              th:attr="onsubmit='return confirm(\'¿Está seguro de desactivar este propietario?\');'">
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Desactivar">
+                                                <i class="bi bi-x-circle"></i>
+                                            </button>
+                                        </form>
+
+                                        <form th:unless="${propietario.activo}"
+                                              th:action="@{/admin/propietarios/{id}/activar(id=${propietario.id})}"
+                                              method="post"
+                                              style="margin: 0;">
+                                            <button type="submit" class="btn btn-success btn-sm" title="Activar">
+                                                <i class="bi bi-check-circle"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas rápidas -->
+        <div th:unless="${#lists.isEmpty(propietarios)}" class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="text-primary" th:text="${propietarios.size()}">5</h3>
+                        <p class="text-muted mb-0">Total Propietarios</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="text-success" th:text="${#lists.size(propietarios.?[activo == true])}">4</h3>
+                        <p class="text-muted mb-0" th:text="#{owner.activate}">Activos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="text-info">
+                            <span th:text="${#aggregates.sum(propietarios.![academias.size()])}">12</span>
+                        </h3>
+                        <p class="text-muted mb-0">Total Academias</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

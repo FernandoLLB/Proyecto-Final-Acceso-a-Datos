@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Detalle de Academia')}"></head>
+<body>
+    <nav th:replace="~{fragments :: navbar('propietario', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-propietario('academias')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="page-title">
+                        <i class="bi bi-building-fill"></i>
+                        <span th:text="${academia.nombre}">Academia</span>
+                    </h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/propietario/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/propietario/academias/lista}">Mis Academias</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Detalle</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div>
+                    <a th:href="@{/propietario/academias/lista}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            <strong>Información:</strong> Esta es una vista de solo lectura. Solo el administrador del sistema puede modificar academias.
+        </div>
+
+        <div class="row">
+            <!-- Información de la Academia -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-building"></i> Información de la Academia
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-group">
+                            <div class="info-item">
+                                <label class="info-label">ID</label>
+                                <p class="info-value" th:text="${academia.id}">1</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Nombre</label>
+                                <p class="info-value" th:text="${academia.nombre}">Academia Central</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">NIF/CIF</label>
+                                <p class="info-value" th:text="${academia.nifCif} ?: 'No especificado'">B12345678</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Email de Contacto</label>
+                                <p class="info-value" th:text="${academia.emailContacto} ?: 'No especificado'">contacto@academia.com</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Teléfono</label>
+                                <p class="info-value" th:text="${academia.telefono} ?: 'No especificado'">912345678</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Dirección</label>
+                                <p class="info-value" th:text="${academia.direccion} ?: 'No especificada'">Calle Principal 123</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Fecha de Alta</label>
+                                <p class="info-value" th:text="${#temporals.format(academia.fechaAlta, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Estado</label>
+                                <p class="info-value">
+                                    <span th:if="${academia.activa}" class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Activa
+                                    </span>
+                                    <span th:unless="${academia.activa}" class="badge bg-danger">
+                                        <i class="bi bi-x-circle"></i> Inactiva
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información del Propietario -->
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-person-badge"></i> Propietario
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-group">
+                            <div class="info-item">
+                                <label class="info-label">Razón Social</label>
+                                <p class="info-value" th:text="${propietario.razonSocial}">Mi Academia S.L.</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">NIF/CIF</label>
+                                <p class="info-value" th:text="${propietario.nifCif} ?: 'No especificado'">B98765432</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Teléfono</label>
+                                <p class="info-value" th:text="${propietario.telefono} ?: 'No especificado'">600123456</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-tools"></i> Acciones
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/propietario/seleccionar-academia}" method="post" class="mb-2">
+                            <input type="hidden" name="academiaId" th:value="${academia.id}">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-box-arrow-in-right"></i> Trabajar con esta Academia
+                            </button>
+                        </form>
+
+                        <a th:href="@{/propietario/academias/lista}" class="btn btn-secondary w-100">
+                            <i class="bi bi-arrow-left"></i> Volver a Mis Academias
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .info-group {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .info-item {
+                padding-bottom: 0.75rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .info-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            .info-label {
+                font-size: 0.875rem;
+                color: #6b7280;
+                font-weight: 500;
+                margin-bottom: 0.25rem;
+                display: block;
+            }
+            .info-value {
+                font-size: 1rem;
+                color: #111827;
+                margin: 0;
+                font-weight: 400;
+            }
+        </style>
+    </main>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

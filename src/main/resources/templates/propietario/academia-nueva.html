@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+</html>
+</body>
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+
+    </main>
+        </div>
+            </div>
+                </form>
+                    </div>
+                        </button>
+                            <i class="bi bi-check-circle"></i> <span th:text="#{app.save}">Crear Academia</span>
+                        <button type="submit" class="btn btn-primary">
+                        </a>
+                            <i class="bi bi-x-circle"></i> <span th:text="#{app.cancel}">Cancelar</span>
+                        <a th:href="@{/propietario/academias/lista}" class="btn btn-secondary">
+                    <div class="form-actions" style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <!-- Botones de acción -->
+
+                    </div>
+                        </ul>
+                            <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                            <li>Podrás agregar profesores, secretarias, alumnos y cursos después de crearla.</li>
+                            <li>La academia se creará en estado <strong>activa</strong> automáticamente.</li>
+                        <ul class="mb-0">
+                        <h5><i class="bi bi-info-circle"></i> Información</h5>
+                    <div class="alert alert-info">
+                    <!-- Información adicional -->
+
+                    </div>
+                        </div>
+                            </div>
+                                       placeholder="Calle, número, código postal, ciudad">
+                                       maxlength="300"
+                                <input type="text" class="form-control" id="direccion" th:field="*{direccion}"
+                                </label>
+                                    <span th:text="#{academy.address}">Dirección</span>
+                                <label for="direccion" class="form-label">
+                            <div class="form-group mb-3">
+                        <div class="col-md-12">
+                    <div class="row">
+
+                    </div>
+                        </div>
+                            </div>
+                                       placeholder="+34 912 345 678">
+                                       maxlength="20"
+                                <input type="tel" class="form-control" id="telefono" th:field="*{telefono}"
+                                </label>
+                                    <span th:text="#{academy.phone}">Teléfono</span>
+                                <label for="telefono" class="form-label">
+                            <div class="form-group mb-3">
+                        <div class="col-md-6">
+                        </div>
+                            </div>
+                                       placeholder="contacto@miacademia.com">
+                                       maxlength="100"
+                                <input type="email" class="form-control" id="emailContacto" th:field="*{emailContacto}"
+                                </label>
+                                    <span th:text="#{academy.email}">Email de Contacto</span>
+                                <label for="emailContacto" class="form-label">
+                            <div class="form-group mb-3">
+                        <div class="col-md-6">
+                    <div class="row">
+
+                    </div>
+                        </div>
+                            </div>
+                                       placeholder="B12345678">
+                                       maxlength="20"
+                                <input type="text" class="form-control" id="nifCif" th:field="*{nifCif}"
+                                </label>
+                                    <span th:text="#{academy.nif}">NIF/CIF</span>
+                                <label for="nifCif" class="form-label">
+                            <div class="form-group mb-3">
+                        <div class="col-md-6">
+                        </div>
+                            </div>
+                                <small class="form-text text-muted">Nombre comercial de tu academia</small>
+                                       placeholder="Ej: Academia Central Madrid">
+                                       required maxlength="200"
+                                <input type="text" class="form-control" id="nombre" th:field="*{nombre}"
+                                </label>
+                                    <span class="text-danger">*</span>
+                                    <span th:text="#{academy.name}">Nombre de la Academia</span>
+                                <label for="nombre" class="form-label">
+                            <div class="form-group mb-3">
+                        <div class="col-md-6">
+                    <div class="row">
+
+                      method="post">
+                      th:object="${academia}"
+                <form th:action="@{/propietario/academias/crear}"
+            <div class="card-body">
+            </div>
+                </h3>
+                    <i class="bi bi-building"></i> Información de la Nueva Academia
+                <h3 class="card-title">
+            <div class="card-header">
+        <div class="card">
+
+        </div>
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+        <div th:if="${error}" class="alert alert-danger">
+        <!-- Mensajes de error -->
+
+        </div>
+            </nav>
+                </ol>
+                    <li class="breadcrumb-item active" aria-current="page">Nueva</li>
+                    <li class="breadcrumb-item"><a th:href="@{/propietario/academias/lista}">Mis Academias</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/propietario/dashboard}">Dashboard</a></li>
+                <ol class="breadcrumb">
+            <nav aria-label="breadcrumb">
+            </h1>
+                <span th:text="#{owner.create.academy}">Nueva Academia</span>
+                <i class="bi bi-building-add"></i>
+            <h1 class="page-title">
+        <div class="page-header">
+    <main class="main-content fade-in">
+
+    <aside th:replace="~{fragments :: sidebar-propietario('academias')}"></aside>
+    <nav th:replace="~{fragments :: navbar('propietario', ${#authentication.name})}"></nav>
+<body>
+<head th:replace="~{fragments :: head(#{owner.create.academy})}"></head>
+<html xmlns:th="http://www.thymeleaf.org">

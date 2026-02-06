@@ -2,6 +2,7 @@ package es.fempa.acd.demosecurityproductos.controller;
 
 import es.fempa.acd.demosecurityproductos.model.Academia;
 import es.fempa.acd.demosecurityproductos.service.AcademiaService;
+import es.fempa.acd.demosecurityproductos.service.PropietarioService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,7 @@ import java.util.Map;
  * Solo accesible por usuarios con rol ADMIN.
  *
  * @author Sistema de Gestión de Academias
- * @version 1.0
+ * @version 2.0
  */
 @Controller
 @RequestMapping("/admin")
@@ -22,14 +23,17 @@ import java.util.Map;
 public class AcademiaController {
 
     private final AcademiaService academiaService;
+    private final PropietarioService propietarioService;
 
     /**
      * Constructor del controlador de academias.
      *
      * @param academiaService servicio de gestión de academias
+     * @param propietarioService servicio de gestión de propietarios
      */
-    public AcademiaController(AcademiaService academiaService) {
+    public AcademiaController(AcademiaService academiaService, PropietarioService propietarioService) {
         this.academiaService = academiaService;
+        this.propietarioService = propietarioService;
     }
 
     /**
@@ -41,8 +45,13 @@ public class AcademiaController {
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         Map<String, Object> stats = academiaService.obtenerEstadisticasGlobales();
+
+        // Añadir estadísticas de propietarios
+        stats.put("totalPropietarios", propietarioService.contarActivos());
+
         model.addAttribute("stats", stats);
         model.addAttribute("academias", academiaService.listarTodas());
+        model.addAttribute("propietarios", propietarioService.listarActivos());
         return "admin/dashboard";
     }
 

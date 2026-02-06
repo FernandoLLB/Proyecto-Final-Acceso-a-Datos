@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Entidad que representa una academia en el sistema.
- * Una academia puede tener múltiples usuarios, cursos, aulas y alumnos asociados.
+ * Entidad que representa una academia en el sistema SaaS.
+ * Una academia pertenece a un propietario y puede tener múltiples usuarios, cursos, aulas y alumnos asociados.
  *
  * @author Sistema de Gestión de Academias
- * @version 1.0
+ * @version 2.0
  */
 @Entity
 @Table(name = "academia")
@@ -46,6 +46,11 @@ public class Academia {
     /** Dirección física de la academia */
     @Column(length = 300)
     private String direccion;
+
+    /** Propietario al que pertenece la academia */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "propietario_id", nullable = false)
+    private Propietario propietario;
 
     /**
      * Constructor por defecto.
@@ -184,5 +189,21 @@ public class Academia {
      */
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    /**
+     * Obtiene el propietario de la academia.
+     * @return el propietario de la academia
+     */
+    public Propietario getPropietario() {
+        return propietario;
+    }
+
+    /**
+     * Establece el propietario de la academia.
+     * @param propietario el propietario a establecer
+     */
+    public void setPropietario(Propietario propietario) {
+        this.propietario = propietario;
     }
 }

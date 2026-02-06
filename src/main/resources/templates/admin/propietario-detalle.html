@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{owner.detail})}"></head>
+<body>
+    <nav th:replace="~{fragments :: navbar('admin', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-admin('propietarios')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="page-title">
+                        <i class="bi bi-person-badge-fill"></i>
+                        <span th:text="${propietario.razonSocial}">Propietario</span>
+                    </h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/admin/propietarios/lista}">Propietarios</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Detalle</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div>
+                    <a th:href="@{/admin/propietarios/{id}/editar(id=${propietario.id})}" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                    <a th:href="@{/admin/propietarios/lista}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Información del Propietario -->
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-building"></i> Información del Propietario
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-group">
+                            <div class="info-item">
+                                <label class="info-label">ID</label>
+                                <p class="info-value" th:text="${propietario.id}">1</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label" th:text="#{owner.business.name}">Razón Social</label>
+                                <p class="info-value" th:text="${propietario.razonSocial}">Mi Academia S.L.</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label" th:text="#{owner.nif}">NIF/CIF</label>
+                                <p class="info-value" th:text="${propietario.nifCif} ?: 'No especificado'">B12345678</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label" th:text="#{owner.phone}">Teléfono</label>
+                                <p class="info-value" th:text="${propietario.telefono} ?: 'No especificado'">600123456</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label" th:text="#{owner.address}">Dirección</label>
+                                <p class="info-value" th:text="${propietario.direccion} ?: 'No especificada'">Calle Principal 123</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label" th:text="#{owner.registration.date}">Fecha de Alta</label>
+                                <p class="info-value" th:text="${#temporals.format(propietario.fechaAlta, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label" th:text="#{owner.status}">Estado</label>
+                                <p class="info-value">
+                                    <span th:if="${propietario.activo}" class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Activo
+                                    </span>
+                                    <span th:unless="${propietario.activo}" class="badge bg-danger">
+                                        <i class="bi bi-x-circle"></i> Inactivo
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-person"></i> Usuario Asociado
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-group">
+                            <div class="info-item">
+                                <label class="info-label">Usuario</label>
+                                <p class="info-value" th:text="${propietario.usuario.username}">usuario123</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Email</label>
+                                <p class="info-value" th:text="${propietario.usuario.email}">email@example.com</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Nombre Completo</label>
+                                <p class="info-value"
+                                   th:text="${propietario.usuario.nombre != null && propietario.usuario.apellidos != null} ?
+                                            ${propietario.usuario.nombre + ' ' + propietario.usuario.apellidos} :
+                                            'No especificado'">
+                                    Juan Pérez
+                                </p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Estado Usuario</label>
+                                <p class="info-value">
+                                    <span th:if="${propietario.usuario.activo}" class="badge bg-success">Activo</span>
+                                    <span th:unless="${propietario.usuario.activo}" class="badge bg-danger">Inactivo</span>
+                                </p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Email Verificado</label>
+                                <p class="info-value">
+                                    <span th:if="${propietario.usuario.emailVerificado}" class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Verificado
+                                    </span>
+                                    <span th:unless="${propietario.usuario.emailVerificado}" class="badge bg-warning">
+                                        <i class="bi bi-exclamation-triangle"></i> Pendiente
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Academias del Propietario -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h5 class="card-title mb-0">
+                                <i class="bi bi-building"></i>
+                                <span th:text="#{owner.academies}">Academias</span>
+                                <span class="badge bg-primary ms-2" th:text="${totalAcademias}">0</span>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Estadísticas de academias -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="stat-card text-center">
+                                    <div class="stat-icon bg-primary">
+                                        <i class="bi bi-building"></i>
+                                    </div>
+                                    <div class="stat-value" th:text="${totalAcademias}">0</div>
+                                    <div class="stat-label">Total Academias</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="stat-card text-center">
+                                    <div class="stat-icon bg-success">
+                                        <i class="bi bi-check-circle"></i>
+                                    </div>
+                                    <div class="stat-value" th:text="${#lists.size(academias.?[activa == true])}">0</div>
+                                    <div class="stat-label">Academias Activas</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lista de academias -->
+                        <div th:if="${#lists.isEmpty(academias)}" class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            Este propietario aún no tiene academias registradas.
+                        </div>
+
+                        <div th:unless="${#lists.isEmpty(academias)}" class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>NIF/CIF</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                        <th>Fecha Alta</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="academia : ${academias}">
+                                        <td th:text="${academia.id}">1</td>
+                                        <td>
+                                            <strong th:text="${academia.nombre}">Academia Central</strong>
+                                        </td>
+                                        <td th:text="${academia.nifCif} ?: '-'">B98765432</td>
+                                        <td th:text="${academia.emailContacto} ?: '-'">info@academia.com</td>
+                                        <td th:text="${academia.telefono} ?: '-'">912345678</td>
+                                        <td th:text="${#temporals.format(academia.fechaAlta, 'dd/MM/yyyy')}">15/01/2026</td>
+                                        <td>
+                                            <span th:if="${academia.activa}" class="badge bg-success">Activa</span>
+                                            <span th:unless="${academia.activa}" class="badge bg-danger">Inactiva</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .info-group {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .info-item {
+                padding-bottom: 0.75rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .info-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            .info-label {
+                font-size: 0.875rem;
+                color: #6b7280;
+                font-weight: 500;
+                margin-bottom: 0.25rem;
+                display: block;
+            }
+            .info-value {
+                font-size: 1rem;
+                color: #111827;
+                margin: 0;
+                font-weight: 400;
+            }
+            .stat-card {
+                padding: 1.5rem;
+                border-radius: 8px;
+                background: #f9fafb;
+                border: 1px solid #e5e7eb;
+            }
+            .stat-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.75rem;
+                color: white;
+                font-size: 1.5rem;
+            }
+            .stat-icon.bg-primary {
+                background: var(--primary-color);
+            }
+            .stat-icon.bg-success {
+                background: #10b981;
+            }
+            .stat-value {
+                font-size: 2rem;
+                font-weight: 700;
+                color: #111827;
+                line-height: 1;
+                margin-bottom: 0.5rem;
+            }
+            .stat-label {
+                font-size: 0.875rem;
+                color: #6b7280;
+            }
+        </style>
+    </main>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

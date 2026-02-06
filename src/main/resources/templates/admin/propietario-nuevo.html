@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{owner.new})}"></head>
+<body>
+    <nav th:replace="~{fragments :: navbar('admin', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-admin('propietarios')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="bi bi-person-plus-fill"></i>
+                <span th:text="#{owner.new}">Nuevo Propietario</span>
+            </h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/admin/propietarios/lista}">Propietarios</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- Mensajes de error -->
+        <div th:if="${error}" class="alert alert-danger" style="margin-bottom: 1.5rem;">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="bi bi-person-badge"></i> Formulario de Nuevo Propietario
+                </h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/admin/propietarios/crear}" method="post">
+
+                    <!-- Datos de Usuario -->
+                    <div class="form-section">
+                        <h5 class="section-title">
+                            <i class="bi bi-person"></i>
+                            <span th:text="#{owner.user.data}">Datos de Usuario</span>
+                        </h5>
+                        <p class="text-muted">Información de acceso al sistema</p>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="username" class="form-label">
+                                        <span th:text="#{owner.user.username}">Usuario</span>
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="username" name="username"
+                                           required minlength="3" maxlength="50"
+                                           placeholder="usuario123">
+                                    <small class="form-text text-muted">Nombre único para iniciar sesión</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="email" class="form-label">
+                                        <span th:text="#{owner.user.email}">Email</span>
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                           required maxlength="100"
+                                           placeholder="usuario@ejemplo.com">
+                                    <small class="form-text text-muted">Email único en el sistema</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="password" class="form-label">
+                                        <span th:text="#{login.password}">Contraseña</span>
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="password" class="form-control" id="password" name="password"
+                                           required minlength="6"
+                                           placeholder="Mínimo 6 caracteres">
+                                    <small class="form-text text-muted">Contraseña inicial (el usuario podrá cambiarla)</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="nombre" class="form-label">
+                                        <span th:text="#{app.name.label}">Nombre</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre"
+                                           maxlength="100"
+                                           placeholder="Nombre de la persona">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group mb-3">
+                                    <label for="apellidos" class="form-label">Apellidos</label>
+                                    <input type="text" class="form-control" id="apellidos" name="apellidos"
+                                           maxlength="100"
+                                           placeholder="Apellidos de la persona">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Datos de Propietario -->
+                    <div class="form-section">
+                        <h5 class="section-title">
+                            <i class="bi bi-building"></i>
+                            <span th:text="#{owner.detail}">Datos del Propietario</span>
+                        </h5>
+                        <p class="text-muted">Información comercial del propietario</p>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="razonSocial" class="form-label">
+                                        <span th:text="#{owner.business.name}">Razón Social</span>
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="razonSocial" name="razonSocial"
+                                           required maxlength="300"
+                                           placeholder="Nombre comercial o razón social">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="nifCif" class="form-label">
+                                        <span th:text="#{owner.nif}">NIF/CIF</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="nifCif" name="nifCif"
+                                           maxlength="20"
+                                           placeholder="B12345678">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="telefono" class="form-label">
+                                        <span th:text="#{owner.phone}">Teléfono</span>
+                                    </label>
+                                    <input type="tel" class="form-control" id="telefono" name="telefono"
+                                           maxlength="20"
+                                           placeholder="+34 600 123 456">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="direccion" class="form-label">
+                                        <span th:text="#{owner.address}">Dirección</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="direccion" name="direccion"
+                                           maxlength="300"
+                                           placeholder="Calle, número, ciudad">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Botones de acción -->
+                    <div class="form-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <a th:href="@{/admin/propietarios/lista}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> <span th:text="#{app.cancel}">Cancelar</span>
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> <span th:text="#{app.save}">Guardar Propietario</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <style>
+            .form-section {
+                margin-bottom: 2rem;
+            }
+            .section-title {
+                color: var(--primary-color);
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+            }
+            .form-label {
+                font-weight: 500;
+                margin-bottom: 0.5rem;
+            }
+            .text-danger {
+                color: #dc3545;
+            }
+        </style>
+    </main>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

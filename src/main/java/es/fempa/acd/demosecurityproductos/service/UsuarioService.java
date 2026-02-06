@@ -154,6 +154,18 @@ public class UsuarioService {
     }
 
     /**
+     * Guarda un usuario en el sistema.
+     * Método público para guardar un usuario ya configurado.
+     *
+     * @param usuario usuario a guardar
+     * @return el usuario guardado
+     */
+    @Transactional
+    public Usuario guardar(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
+
+    /**
      * Crea un nuevo usuario con rol de alumno asociado a una academia.
      * Utilizado principalmente en el proceso de registro público.
      *

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(#{owner.my.academies})}"></head>
+<body>
+    <nav th:replace="~{fragments :: navbar('propietario', ${#authentication.name})}"></nav>
+    <aside th:replace="~{fragments :: sidebar-propietario('academias')}"></aside>
+
+    <main class="main-content fade-in">
+        <div class="page-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="page-title">
+                        <i class="bi bi-building"></i>
+                        <span th:text="#{owner.my.academies}">Mis Academias</span>
+                    </h1>
+                    <p class="page-subtitle">Visualiza todas tus academias (solo lectura)</p>
+                    <p class="text-muted"><small>💡 Solo el administrador del sistema puede crear o modificar academias</small></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensajes -->
+        <div th:if="${success}" class="alert alert-success">
+            <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+        </div>
+
+        <!-- Información del propietario -->
+        <div class="card mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="mb-2" style="color: white;">
+                            <i class="bi bi-person-badge"></i>
+                            <span th:text="${propietario.razonSocial}">Mi Empresa</span>
+                        </h4>
+                        <p class="mb-1" style="opacity: 0.9;">
+                            <i class="bi bi-envelope"></i>
+                            <span th:text="${propietario.usuario.email}">email@ejemplo.com</span>
+                        </p>
+                        <p class="mb-0" style="opacity: 0.9;" th:if="${propietario.nifCif}">
+                            <i class="bi bi-card-text"></i>
+                            <span th:text="${propietario.nifCif}">B12345678</span>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="h2 mb-0" style="color: white;">
+                            <i class="bi bi-building-fill"></i>
+                            <span th:text="${academias.size()}">0</span>
+                        </div>
+                        <div style="opacity: 0.9;">Academias Totales</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sin academias -->
+        <div th:if="${#lists.isEmpty(academias)}" class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-building" style="font-size: 5rem; color: #cbd5e1;"></i>
+            </div>
+            <h3 class="mb-3" th:text="#{owner.no.academies}">Sin academias</h3>
+            <p class="text-muted mb-4">
+                Aún no tienes academias asignadas. Contacta con el administrador del sistema para que te asigne academias.
+            </p>
+        </div>
+
+        <!-- Grid de academias -->
+        <div th:unless="${#lists.isEmpty(academias)}" class="row">
+            <div class="col-md-6 col-lg-4 mb-4" th:each="academia : ${academias}">
+                <div class="card h-100 academia-card">
+                    <div class="card-body">
+                        <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                            <div style="flex: 1;">
+                                <h5 class="card-title mb-1" th:text="${academia.nombre}">Academia Central</h5>
+                                <span th:if="${academia.activa}" class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i> Activa
+                                </span>
+                                <span th:unless="${academia.activa}" class="badge bg-danger">
+                                    <i class="bi bi-x-circle"></i> Inactiva
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="academia-info mb-3">
+                            <div class="info-row" th:if="${academia.nifCif}">
+                                <i class="bi bi-card-text text-muted"></i>
+                                <span th:text="${academia.nifCif}">B98765432</span>
+                            </div>
+                            <div class="info-row" th:if="${academia.emailContacto}">
+                                <i class="bi bi-envelope text-muted"></i>
+                                <span th:text="${academia.emailContacto}">contacto@academia.com</span>
+                            </div>
+                            <div class="info-row" th:if="${academia.telefono}">
+                                <i class="bi bi-telephone text-muted"></i>
+                                <span th:text="${academia.telefono}">912345678</span>
+                            </div>
+                            <div class="info-row" th:if="${academia.direccion}">
+                                <i class="bi bi-geo-alt text-muted"></i>
+                                <span th:text="${academia.direccion}">Calle Principal 123</span>
+                            </div>
+                            <div class="info-row">
+                                <i class="bi bi-calendar text-muted"></i>
+                                <span>Alta: <span th:text="${#temporals.format(academia.fechaAlta, 'dd/MM/yyyy')}">01/01/2026</span></span>
+                            </div>
+                        </div>
+
+                        <div class="card-actions">
+                            <form th:action="@{/propietario/seleccionar-academia}" method="post" class="d-inline">
+                                <input type="hidden" name="academiaId" th:value="${academia.id}">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">
+                                    <i class="bi bi-box-arrow-in-right"></i> Trabajar con esta Academia
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .academia-card {
+                transition: transform 0.2s, box-shadow 0.2s;
+                border: 1px solid #e5e7eb;
+            }
+            .academia-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            }
+            .academia-info {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .info-row {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.875rem;
+            }
+            .info-row i {
+                width: 16px;
+                flex-shrink: 0;
+            }
+            .card-actions {
+                margin-top: auto;
+            }
+        </style>
+    </main>
+
+    <script th:src="@{/js/bootsprap/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

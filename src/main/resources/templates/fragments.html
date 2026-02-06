@@ -56,6 +56,14 @@
             </a>
         </li>
         <li class="sidebar-nav-item">
+            <a th:href="@{/admin/propietarios/lista}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'propietarios'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-people-fill"></i></span>
+                <span th:text="#{owner.list}">Propietarios</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
             <a th:href="@{/admin/academias/lista}"
                class="sidebar-nav-link"
                th:classappend="${active == 'academias'} ? 'active' : ''">
@@ -69,14 +77,6 @@
                th:classappend="${active == 'profesores'} ? 'active' : ''">
                 <span class="sidebar-nav-icon"><i class="bi bi-person-badge"></i></span>
                 <span th:text="#{teacher.list}">Profesores</span>
-            </a>
-        </li>
-        <li class="sidebar-nav-item">
-            <a th:href="@{/secretarias}"
-               class="sidebar-nav-link"
-               th:classappend="${active == 'secretarias'} ? 'active' : ''">
-                <span class="sidebar-nav-icon"><i class="bi bi-person-vcard"></i></span>
-                <span th:text="#{secretary.title}">Secretarias</span>
             </a>
         </li>
     </ul>
@@ -149,8 +149,24 @@
             <a th:href="@{/propietario/dashboard}"
                class="sidebar-nav-link"
                th:classappend="${active == 'dashboard'} ? 'active' : ''">
-                <span class="sidebar-nav-icon"><i class="bi bi-grid-fill"></i></span>
-                <span>Dashboard</span>
+                <span class="sidebar-nav-icon"><i class="bi bi-speedometer2"></i></span>
+                <span th:text="#{app.dashboard}">Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/propietario/academias/lista}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'academias'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-building"></i></span>
+                <span th:text="#{owner.my.academies}">Mis Academias</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a th:href="@{/propietario/secretarias}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'secretarias'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-person-vcard"></i></span>
+                <span th:text="#{secretary.title}">Secretarias</span>
             </a>
         </li>
     </ul>
