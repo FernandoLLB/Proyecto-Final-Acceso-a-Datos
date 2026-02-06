@@ -77,6 +77,34 @@
                                 <div th:if="${#fields.hasErrors('aula')}" class="invalid-feedback" th:errors="*{aula}"></div>
                             </div>
 
+                            <!-- Selección de curso (opcional) -->
+                            <div class="mb-3">
+                                <label for="curso" class="form-label">
+                                    Curso Asociado <small class="text-muted">(opcional)</small>
+                                </label>
+                                <select class="form-select"
+                                        id="curso"
+                                        th:field="*{curso.id}"
+                                        onchange="mostrarInfoCurso(this)"
+                                        th:classappend="${#fields.hasErrors('curso')} ? 'is-invalid' : ''">
+                                    <option value="">Sin curso asociado</option>
+                                    <option th:each="cursoItem : ${cursos}"
+                                            th:value="${cursoItem.id}"
+                                            th:text="${cursoItem.nombre + ' - ' + cursoItem.profesor.usuario.nombre + ' ' + cursoItem.profesor.usuario.apellidos}"
+                                            th:selected="${reserva.curso != null and cursoItem.id == reserva.curso.id}"
+                                            th:attr="data-profesor=${cursoItem.profesor.usuario.nombre + ' ' + cursoItem.profesor.usuario.apellidos}, data-fechas=${#temporals.format(cursoItem.fechaInicio, 'dd/MM/yyyy') + ' - ' + #temporals.format(cursoItem.fechaFin, 'dd/MM/yyyy')}">
+                                        Curso de ejemplo
+                                    </option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('curso')}" class="invalid-feedback" th:errors="*{curso}"></div>
+
+                                <!-- Info del curso seleccionado -->
+                                <div id="cursoInfo" class="alert alert-success mt-2" th:style="${reserva.curso != null} ? '' : 'display: none;'">
+                                    <strong>Profesor:</strong> <span id="cursoProfesor" th:text="${reserva.curso != null} ? ${reserva.curso.profesor.usuario.nombre + ' ' + reserva.curso.profesor.usuario.apellidos} : ''"></span><br>
+                                    <strong>Fechas del curso:</strong> <span id="cursoFechas" th:text="${reserva.curso != null} ? ${#temporals.format(reserva.curso.fechaInicio, 'dd/MM/yyyy') + ' - ' + #temporals.format(reserva.curso.fechaFin, 'dd/MM/yyyy')} : ''"></span>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <!-- Fecha y hora de inicio -->
                                 <div class="col-md-6">
@@ -165,6 +193,20 @@
                 const capacidad = selectedOption.getAttribute('data-capacidad');
                 const recursos = selectedOption.getAttribute('data-recursos');
                 console.log('Aula seleccionada - Capacidad:', capacidad, 'Recursos:', recursos);
+            }
+        }
+
+        function mostrarInfoCurso(select) {
+            const selectedOption = select.options[select.selectedIndex];
+            if (selectedOption.value) {
+                const profesor = selectedOption.getAttribute('data-profesor');
+                const fechas = selectedOption.getAttribute('data-fechas');
+
+                document.getElementById('cursoProfesor').textContent = profesor;
+                document.getElementById('cursoFechas').textContent = fechas;
+                document.getElementById('cursoInfo').style.display = 'block';
+            } else {
+                document.getElementById('cursoInfo').style.display = 'none';
             }
         }
 

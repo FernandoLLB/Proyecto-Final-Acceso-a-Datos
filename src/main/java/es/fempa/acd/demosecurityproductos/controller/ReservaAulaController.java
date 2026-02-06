@@ -1,8 +1,10 @@
 package es.fempa.acd.demosecurityproductos.controller;
 
 import es.fempa.acd.demosecurityproductos.model.Aula;
+import es.fempa.acd.demosecurityproductos.model.Curso;
 import es.fempa.acd.demosecurityproductos.model.ReservaAula;
 import es.fempa.acd.demosecurityproductos.service.AulaService;
+import es.fempa.acd.demosecurityproductos.service.CursoService;
 import es.fempa.acd.demosecurityproductos.service.ReservaAulaService;
 import es.fempa.acd.demosecurityproductos.service.SecurityUtils;
 import jakarta.validation.Valid;
@@ -26,13 +28,16 @@ public class ReservaAulaController {
 
     private final ReservaAulaService reservaAulaService;
     private final AulaService aulaService;
+    private final CursoService cursoService;
     private final SecurityUtils securityUtils;
 
     public ReservaAulaController(ReservaAulaService reservaAulaService,
                                 AulaService aulaService,
+                                CursoService cursoService,
                                 SecurityUtils securityUtils) {
         this.reservaAulaService = reservaAulaService;
         this.aulaService = aulaService;
+        this.cursoService = cursoService;
         this.securityUtils = securityUtils;
     }
 
@@ -73,9 +78,11 @@ public class ReservaAulaController {
     public String nuevaReservaForm(Model model) {
         Long academiaId = securityUtils.getAcademiaIdActual();
         List<Aula> aulas = aulaService.listarActivasPorAcademia(academiaId);
+        List<Curso> cursos = cursoService.listarActivosPorAcademia(academiaId);
 
         model.addAttribute("reserva", new ReservaAula());
         model.addAttribute("aulas", aulas);
+        model.addAttribute("cursos", cursos);
         return "secretaria/reserva-nueva";
     }
 
@@ -87,7 +94,9 @@ public class ReservaAulaController {
 
         Long academiaId = securityUtils.getAcademiaIdActual();
         List<Aula> aulas = aulaService.listarActivasPorAcademia(academiaId);
+        List<Curso> cursos = cursoService.listarActivosPorAcademia(academiaId);
         model.addAttribute("aulas", aulas);  // siempre, haya errores o no
+        model.addAttribute("cursos", cursos);
 
         if (result.hasErrors()) {
             System.out.println(">>> Hay errores de validación en ReservaAula");
@@ -114,9 +123,11 @@ public class ReservaAulaController {
             ReservaAula reserva = reservaAulaService.obtenerPorId(id);
             Long academiaId = securityUtils.getAcademiaIdActual();
             List<Aula> aulas = aulaService.listarActivasPorAcademia(academiaId);
+            List<Curso> cursos = cursoService.listarActivosPorAcademia(academiaId);
 
             model.addAttribute("reserva", reserva);
             model.addAttribute("aulas", aulas);
+            model.addAttribute("cursos", cursos);
             return "secretaria/reserva-editar";
         } catch (IllegalArgumentException e) {
             return "redirect:/secretaria/reservas";
@@ -132,7 +143,9 @@ public class ReservaAulaController {
         if (result.hasErrors()) {
             Long academiaId = securityUtils.getAcademiaIdActual();
             List<Aula> aulas = aulaService.listarActivasPorAcademia(academiaId);
+            List<Curso> cursos = cursoService.listarActivosPorAcademia(academiaId);
             model.addAttribute("aulas", aulas);
+            model.addAttribute("cursos", cursos);
             model.addAttribute("reserva", reserva);
             return "secretaria/reserva-editar";
         }
@@ -144,8 +157,10 @@ public class ReservaAulaController {
         } catch (IllegalStateException | IllegalArgumentException e) {
             Long academiaId = securityUtils.getAcademiaIdActual();
             List<Aula> aulas = aulaService.listarActivasPorAcademia(academiaId);
+            List<Curso> cursos = cursoService.listarActivosPorAcademia(academiaId);
             model.addAttribute("error", e.getMessage());
             model.addAttribute("aulas", aulas);
+            model.addAttribute("cursos", cursos);
             model.addAttribute("reserva", reserva);
             return "secretaria/reserva-editar";
         }

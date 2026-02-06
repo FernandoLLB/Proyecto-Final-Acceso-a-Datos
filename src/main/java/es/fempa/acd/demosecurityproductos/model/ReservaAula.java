@@ -72,6 +72,11 @@ public class ReservaAula {
     @JoinColumn(name = "cancelada_por")
     private Usuario canceladaPor;
 
+    /** Curso asociado a la reserva (opcional) */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "curso_id")
+    private Curso curso;
+
     /** Fecha y hora de creación de la reserva */
     @NotNull
     @Column(name = "fecha_creacion", nullable = false)
@@ -177,5 +182,13 @@ public class ReservaAula {
 
     public void setFechaCancelacion(LocalDateTime fechaCancelacion) {
         this.fechaCancelacion = fechaCancelacion;
+    }
+
+    public Curso getCurso() {
+        return curso;
+    }
+
+    public void setCurso(Curso curso) {
+        this.curso = curso;
     }
 }

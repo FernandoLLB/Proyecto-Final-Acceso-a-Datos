@@ -84,6 +84,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th th:text="#{reservation.classroom.header}">Aula</th>
+                                <th>Curso</th>
                                 <th th:text="#{reservation.start.datetime.header}">Fecha/Hora Inicio</th>
                                 <th th:text="#{reservation.end.datetime.header}">Fecha/Hora Fin</th>
                                 <th th:text="#{reservation.description.header}">Descripción</th>
@@ -101,6 +102,18 @@
                                     <small class="text-muted">
                                         <i class="bi bi-people"></i> Cap: <span th:text="${reserva.aula.capacidad}">30</span>
                                     </small>
+                                </td>
+                                <td>
+                                    <span th:if="${reserva.curso != null}">
+                                        <strong th:text="${reserva.curso.nombre}">Curso de ejemplo</strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            <i class="bi bi-person"></i> <span th:text="${reserva.curso.profesor.usuario.nombre + ' ' + reserva.curso.profesor.usuario.apellidos}">Profesor</span>
+                                        </small>
+                                    </span>
+                                    <span th:unless="${reserva.curso != null}" class="text-muted">
+                                        <em>Sin curso</em>
+                                    </span>
                                 </td>
                                 <td th:text="${#temporals.format(reserva.fechaInicio, 'dd/MM/yyyy HH:mm')}">
                                     01/01/2026 09:00
