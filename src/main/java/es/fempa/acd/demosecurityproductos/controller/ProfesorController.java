@@ -65,8 +65,25 @@ public class ProfesorController {
                 model.addAttribute("reservasActivas", reservasActivas.size());
 
             } catch (IllegalArgumentException e) {
-                // Profesor no encontrado, se maneja en la vista
-                model.addAttribute("error", "Perfil de profesor no encontrado");
+                // Profesor no encontrado - inicializar valores por defecto
+                model.addAttribute("profesor", null);
+                model.addAttribute("cursos", List.of());
+                model.addAttribute("totalCursos", 0);
+                model.addAttribute("cursosActivos", 0);
+                model.addAttribute("reservas", List.of());
+                model.addAttribute("totalReservas", 0);
+                model.addAttribute("reservasActivas", 0);
+                model.addAttribute("error", "Perfil de profesor no encontrado. Por favor, contacte con el administrador para que cree su perfil.");
+            } catch (Exception e) {
+                // Error inesperado
+                model.addAttribute("profesor", null);
+                model.addAttribute("cursos", List.of());
+                model.addAttribute("totalCursos", 0);
+                model.addAttribute("cursosActivos", 0);
+                model.addAttribute("reservas", List.of());
+                model.addAttribute("totalReservas", 0);
+                model.addAttribute("reservasActivas", 0);
+                model.addAttribute("error", "Error al cargar los datos: " + e.getMessage());
             }
         }
 

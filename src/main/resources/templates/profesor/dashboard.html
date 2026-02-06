@@ -128,77 +128,92 @@
         </div>
 
         <!-- Cursos Asignados -->
-        <div class="card mb-4" th:if="${profesor != null && cursos != null && !cursos.isEmpty()}">
+        <div class="card mb-4" th:if="${profesor != null}">
             <div class="card-header">
-                <h3 class="card-title" th:text="#{teacher.my.courses}">Mis Cursos Asignados</h3>
+                <h3 class="card-title">Mis Cursos Asignados</h3>
             </div>
-            <div class="table-container">
+
+            <!-- Mostrar cursos si existen -->
+            <div th:if="${cursos != null && !cursos.isEmpty()}" class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th th:text="#{course.name.header}">Nombre</th>
-                            <th th:text="#{app.description}">Descripción</th>
-                            <th th:text="#{course.duration.header}">Duración</th>
-                            <th th:text="#{course.start.date}">Fecha Inicio</th>
-                            <th th:text="#{course.end.date}">Fecha Fin</th>
-                            <th th:text="#{course.places.header}">Plazas</th>
-                            <th th:text="#{app.status}">Estado</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Duración</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Plazas</th>
+                            <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="curso : ${cursos}">
                             <td><strong th:text="${curso.nombre}">Curso 1</strong></td>
-                            <td th:text="${#strings.abbreviate(curso.descripcion ?: #{app.no.description}, 50)}">Descripción...</td>
+                            <td th:text="${curso.descripcion != null && !curso.descripcion.isEmpty() ? #strings.abbreviate(curso.descripcion, 50) : 'Sin descripción'}">Descripción...</td>
                             <td th:text="${curso.duracionHoras + ' h'}">40 h</td>
                             <td th:text="${#temporals.format(curso.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</td>
                             <td th:text="${#temporals.format(curso.fechaFin, 'dd/MM/yyyy')}">31/12/2026</td>
                             <td th:text="${curso.plazasDisponibles ?: 'N/A'}">20</td>
                             <td>
                                 <span th:if="${curso.activo}" class="badge badge-success">
-                                    <i class="bi bi-check-circle"></i> <span th:text="#{app.active}">Activo</span>
+                                    <i class="bi bi-check-circle"></i> Activo
                                 </span>
                                 <span th:if="${!curso.activo}" class="badge badge-secondary">
-                                    <i class="bi bi-x-circle"></i> <span th:text="#{app.inactive}">Inactivo</span>
+                                    <i class="bi bi-x-circle"></i> Inactivo
                                 </span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <!-- Mensaje cuando no hay cursos -->
+            <div th:if="${cursos == null || cursos.isEmpty()}" class="card-body">
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <h3 class="empty-state-title">No tienes cursos asignados</h3>
+                    <p class="empty-state-description">Actualmente no tienes ningún curso asignado. Contacta con el administrador o secretaría de tu academia para que te asignen cursos.</p>
+                </div>
+            </div>
         </div>
 
         <!-- Reservas de Aula -->
-        <div class="card mb-4" th:if="${profesor != null && reservas != null && !reservas.isEmpty()}">
+        <div class="card mb-4" th:if="${profesor != null}">
             <div class="card-header">
-                <h3 class="card-title" th:text="#{teacher.my.reservations}">Mis Reservas de Aula</h3>
+                <h3 class="card-title">Mis Reservas de Aula</h3>
             </div>
-            <div class="table-container">
+
+            <!-- Mostrar reservas si existen -->
+            <div th:if="${reservas != null && !reservas.isEmpty()}" class="table-container">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th th:text="#{reservation.classroom.header}">Aula</th>
-                            <th th:text="#{app.description}">Descripción</th>
-                            <th th:text="#{reservation.start.datetime.header}">Fecha/Hora Inicio</th>
-                            <th th:text="#{reservation.end.datetime.header}">Fecha/Hora Fin</th>
-                            <th th:text="#{app.status}">Estado</th>
-                            <th th:text="#{app.date}">Creada</th>
+                            <th>Aula</th>
+                            <th>Descripción</th>
+                            <th>Fecha/Hora Inicio</th>
+                            <th>Fecha/Hora Fin</th>
+                            <th>Estado</th>
+                            <th>Creada</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="reserva : ${reservas}">
                             <td><strong th:text="${reserva.aula.nombre}">Aula 101</strong></td>
-                            <td th:text="${#strings.abbreviate(reserva.descripcion ?: #{app.no.description}, 40)}">Descripción...</td>
+                            <td th:text="${reserva.descripcion != null && !reserva.descripcion.isEmpty() ? #strings.abbreviate(reserva.descripcion, 40) : 'Sin descripción'}">Descripción...</td>
                             <td th:text="${#temporals.format(reserva.fechaInicio, 'dd/MM/yyyy HH:mm')}">01/01/2026 09:00</td>
                             <td th:text="${#temporals.format(reserva.fechaFin, 'dd/MM/yyyy HH:mm')}">01/01/2026 11:00</td>
                             <td>
                                 <span th:if="${reserva.estado.name() == 'ACTIVA'}" class="badge badge-success">
-                                    <i class="bi bi-check-circle"></i> <span th:text="#{reservation.active}">Activa</span>
+                                    <i class="bi bi-check-circle"></i> Activa
                                 </span>
                                 <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge badge-danger">
-                                    <i class="bi bi-x-circle"></i> <span th:text="#{reservation.cancelled}">Cancelada</span>
+                                    <i class="bi bi-x-circle"></i> Cancelada
                                 </span>
                                 <span th:if="${reserva.estado.name() == 'COMPLETADA'}" class="badge badge-secondary">
-                                    <i class="bi bi-check-circle-fill"></i> <span th:text="#{reservation.completed}">Completada</span>
+                                    <i class="bi bi-check-circle-fill"></i> Completada
                                 </span>
                             </td>
                             <td th:text="${#temporals.format(reserva.fechaCreacion, 'dd/MM/yyyy')}">27/01/2026</td>
@@ -206,17 +221,15 @@
                     </tbody>
                 </table>
             </div>
-        </div>
 
-        <!-- Mensaje si no hay cursos o reservas -->
-        <div class="card" th:if="${profesor != null && (cursos == null || cursos.isEmpty()) && (reservas == null || reservas.isEmpty())}">
-            <div class="card-body">
+            <!-- Mensaje cuando no hay reservas -->
+            <div th:if="${reservas == null || reservas.isEmpty()}" class="card-body">
                 <div class="empty-state">
                     <div class="empty-state-icon">
-                        <i class="bi bi-inbox"></i>
+                        <i class="bi bi-calendar"></i>
                     </div>
-                    <h3 class="empty-state-title" th:text="#{teacher.no.courses.or.reservations}">Sin Cursos o Reservas</h3>
-                    <p class="empty-state-description" th:text="#{teacher.no.courses.or.reservations.message}">Actualmente no tiene cursos asignados ni reservas de aula creadas.</p>
+                    <h3 class="empty-state-title">No tienes reservas de aula</h3>
+                    <p class="empty-state-description">Actualmente no has creado ninguna reserva de aula.</p>
                 </div>
             </div>
         </div>
