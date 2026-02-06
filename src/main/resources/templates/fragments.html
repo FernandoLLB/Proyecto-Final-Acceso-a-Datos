@@ -94,6 +94,14 @@
             </a>
         </li>
         <li class="sidebar-nav-item">
+            <a th:href="@{/secretaria/profesores}"
+               class="sidebar-nav-link"
+               th:classappend="${active == 'profesores'} ? 'active' : ''">
+                <span class="sidebar-nav-icon"><i class="bi bi-person-badge-fill"></i></span>
+                <span th:text="#{teacher.list}">Profesores</span>
+            </a>
+        </li>
+        <li class="sidebar-nav-item">
             <a th:href="@{/secretaria/cursos}"
                class="sidebar-nav-link"
                th:classappend="${active == 'cursos'} ? 'active' : ''">
