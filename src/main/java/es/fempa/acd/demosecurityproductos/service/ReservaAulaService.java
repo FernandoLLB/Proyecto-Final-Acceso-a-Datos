@@ -178,8 +178,10 @@ public class ReservaAulaService {
             throw new IllegalArgumentException("La fecha de fin debe ser posterior a la fecha de inicio");
         }
 
-        if (fechaInicio.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("No se pueden crear reservas en el pasado");
+        // Permitir reservas del día actual (desde el inicio del día)
+        LocalDateTime inicioDelDia = LocalDateTime.now().toLocalDate().atStartOfDay();
+        if (fechaInicio.isBefore(inicioDelDia)) {
+            throw new IllegalArgumentException("No se pueden crear reservas en días pasados");
         }
     }
 
