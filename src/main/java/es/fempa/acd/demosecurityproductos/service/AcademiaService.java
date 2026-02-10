@@ -185,6 +185,9 @@ public class AcademiaService {
         academia.setEmailContacto(academiaActualizada.getEmailContacto());
         academia.setTelefono(academiaActualizada.getTelefono());
         academia.setDireccion(academiaActualizada.getDireccion());
+        if (academiaActualizada.getPropietario() != null) {
+            academia.setPropietario(academiaActualizada.getPropietario());
+        }
         return academiaRepository.save(academia);
     }
 

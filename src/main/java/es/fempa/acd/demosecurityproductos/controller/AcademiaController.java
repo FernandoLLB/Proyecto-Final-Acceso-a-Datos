@@ -76,6 +76,7 @@ public class AcademiaController {
     @GetMapping("/academias/nueva")
     public String nuevaAcademiaForm(Model model) {
         model.addAttribute("academia", new Academia());
+        model.addAttribute("propietarios", propietarioService.listarActivos());
         return "admin/academia-nueva";
     }
 
@@ -83,11 +84,22 @@ public class AcademiaController {
      * Procesa la creación de una nueva academia.
      *
      * @param academia datos de la academia a crear
+     * @param propietarioId ID del propietario al que asignar la academia
+     * @param redirectAttributes atributos para mensajes flash
      * @return redirección a la lista de academias
      */
     @PostMapping("/academias/crear")
-    public String crearAcademia(@ModelAttribute Academia academia) {
-        academiaService.crear(academia);
+    public String crearAcademia(@ModelAttribute Academia academia,
+                                @RequestParam Long propietarioId,
+                                org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            es.fempa.acd.demosecurityproductos.model.Propietario propietario = propietarioService.obtenerPorId(propietarioId);
+            academia.setPropietario(propietario);
+            academiaService.crear(academia);
+            redirectAttributes.addFlashAttribute("success", "Academia creada exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al crear la academia: " + e.getMessage());
+        }
         return "redirect:/admin/academias/lista";
     }
 
@@ -102,6 +114,7 @@ public class AcademiaController {
     public String editarAcademiaForm(@PathVariable Long id, Model model) {
         Academia academia = academiaService.obtenerPorId(id);
         model.addAttribute("academia", academia);
+        model.addAttribute("propietarios", propietarioService.listarActivos());
         return "admin/academia-editar";
     }
 
@@ -110,11 +123,23 @@ public class AcademiaController {
      *
      * @param id identificador de la academia
      * @param academia datos actualizados de la academia
+     * @param propietarioId ID del propietario
+     * @param redirectAttributes atributos para mensajes flash
      * @return redirección a la lista de academias
      */
     @PostMapping("/academias/{id}/actualizar")
-    public String actualizarAcademia(@PathVariable Long id, @ModelAttribute Academia academia) {
-        academiaService.actualizar(id, academia);
+    public String actualizarAcademia(@PathVariable Long id,
+                                     @ModelAttribute Academia academia,
+                                     @RequestParam Long propietarioId,
+                                     org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            es.fempa.acd.demosecurityproductos.model.Propietario propietario = propietarioService.obtenerPorId(propietarioId);
+            academia.setPropietario(propietario);
+            academiaService.actualizar(id, academia);
+            redirectAttributes.addFlashAttribute("success", "Academia actualizada exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al actualizar la academia: " + e.getMessage());
+        }
         return "redirect:/admin/academias/lista";
     }
 

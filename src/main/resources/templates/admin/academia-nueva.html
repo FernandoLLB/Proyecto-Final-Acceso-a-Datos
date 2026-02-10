@@ -19,6 +19,17 @@
                 <div class="card-body">
                     <form th:action="@{/admin/academias/crear}" th:object="${academia}" method="post">
                         <div class="form-group">
+                            <label for="propietarioId" class="form-label">Propietario <span style="color: var(--danger-color);">*</span></label>
+                            <select class="form-control" id="propietarioId" name="propietarioId" required>
+                                <option value="">-- Seleccionar Propietario --</option>
+                                <option th:each="propietario : ${propietarios}"
+                                        th:value="${propietario.id}"
+                                        th:text="${propietario.razonSocial != null ? propietario.razonSocial : propietario.usuario.username}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label for="nombre" class="form-label" th:text="#{app.name.label} + ' *'">Nombre <span style="color: var(--danger-color);">*</span></label>
                             <input type="text" class="form-control" id="nombre" th:field="*{nombre}"
                                    th:placeholder="#{academy.name}" required>
